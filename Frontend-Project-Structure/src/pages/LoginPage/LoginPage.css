@@ -1,0 +1,12 @@
+/* Estilos para el contenedor de la página de Login */
+.login-page-container {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;    /* Centra verticalmente */
+  height: 100%;           /* Ocupa todo el alto disponible */
+  width: 100%;            /* Ocupa todo el ancho disponible */
+  
+  /* Este es el fondo con degradado que querías */
+  background: linear-gradient(135deg, #e0eafc 20%, #5eb4f2 80%);
+}
+
