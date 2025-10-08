@@ -1,0 +1,34 @@
+/* Estilos para nuestro botón de regresar reutilizable */
+.ui-back-button {
+  /* Posicionamiento y Apariencia */
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 14px 0; /* Un poco de espacio vertical, sin padding horizontal para que se alinee a la izquierda */
+  
+  /* Flexbox para alinear el ícono y el texto */
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espacio entre la flecha y el texto */
+
+  /* Estilo del texto */
+  font-size: 16px;
+  font-weight: 600;
+  color: #555;
+
+  /* Transición suave para el hover */
+  transition: color 0.3s ease;
+}
+
+.ui-back-button:hover {
+  color: #007bff; /* Cambia a azul al pasar el mouse */
+}
+
+/* El ícono hereda el color del botón */
+.ui-back-button-icon {
+  transition: transform 0.3s ease;
+}
+
+.ui-back-button:hover .ui-back-button-icon {
+  transform: translateX(-3px); /* Pequeño efecto de movimiento en la flecha */
+}

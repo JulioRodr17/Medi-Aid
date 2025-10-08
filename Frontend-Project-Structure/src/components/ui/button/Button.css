@@ -23,6 +23,12 @@
   background-color: #0056b3;
 }
 
+.ui-button--disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+}
+
 /* Podríamos añadir más variantes en el futuro */
 /*
 .ui-button--secondary {

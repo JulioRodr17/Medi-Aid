@@ -1,7 +1,7 @@
 import React from 'react';
 import './Input.css';
 
-const Input = ({ id, label, type = 'text', value, onChange, ...rest }) => {
+const Input = ({ id, label, type = 'text', value, onChange, error = false, ...rest }) => {
   return (
     <div className="ui-input-group">
       <label htmlFor={id} className="ui-input-label">
@@ -12,7 +12,7 @@ const Input = ({ id, label, type = 'text', value, onChange, ...rest }) => {
         type={type}
         value={value}
         onChange={onChange}
-        className="ui-input-field"
+        className={`ui-input-field ${error ? 'ui-input-error' : ''}`}
         {...rest}
       />
     </div>

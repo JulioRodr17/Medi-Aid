@@ -1,0 +1,10 @@
+.register-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh; 
+  background: linear-gradient(135deg, #e0eafc 20%, #5eb4f2 80%);
+  padding: 20px;
+  box-sizing: border-box; 
+}
