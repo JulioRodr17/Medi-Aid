@@ -5,6 +5,10 @@ import LoginPage from './pages/LoginPage/LoginPage'
 import Register from './pages/RegisterPage/RegisterPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
+
+import HomePage from './pages/HomePage/HomePage'
+import MainLayout from './components/layout/MainLayout/MainLayout'
+
 import './App.css'
 
 function App() {
@@ -14,15 +18,23 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Routes>
-          {/* Ruta Raíz: Si alguien entra a la URL principal, lo redirigimos al login */}
-          <Route path="/" element={<Navigate to="/login" />} />
+          {/* Rutas de Autenticación (no usan el MainLayout) */}
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/registro" element={<RegisterPage />} />
+          <Route path="/recuperar-contrasena" element={<ForgotPasswordPage />} />
+          <Route path="/restablecer-contrasena" element={<ResetPasswordPage />} />
 
-          {/* Podríamos añadir una ruta "catch-all" para páginas no encontradas en el futuro */}
-          {/* <Route path="*" element={<NotFoundPage />} /> */}
+          {/* 2. Rutas Principales (usan el MainLayout) */}
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<HomePage />} />
+            {/* Aquí añadiremos las rutas de /catalogo, /donacion, etc. en el futuro */}
+            {/* <Route path="catalogo" element={<CatalogPage />} /> */}
+            {/* <Route path="donacion" element={<DonationPage />} /> */}
+            {/* <Route path="perfil" element={<ProfilePage />} /> */}
+          </Route>
+          
+          {/* Redirección por defecto si ninguna ruta coincide */}
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
     </BrowserRouter>

@@ -11,6 +11,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
 
   const handleSubmit = (event) => {
+   {/* Validacion*/}
     event.preventDefault(); 
     console.log('Intentando iniciar sesión con:', { email, password });
   };
@@ -41,7 +42,7 @@ const LoginForm = () => {
         />
 
         <Button type="submit" className="login-button">
-          Ingresar
+          <Link to="/">Iniciar Sesión</Link>
         </Button>
       </form>
       
