@@ -20,7 +20,7 @@ function App() {
         <Routes>
           {/* Rutas de Autenticación (no usan el MainLayout) */}
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/registro" element={<RegisterPage />} />
+          <Route path="/registro" element={<Register />} />
           <Route path="/recuperar-contrasena" element={<ForgotPasswordPage />} />
           <Route path="/restablecer-contrasena" element={<ResetPasswordPage />} />
 

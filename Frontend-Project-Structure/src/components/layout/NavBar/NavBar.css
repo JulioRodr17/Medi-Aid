@@ -1,52 +1,99 @@
 .navbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* La clave para separar las secciones */
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0.75rem 2rem;
   background-color: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 70px;
   position: sticky;
   top: 0;
   z-index: 1000;
+  border-bottom: #3921f2 2px solid;
 }
+
+/* --- Secciones del Navbar --- */
+.navbar-left,
+.navbar-center,
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* Espacio entre los elementos de cada sección */
+}
+
+/* Para que la sección central ocupe el espacio y se centre bien */
+.navbar-center {
+  flex-grow: 1;
+  justify-content: center;
+}
+
+
+/* --- Estilos de los Elementos --- */
 
 .navbar-logo-link {
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: #333;
+  gap: 0.75rem;
 }
 
 .navbar-logo-img {
-  height: 40px;
-  margin-right: 12px;
+  height: 45px;
+  width: 45px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .navbar-logo-text {
   font-size: 1.5rem;
   font-weight: bold;
-}
-
-.navbar-nav {
-  display: flex;
-  gap: 1.5rem;
+  color: #333;
 }
 
 .nav-link {
   text-decoration: none;
   color: #555;
-  font-size: 1rem;
   font-weight: 500;
-  padding-bottom: 5px;
-  border-bottom: 2px solid transparent;
-  transition: all 0.3s ease;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: color 0.3s ease;
 }
 
 .nav-link:hover {
-  color: #007bff;
+  color: #3921f2;
 }
 
-.nav-link.active {
-  color: #007bff;
-  border-bottom-color: #007bff;
+/* Línea inferior que aparece en el link activo */
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #3921f2;
 }
+
+/* Estilos para los botones de íconos */
+.navbar-icon-button {
+  color: #555;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar-icon-button:hover {
+  background-color: #f0f0f0;
+}
+
+.navbar-icon-button.active {
+  color: #3921f2;
+}
+

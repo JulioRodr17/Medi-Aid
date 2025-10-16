@@ -42,13 +42,13 @@ const LoginForm = () => {
         />
 
         <Button type="submit" className="login-button">
-          <Link to="/">Iniciar Sesión</Link>
+          <Link to="/HomePage">Iniciar Sesión</Link>
         </Button>
       </form>
       
       <div className="login-links">
-        <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
-        <Link to="/register">¿No tienes cuenta? Regístrate</Link>
+        <Link to="/recuperar-contrasena">¿Olvidaste tu contraseña?</Link>
+        <Link to="/registro">¿No tienes cuenta? Regístrate</Link>
       </div>
     </div>
   );

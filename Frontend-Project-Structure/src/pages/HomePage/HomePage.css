@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 2rem;
   padding: 2rem;
-  max-width: 1200px;
+  max-width: 200vh;
   margin: 0 auto;
 }
 
@@ -15,4 +15,11 @@
   border-radius: 8px;
   font-family: sans-serif;
   color: #666;
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0;
+  text-align: center;
 }
