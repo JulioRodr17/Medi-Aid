@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ImageCarousel.css';
 
 
@@ -6,26 +6,45 @@ import slide1 from '../../../assets/images/carousel/slide_1.jpg';
 import slide2 from '../../../assets/images/carousel/slide_2.jpg';
 import slide3 from '../../../assets/images/carousel/slide_3.jpg';
 
-// 2. Crea un arreglo con las imágenes importadas.
 const images = [slide1, slide2, slide3];
 
 const ImageCarousel = () => {
-  // Usamos useState para saber qué imagen se está mostrando.
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  useEffect(() => {
+    let interval;
+    if (isAutoPlaying) {
+      interval = setInterval(() => {
+        const isLastSlide = currentIndex === images.length - 1;
+        const newIndex = isLastSlide ? 0 : currentIndex + 1;
+        setCurrentIndex(newIndex);
+      }, 5000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [currentIndex, isAutoPlaying]);
 
   const goToPrevious = () => {
+    setIsAutoPlaying(false);
     const isFirstSlide = currentIndex === 0;
     const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1;
     setCurrentIndex(newIndex);
   };
 
   const goToNext = () => {
+    setIsAutoPlaying(false);
     const isLastSlide = currentIndex === images.length - 1;
     const newIndex = isLastSlide ? 0 : currentIndex + 1;
     setCurrentIndex(newIndex);
   };
 
   const goToSlide = (slideIndex) => {
+    setIsAutoPlaying(false);
     setCurrentIndex(slideIndex);
   };
 
@@ -35,7 +54,6 @@ const ImageCarousel = () => {
         &#10094;
       </button>
       <div className="carousel-slide-container">
-        {/* Usamos un style dinámico para mover el "film strip" de imágenes */}
         <div
           className="carousel-slides"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
