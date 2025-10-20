@@ -1,0 +1,10 @@
+.catalog-page {
+  width: 100%;
+  max-width: 1200px; /* Un ancho máximo para que no se estire demasiado en pantallas grandes */
+  margin: 0 auto; /* Centra la página en el layout */
+  padding: 2rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem; /* Espacio entre las futuras secciones */
+}
