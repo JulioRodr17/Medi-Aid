@@ -1,99 +1,121 @@
 .navbar {
   display: flex;
-  justify-content: space-between; /* La clave para separar las secciones */
+  justify-content: space-between;
   align-items: center;
   padding: 0.75rem 2rem;
   background-color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  height: 70px;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  border-bottom: #3921f2 2px solid;
+  border-bottom: 1px solid #e9ecef;
+  height: 60px; /* Altura fija */
+  box-sizing: border-box;
 }
 
-/* --- Secciones del Navbar --- */
-.navbar-left,
-.navbar-center,
-.navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem; /* Espacio entre los elementos de cada sección */
-}
-
-/* Para que la sección central ocupe el espacio y se centre bien */
-.navbar-center {
-  flex-grow: 1;
-  justify-content: center;
-}
-
-
-/* --- Estilos de los Elementos --- */
-
+/* --- Izquierda: Logo --- */
 .navbar-logo-link {
   display: flex;
   align-items: center;
   text-decoration: none;
-  gap: 0.75rem;
+  color: #333;
 }
 
 .navbar-logo-img {
-  height: 45px;
-  width: 45px;
+  height: 40px;
+  width: 40px;
   border-radius: 50%;
   object-fit: cover;
+  margin-right: 0.75rem;
 }
 
 .navbar-logo-text {
   font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
+  font-weight: 600;
+}
+
+/* --- Centro: Links de Navegación --- */
+.navbar-center {
+  display: flex;
+  gap: 1.5rem;
 }
 
 .nav-link {
   text-decoration: none;
   color: #555;
   font-weight: 500;
-  font-size: 1rem;
-  padding: 0.5rem 0;
+  padding: 0.5rem;
   position: relative;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
 }
 
 .nav-link:hover {
   color: #3921f2;
 }
 
-/* Línea inferior que aparece en el link activo */
+/* Estilo para el link activo */
+.nav-link.active {
+  color: #3921f2;
+  font-weight: 600;
+}
 .nav-link.active::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: -4px;
   left: 0;
   width: 100%;
   height: 2px;
   background-color: #3921f2;
 }
 
-/* Estilos para los botones de íconos */
-.navbar-icon-button {
+
+/* --- Derecha: Iconos --- */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Contenedor del wrapper de notificaciones (para el 'clic-fuera') */
+.notification-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Botón de Icono (para Campana y Perfil) */
+.navbar-icon-button,
+.nav-icon-link {
   color: #555;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
   padding: 0.5rem;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  position: relative; /* Clave para la insignia */
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
 }
 
-.navbar-icon-button:hover {
-  background-color: #f0f0f0;
-}
-
-.navbar-icon-button.active {
+.navbar-icon-button:hover,
+.nav-icon-link:hover {
+  background-color: #f1f1f1;
   color: #3921f2;
+}
+
+.nav-icon-link.active {
+  background-color: #e7f3ff;
+  color: #3921f2;
+}
+
+/* --- ESTILO PARA LA INSIGNIA --- */
+.notification-badge {
+  position: absolute;
+  top: 6px;  /* Ajusta según tu gusto */
+  right: 6px; /* Ajusta según tu gusto */
+  width: 8px;
+  height: 8px;
+  background-color: #dc3545; /* Rojo de notificación */
+  border-radius: 50%;
+  border: 2px solid white; /* Borde blanco para que resalte sobre el ícono */
 }
 

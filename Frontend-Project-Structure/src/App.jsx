@@ -8,6 +8,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
 
 import HomePage from './pages/HomePage/HomePage'
 import CatalogPage from './pages/CatalogPage/CatalogPage'
+import DonationPage from './pages/DonationPage/DonationPage'
 import MainLayout from './components/layout/MainLayout/MainLayout'
 
 import './App.css'
@@ -29,8 +30,8 @@ function App() {
           <Route path="/" element={<MainLayout />}>
             <Route index element={<HomePage />} />
             <Route path="catalogo" element={<CatalogPage />} />
+            <Route path="donacion" element={<DonationPage />} />
             {/* Aquí añadiremos las rutas de /catalogo, /donacion, etc. en el futuro */}
-            {/* <Route path="donacion" element={<DonationPage />} /> */}
             {/* <Route path="perfil" element={<ProfilePage />} /> */}
           </Route>
           

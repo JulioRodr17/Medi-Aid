@@ -15,12 +15,12 @@
 
 /* Estilo para el botón primario */
 .ui-button--primary {
-  background-color: #007bff;
+  background-color: #3921f2;
   color: white;
 }
 
 .ui-button--primary:hover {
-  background-color: #0056b3;
+  background-color: #6e5de9;
 }
 
 .ui-button--disabled {

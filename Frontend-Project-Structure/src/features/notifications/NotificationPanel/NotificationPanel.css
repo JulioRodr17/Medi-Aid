@@ -1,0 +1,98 @@
+.notification-panel {
+  position: absolute;
+  top: calc(100% + 15px); /* 100% del navbar + 15px de espacio */
+  right: 0;
+  width: 340px;
+  max-height: 450px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  border: 1px solid #e9ecef;
+  z-index: 1000;
+  
+  /* Animación de entrada */
+  opacity: 0;
+  transform: translateY(-10px) scale(0.98);
+  animation: slide-down 0.2s ease-out forwards;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.notif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.notif-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.notif-mark-read-btn {
+  background: none;
+  border: none;
+  color: #3921f2;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+
+.notif-mark-read-btn:hover {
+  text-decoration: underline;
+}
+
+.notif-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.notif-item {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f4f4f4;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.notif-item:last-child {
+  border-bottom: none;
+}
+
+.notif-item:hover {
+  background-color: #f8f9fa;
+}
+
+.notif-text {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.95rem;
+  color: #343a40;
+  line-height: 1.4;
+}
+
+.notif-time {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.notif-empty {
+  padding: 2rem 1.25rem;
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+}
