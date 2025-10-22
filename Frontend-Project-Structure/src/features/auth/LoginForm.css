@@ -48,14 +48,14 @@
 /* Efecto visual cuando el usuario hace clic en un campo de texto */
 .input-group input:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #3921f2;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
 .login-button {
   width: 100%;
   padding: 12px;
-  background-color: #007bff;
+  background-color: #3921f2;
   color: white;
   border: none;
   border-radius: 8px;
@@ -78,12 +78,30 @@
 }
 
 .login-links a {
-  color: #007bff;
+  color: #3921f2;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 0.9rem;
+  transition: opacity 0.2s ease;
 }
 
 .login-links a:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+}
+
+.login-links a {
+  color: #3921f2; /* 1. Usamos tu nuevo color primario */
+  text-decoration: none;
+  
+}
+
+/* 2. Forzamos el color para que NUNCA cambie a morado */
+.login-links a:visited {
+  color: #3921f2;
+}
+
+.login-links a:hover {
+  opacity: 0.7;
   text-decoration: underline;
 }
 

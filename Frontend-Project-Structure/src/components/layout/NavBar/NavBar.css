@@ -112,9 +112,9 @@
   position: absolute;
   top: 6px;  /* Ajusta según tu gusto */
   right: 6px; /* Ajusta según tu gusto */
-  width: 8px;
-  height: 8px;
-  background-color: #dc3545; /* Rojo de notificación */
+  width: 10px;
+  height: 10px;
+  background-color: #3921f2; /* Azul de notificación */
   border-radius: 50%;
   border: 2px solid white; /* Borde blanco para que resalte sobre el ícono */
 }

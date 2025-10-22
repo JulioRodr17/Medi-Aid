@@ -6,7 +6,7 @@
   height: 100%;           /* Ocupa todo el alto disponible */
   width: 100%;            /* Ocupa todo el ancho disponible */
   
-  /* Este es el fondo con degradado que querías */
-  background: linear-gradient(135deg, #e0eafc 20%, #5eb4f2 80%);
+
+  background: linear-gradient(135deg, #e0eafc 0%, #988cf0 40%,#5d49f5 90%);
 }
 
