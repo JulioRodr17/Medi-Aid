@@ -1,0 +1,25 @@
+.stats-container {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  gap: 1rem;
+}
+
+.stat-box {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.stat-value {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #3921f2; /* Tu color primario */
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #555;
+}
