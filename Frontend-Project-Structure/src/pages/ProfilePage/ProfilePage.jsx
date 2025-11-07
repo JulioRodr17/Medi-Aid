@@ -9,7 +9,8 @@ import UserDonationStats from '../../features/profile/UserDonationStats/UserDona
 import UserDonationHistory from '../../features/profile/UserdDonationHistory/UserDonationHistory';
 import Button from '../../components/ui/button/Button';
 import Modal from '../../components/ui/Modal/Modal';
-
+import EditProfileForm from '../../features/profile/EditProfileForm/EditProfileForm';
+import ChangePasswordForm from '../../features/profile/ChangePasswordForm/ChangePasswordForm';
 
 // TODO: BACKEND
 // Esta información vendrá de la API (del usuario que esté logueado)
@@ -34,7 +35,8 @@ const ProfilePage = () => {
   
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  // En un futuro, esto se llenaría con un fetch al backend
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
+
   const [currentUser, setCurrentUser] = useState(dummyUser);
 
   const handleLogout = () => {
@@ -46,16 +48,24 @@ const ProfilePage = () => {
   };
 
   // 5. Función para guardar los cambios del formulario
-  const handleSaveProfile = (newDa_ta) => {
+  const handleSaveProfile = (newData) => {
     // TODO: BACKEND
     // Aquí es donde la llamada a la API realmente guardaría los datos.
     // Por ahora, solo actualizamos el estado local para ver el cambio al instante.
     setCurrentUser(prev => ({
       ...prev,
-      name: newDa_ta.name,
-      phone: newDa_ta.phone
+      name: newData.name,
+      phone: newData.phone
     }));
     setIsEditModalOpen(false); // Cierra el modal
+  };
+
+  const handleSavePassword = (passwordData) => {
+    // TODO: BACKEND
+    // Aquí se llamaría a la API para guardar la nueva contraseña.
+    // 'passwordData' contiene { currentPassword, newPassword, confirmPassword }
+    console.log('Enviando al backend:', passwordData);
+    setIsChangePasswordModalOpen(false); // Cierra el modal
   };
 
   return (
@@ -67,6 +77,7 @@ const ProfilePage = () => {
           role={dummyUser.role} 
           avatarUrl={dummyUser.avatarUrl} 
           onEditProfileClick={() => setIsEditModalOpen(true)}
+          onChangePasswordClick={() => setIsChangePasswordModalOpen(true)}
           />
 
         {/* --- 2. Información de Contacto --- */}
@@ -90,7 +101,6 @@ const ProfilePage = () => {
           <Button 
             variant="secondary" 
             onClick={handleLogout}
-            style={{ borderColor: '#dc3545', color: '#dc3545' }} // Estilo "peligro"
             >
             Cerrar Sesión
           </Button>
@@ -101,7 +111,24 @@ const ProfilePage = () => {
         title="Editar Perfil"
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-      ></Modal>
+      >
+        <EditProfileForm 
+          currentUser={currentUser}
+          onSave={handleSaveProfile}
+          onCancel={() => setIsEditModalOpen(false)}
+        />
+      </Modal>
+
+      <Modal 
+        title="Cambiar Contraseña"
+        isOpen={isChangePasswordModalOpen}
+        onClose={() => setIsChangePasswordModalOpen(false)}
+      >
+        <ChangePasswordForm 
+          onSave={handleSavePassword}
+          onCancel={() => setIsChangePasswordModalOpen(false)}
+        />
+      </Modal>
     </>
   );
 };

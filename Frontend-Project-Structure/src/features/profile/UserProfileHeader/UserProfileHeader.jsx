@@ -10,7 +10,7 @@ const SettingsIcon = () => (
   </svg>
 );
 
-const UserProfileHeader = ({ name, role, avatarUrl, onEditProfileClick }) => {
+const UserProfileHeader = ({ name, role, avatarUrl, onEditProfileClick, onChangePasswordClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -46,9 +46,11 @@ const UserProfileHeader = ({ name, role, avatarUrl, onEditProfileClick }) => {
         {isMenuOpen && (
           <UserSettingsMenu 
             onEditProfileClick={onEditProfileClick}
+            onChangePasswordClick={onChangePasswordClick}
             onCloseMenu={() => setIsMenuOpen(false)} // Ayuda a cerrar el menú
           />
         )}
+        
       </div>
     </header>
   );

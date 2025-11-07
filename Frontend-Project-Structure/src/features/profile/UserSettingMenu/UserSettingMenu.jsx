@@ -5,23 +5,21 @@ import './UserSettingMenu.css';
 // Estos botones/enlaces deberían abrir Modales.
 // Por ahora, solo simulan la acción.
 
-const UserSettingsMenu = ({ onEditProfileClick, onCloseMenu }) => {
+const UserSettingsMenu = ({ onEditProfileClick, onChangePasswordClick, onCloseMenu }) => {
 
   const handleEditProfile = () => {
-    onEditProfileClick(); // Llama a la función del padre
-    onCloseMenu(); // Cierra el menú
+    onEditProfileClick(); 
+    onCloseMenu(); 
   };
 
   const handleChangePassword = () => {
-    // TODO: Implementar Modal de Cambio de Contraseña
-    alert('Abriendo Modal de Cambiar Contraseña...');
-    onCloseMenu(); // Cierra el menú
+    onChangePasswordClick();
+    onCloseMenu(); 
   };
 
   return (
    <ul className="settings-menu">
       <li className="settings-menu-item">
-        {/* 2. Conectamos la función */}
         <button onClick={handleEditProfile}>Editar Perfil</button>
       </li>
       <li className="settings-menu-item">

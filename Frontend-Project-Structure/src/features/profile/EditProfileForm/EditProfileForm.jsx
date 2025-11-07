@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 import './EditProfileForm.css';
-import Input from '../../../components/ui/Input/Input';
-import Button from '../../../components/ui/Button/Button';
+import Input from '../../../components/ui/input/Input';
+import Button from '../../../components/ui/button/Button';
 
-/**
- * Formulario para editar el perfil del usuario.
- * @param {object} currentUser - El objeto con los datos actuales del usuario.
- * @param {function} onSave - Función que se llama al guardar (recibe los nuevos datos).
- * @param {function} onCancel - Función que se llama al cancelar (cierra el modal).
- */
+
 const EditProfileForm = ({ currentUser, onSave, onCancel }) => {
   // Inicializamos el estado del formulario con los datos actuales del usuario
   const [formData, setFormData] = useState({
