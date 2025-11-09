@@ -1,8 +1,9 @@
-import React, { useState } from 'react'; 
+import React, { useState, useEffect } from 'react'; 
+import { useAuth } from '../../context/AuthContext.jsx';
+import { profileService } from '../../services/profileService.js';
 import { useNavigate } from 'react-router-dom';
 import './ProfilePage.css';
 
-// 1. Importamos todos los "muebles" que formarán la página
 import UserProfileHeader from '../../features/profile/UserProfileHeader/UserProfileHeader';
 import UserContactInfo from '../../features/profile/UserContactInfo/UserContactInfo';
 import UserDonationStats from '../../features/profile/UserDonationStats/UserDonationStats';
@@ -12,51 +13,73 @@ import Modal from '../../components/ui/Modal/Modal';
 import EditProfileForm from '../../features/profile/EditProfileForm/EditProfileForm';
 import ChangePasswordForm from '../../features/profile/ChangePasswordForm/ChangePasswordForm';
 
-// TODO: BACKEND
-// Esta información vendrá de la API (del usuario que esté logueado)
-const dummyUser = {
-  name: 'Julio Rodríguez',
-  role: 'Alumno',
-  email: 'jrodriguez@alumno.escom.ipn.mx',
-  phone: '55-1234-5678',
-  avatarUrl: 'https://via.placeholder.com/150' // Placeholder para la foto
-};
-
-// TODO: BACKEND
-// Estos datos también vendrán de un endpoint de estadísticas
-const dummyStats = {
-  total: 12,
-  pending: 2,
-  approved: 10
-};
-
 const ProfilePage = () => {
   const navigate = useNavigate();
   
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const { user, logout } = useAuth(); 
 
+  // --- Estados para los datos cargados ---
+  const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0 });
+  const [history, setHistory] = useState([]);
+  
+  // --- Estados para Carga y Error ---
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
 
-  const [currentUser, setCurrentUser] = useState(dummyUser);
+  useEffect(() => {
+    // Si no hay usuario, no intentes cargar nada.
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const loadProfileData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // TODO: BACKEND
+        // Aquí pasaremos el 'user.id' a los servicios
+        // const [statsData, historyData] = await Promise.all([
+        //   profileService.getProfileStats(user.id),
+        //   profileService.getDonationHistoryRecent(user.id)
+        // ]);
+        
+        // Por ahora, llamamos a los servicios dummy
+        const [statsData, historyData] = await Promise.all([
+          profileService.getProfileStats(),
+          profileService.getDonationHistoryRecent()
+        ]);
+
+        setStats(statsData);
+        setHistory(historyData);
+
+      } catch (err) {
+        console.error("Error al cargar datos del perfil:", err);
+        setError(err.message || 'No se pudieron cargar los datos.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProfileData();
+  }, [user]);
+
 
   const handleLogout = () => {
     // TODO: BACKEND
-    // Aquí se llamaría a la API para invalidar el token/sesión
     console.log('Cerrando sesión...');
-    // Redirigimos al login
-    navigate('/login');
+    logout();
   };
 
   // 5. Función para guardar los cambios del formulario
-  const handleSaveProfile = (newData) => {
+  const handleSaveProfile = (updatedData) => {
     // TODO: BACKEND
     // Aquí es donde la llamada a la API realmente guardaría los datos.
-    // Por ahora, solo actualizamos el estado local para ver el cambio al instante.
-    setCurrentUser(prev => ({
-      ...prev,
-      name: newData.name,
-      phone: newData.phone
-    }));
+    console.log('Guardando perfil:', updatedData);
     setIsEditModalOpen(false); // Cierra el modal
   };
 
@@ -68,33 +91,50 @@ const ProfilePage = () => {
     setIsChangePasswordModalOpen(false); // Cierra el modal
   };
 
+  if (!user) {
+    // TODO: Poner un spinner bonito aquí.
+    return <div>Cargando datos del usuario...</div>;
+  }
+
   return (
     <>
       <div className="profile-page">
         {/* --- 1. Encabezado --- */}
         <UserProfileHeader 
-          name={dummyUser.name} 
-          role={dummyUser.role} 
-          avatarUrl={dummyUser.avatarUrl} 
+          name={user.name} 
+          role={user.role} 
+          avatarUrl={user.avatarUrl} 
           onEditProfileClick={() => setIsEditModalOpen(true)}
           onChangePasswordClick={() => setIsChangePasswordModalOpen(true)}
           />
 
-        {/* --- 2. Información de Contacto --- */}
-        <UserContactInfo 
-          email={dummyUser.email} 
-          phone={dummyUser.phone} 
-          />
 
-        {/* --- 3. Estadísticas de Donación --- */}
-        <UserDonationStats 
-          total={dummyStats.total} 
-          pending={dummyStats.pending} 
-          approved={dummyStats.approved} 
-          />
-
-        {/* --- 4. Historial Reciente --- */}
-        <UserDonationHistory />
+        {loading ? (
+          <div className="page-loading">Cargando datos del perfil...</div>
+        ) : error ? (
+          <div className="page-error">Error: {error}</div>
+        ) : (
+          <>
+            <div className="profile-page-content">
+              <div className="profile-main-column">
+                <UserDonationStats 
+                  total={stats.total} 
+                  pending={stats.pending} 
+                  approved={stats.approved} 
+                />
+                <UserDonationHistory 
+                  history={history} 
+                />
+              </div>
+              <div className="profile-sidebar-column">
+                <UserContactInfo 
+                  email={user.email} 
+                  phone={user.phone} 
+                />
+              </div>
+            </div>
+          </>
+        )}
 
         {/* --- 5. Botón de Logout --- */}
         <div className="logout-section">
@@ -113,7 +153,7 @@ const ProfilePage = () => {
         onClose={() => setIsEditModalOpen(false)}
       >
         <EditProfileForm 
-          currentUser={currentUser}
+          currentUser={user}
           onSave={handleSaveProfile}
           onCancel={() => setIsEditModalOpen(false)}
         />

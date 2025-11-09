@@ -12,6 +12,8 @@ import DonationPage from './pages/DonationPage/DonationPage'
 import MainLayout from './components/layout/MainLayout/MainLayout'
 import ProfilePage from './pages/ProfilePage/ProfilePage'
 
+import ProtectedRoute from './components/utility/ProtectedRoute';
+
 import './App.css'
 
 function App() {
@@ -28,11 +30,18 @@ function App() {
           <Route path="/restablecer-contrasena" element={<ResetPasswordPage />} />
 
           {/* 2. Rutas Principales (usan el MainLayout) */}
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<HomePage />} />
-            <Route path="catalogo" element={<CatalogPage />} />
-            <Route path="donacion" element={<DonationPage />} />
-            <Route path="perfil" element={<ProfilePage />} />
+          <Route 
+            path="/" 
+            element={
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>  
+            }
+          >
+              <Route index element={<HomePage />} />
+              <Route path="catalogo" element={<CatalogPage />} />
+              <Route path="donacion" element={<DonationPage />} />
+              <Route path="perfil" element={<ProfilePage />} />
           </Route>
           
           {/* Redirección por defecto si ninguna ruta coincide */}

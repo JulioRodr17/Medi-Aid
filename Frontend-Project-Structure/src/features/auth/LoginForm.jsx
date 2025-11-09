@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './LoginForm.css';
+import { useAuth } from '../../context/AuthContext.jsx';
 
+import './LoginForm.css';
 import Input from '../../components/ui/input/Input';
 import Button from '../../components/ui/button/Button';
 import logo from '../../assets/images/logoMediAid.jpeg';
@@ -10,19 +11,26 @@ import logo from '../../assets/images/logoMediAid.jpeg';
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // 2. Inicializamos el hook de navegación
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const { login } = useAuth();
+
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Enviando datos:', { email, password });
-    
-    // TODO: BACKEND
-    // Aquí iría tu lógica de fetch/axios para validar al usuario.
-    // Si la validación es exitosa...
-    
-    // 3. ¡Navegamos al usuario a la página principal!
-    navigate('/'); // Esto te lleva a la HomePage
+    setLoading(true);
+    setError(null);
+
+    try{
+      await login(email, password);
+      navigate('/'); // Redirigir al dashboard después del login exitoso
+    } catch (err) {
+      console.error('Error during login:', err);
+      setError(err.message || 'Error desconocido');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,6 +44,7 @@ const LoginForm = () => {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          disabled={loading}
           required
         />
         <Input
@@ -44,14 +53,21 @@ const LoginForm = () => {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          disabled={loading}
           required
         />
+
+         {error && (
+          <p className="form-error-message">{error}</p>
+        )}
         
         <Button 
           type="submit" 
           variant="primary" 
+          style={{ backgroundColor: '#3921f2' }}
+          disabled={loading}
         >
-          Ingresar
+          {loading ? 'Ingresando...' : 'Ingresar'}
         </Button>
       </form>
       <div className="login-links">

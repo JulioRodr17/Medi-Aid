@@ -14,18 +14,21 @@ const WorriedMascot = () => (
 );
 
 
-const ScarcityBanner = () => {
+const ScarcityBanner = ({ scarceMeds }) => {
   // En un futuro, esta lista vendrá del backend.
-  const scarceMedications = ['Paracetamol', 'Amoxicilina', 'Ibuprofeno', 'Loratadina', 'Omeprazol'];
+
+  if (!scarceMeds || scarceMeds.length === 0) {
+    return null; // O un banner genérico que diga "Todo en orden"
+  }
 
   return (
     <div className="scarcity-banner">
       <div className="banner-content">
         <h2 className="banner-title">Medicamentos Escasos</h2>
         <div className="medications-list">
-          {scarceMedications.map((med) => (
-            <span key={med} className="med-tag">
-              {med}
+          {scarceMeds.map((med) => (
+            <span key={med.id || med.name} className="med-tag">
+              {med.name}
             </span>
           ))}
         </div>

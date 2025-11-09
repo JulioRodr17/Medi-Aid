@@ -1,23 +1,75 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './NotificationPanel.css';
+import { notificationService } from '../../../services/notificationService';
 
-// TODO: BACKEND
-// Estos son datos de ejemplo. En un futuro, esta lista
-// se debería cargar (fetch) desde la API.
-const dummyNotifications = [
-  { id: 1, text: 'Tu donación de Paracetamol fue aprobada.', time: 'hace 5 min' },
-  { id: 2, text: 'Nuevos consejos de salud disponibles en el blog.', time: 'hace 1 hora' },
-  { id: 3, text: 'Tu donación de Gasas fue rechazada.', time: 'hace 3 horas' },
-];
 
 const NotificationPanel = ({ setHasUnread }) => {
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleMarkAllAsRead = () => {
-    // TODO: BACKEND
-    // Aquí se haría una llamada a la API para marcar
-    // todas las notificaciones como leídas en la base de datos.
-    console.log('Marcando todas como leídas...');
-    setHasUnread(false);
+  useEffect(() => {
+    const loadNotifications = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const data = await notificationService.getNotifications();
+        
+        setNotifications(data.notifications);
+        setHasUnread(data.unreadCount > 0);
+
+      } catch (err) {
+        console.error("Error al cargar notificaciones:", err);
+        setError(err.message || 'No se pudieron cargar las notificaciones.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadNotifications();
+  }, [setHasUnread]);
+  
+  const handleMarkAllAsRead = async () => {
+    try {
+      // TODO: BACKEND - Llamar al servicio
+      await notificationService.markAllAsRead();
+      
+      // Actualizamos el estado localmente para que se refleje al instante
+      setNotifications(prevNotifs => 
+        prevNotifs.map(n => ({ ...n, read: true }))
+      );
+      setHasUnread(false); // Apagamos la insignia
+      
+    } catch (err) {
+      console.error("Error al marcar como leídas:", err);
+      // (Podríamos mostrar un error pequeño)
+    }
+  };
+
+  const renderContent = () => {
+    if (loading) {
+      return <p className="notif-empty">Cargando...</p>;
+    }
+
+    if (error) {
+      return <p className="notif-empty notif-error">{error}</p>;
+    }
+
+    if (notifications.length === 0) {
+      return <p className="notif-empty">No tienes notificaciones.</p>;
+    }
+
+    return (
+      <ul className="notif-list">
+        {notifications.map(notif => (
+          <li key={notif.id} className={`notif-item ${notif.read ? 'read' : ''}`}>
+            <p className="notif-text">{notif.text}</p>
+            <span className="notif-time">{notif.time}</span>
+          </li>
+        ))}
+      </ul>
+    );
   };
 
   return (
@@ -32,16 +84,7 @@ const NotificationPanel = ({ setHasUnread }) => {
         </button>
       </div>
       <ul className="notif-list">
-        {dummyNotifications.length > 0 ? (
-          dummyNotifications.map(notif => (
-            <li key={notif.id} className="notif-item">
-              <p className="notif-text">{notif.text}</p>
-              <span className="notif-time">{notif.time}</span>
-            </li>
-          ))
-        ) : (
-          <li className="notif-empty">No tienes notificaciones nuevas.</li>
-        )}
+        {renderContent()}
       </ul>
     </div>
   );

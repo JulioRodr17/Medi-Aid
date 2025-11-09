@@ -32,3 +32,11 @@
   padding-top: 1rem;
   border-top: 1px solid #f0f2f5;
 }
+
+/* Mensaje si no hay donaciones */
+.history-empty-message {
+  text-align: center;
+  color: #6c757d;
+  padding: 1rem 0;
+  font-style: italic;
+}

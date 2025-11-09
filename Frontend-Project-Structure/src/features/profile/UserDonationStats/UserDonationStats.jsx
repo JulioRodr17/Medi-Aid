@@ -1,5 +1,6 @@
 import React from 'react';
 import './UserDonationStats.css';
+import '../UserContactInfo/UserContactInfo.css'; 
 
 // Un mini-componente interno para cada estadística
 const StatBox = ({ value, label }) => (
