@@ -35,3 +35,39 @@ export const simulateGetDonationHistoryRecent = (userId) => {
     }, 600);
   });
 };
+
+// --- ¡NUEVO! ---
+/**
+ * Simula la actualización de datos del perfil.
+ */
+export const simulateUpdateProfile = (userId, profileData) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log(`Simulando API: Actualizando perfil ${userId} con`, profileData);
+      // Devuelve los datos actualizados
+      resolve({
+        name: profileData.name,
+        phone: profileData.phone,
+      });
+    }, 500);
+  });
+};
+
+// --- ¡NUEVO! ---
+/**
+ * Simula el cambio de contraseña.
+ */
+export const simulateChangePassword = (userId, currentPassword, newPassword) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // Simulación simple: si la contraseña "actual" no es 'password123', falla.
+      // En un backend real, esto se validaría contra la DB.
+      if (currentPassword === '123456') {
+        console.log(`Simulando API: Contraseña de ${userId} cambiada.`);
+        resolve({ success: true, message: 'Contraseña actualizada.' });
+      } else {
+        reject(new Error('La contraseña actual es incorrecta.'));
+      }
+    }, 800);
+  });
+};

@@ -92,3 +92,29 @@ export const simulateRegister = (registerData) => {
     }, 700);
   });
 };
+
+// --- ¡NUEVO! ---
+/**
+ * Simula el envío de un correo de recuperación.
+ */
+export const simulateForgotPassword = (email) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log(`Simulando API: Correo de recuperación enviado a ${email}`);
+      resolve({ success: true, message: 'Si el correo existe, se enviará un enlace.' });
+    }, 600);
+  });
+};
+
+// --- ¡NUEVO! ---
+/**
+ * Simula el reseteo de la contraseña.
+ */
+export const simulateResetPassword = (token, newPassword) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log(`Simulando API: Contraseña cambiada a ${newPassword} con token ${token}`);
+      resolve({ success: true, message: 'Contraseña actualizada con éxito.' });
+    }, 700);
+  });
+};

@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import './ChangePasswordForm.css';
 import Input from '../../../components/ui/input/Input';
 import Button from '../../../components/ui/button/Button';
+import { profileService } from '../../../services/profileService.js'; // Importamos el servicio
+import { useAuth } from '../../../context/AuthContext.jsx';
 
 const ChangePasswordForm = ({ onSave, onCancel }) => {
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
   });
-
-  // Estado para manejar errores de validación
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,7 +27,7 @@ const ChangePasswordForm = ({ onSave, onCancel }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // 1. Validación: Revisamos que las contraseñas nuevas coincidan
@@ -40,16 +42,20 @@ const ChangePasswordForm = ({ onSave, onCancel }) => {
       return;
     }
 
-    // Si todo está bien, limpiamos errores y enviamos
+    setLoading(true);
     setError('');
-
-    // TODO: BACKEND
-    // Aquí se llamaría a la API para validar la contraseña actual
-    // y guardar la nueva.
-    console.log('Guardando nueva contraseña...');
     
-    // Llamamos a la función onSave (que cerrará el modal)
-    onSave(formData); 
+    try {
+      // Llamamos al servicio
+      await profileService.changePassword(user.id, formData);
+      onSave(); // Cerramos el modal
+
+    } catch (err) {
+      // El error de "contraseña actual incorrecta" vendrá del servicio
+      setError(err.message || 'Error al cambiar la contraseña.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -61,6 +67,7 @@ const ChangePasswordForm = ({ onSave, onCancel }) => {
         type="password"
         value={formData.currentPassword}
         onChange={handleChange}
+        disabled={loading}
         required
       />
       <Input
@@ -70,6 +77,7 @@ const ChangePasswordForm = ({ onSave, onCancel }) => {
         type="password"
         value={formData.newPassword}
         onChange={handleChange}
+        disabled={loading}
         required
       />
       <Input
@@ -79,26 +87,23 @@ const ChangePasswordForm = ({ onSave, onCancel }) => {
         type="password"
         value={formData.confirmPassword}
         onChange={handleChange}
+        disabled={loading}
         required
       />
       
-      {/* Mostramos el mensaje de error si existe */}
       {error && <p className="form-error-message">{error}</p>}
 
       <div className="form-actions">
-        <Button 
-          type="button" 
-          variant="secondary" 
-          onClick={onCancel}
-        >
+        <Button type="button" variant="secondary" onClick={onCancel} disabled={loading}>
           Cancelar
         </Button>
         <Button 
           type="submit" 
           variant="primary" 
-          style={{ backgroundColor: '#3921f2' }} // Tu color primario
+          style={{ backgroundColor: '#3921f2' }}
+          disabled={loading}
         >
-          Guardar Contraseña
+          {loading ? 'Guardando...' : 'Guardar Contraseña'}
         </Button>
       </div>
     </form>

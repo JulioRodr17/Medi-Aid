@@ -4,7 +4,7 @@ Para iniciar la visualizacion del frontend debemos de usar:
 ```
 cd Frontend-Project-Structure
 npm install
-npm start
+npm run dev
 ```
 Ahora los archivos que necesitan conexion por parte del backend son:
 ```

@@ -1,29 +1,42 @@
-import React, { useState } from 'react';
-import './EditProfileForm.css';
-import Input from '../../../components/ui/input/Input';
-import Button from '../../../components/ui/button/Button';
-
+import React, { useState } from "react";
+import "./EditProfileForm.css";
+import Input from "../../../components/ui/input/Input";
+import Button from "../../../components/ui/button/Button";
+import { profileService } from "../../../services/profileService"; // Importamos el servicio
+import { useAuth } from "../../../context/AuthContext.jsx";
 
 const EditProfileForm = ({ currentUser, onSave, onCancel }) => {
   // Inicializamos el estado del formulario con los datos actuales del usuario
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
-    name: currentUser.name || '',
-    phone: currentUser.phone || '',
+    name: currentUser.name || "",
+    phone: currentUser.phone || "",
   });
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: BACKEND - Aquí se llamaría a la API para guardar los datos
-    console.log('Guardando perfil:', formData);
-    onSave(formData); // Llama a la función onSave (que cerrará el modal)
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Llamamos al servicio para actualizar
+      const updatedData = await profileService.updateProfile(user.id, formData);
+      onSave(updatedData); // Pasamos los datos actualizados a ProfilePage
+    } catch (err) {
+      setError(err.message || "No se pudo actualizar el perfil.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -32,36 +45,38 @@ const EditProfileForm = ({ currentUser, onSave, onCancel }) => {
         id="name"
         name="name"
         label="Nombre Completo"
-        type="text"
         value={formData.name}
         onChange={handleChange}
-        placeholder="Tu nombre completo"
+        disabled={loading}
         required
       />
       <Input
         id="phone"
         name="phone"
         label="Teléfono"
-        type="tel"
         value={formData.phone}
         onChange={handleChange}
-        placeholder="Ej. 55-1234-5678"
+        disabled={loading}
       />
-      
+
+      {error && <p className="form-error-message">{error}</p>}
+
       <div className="form-actions">
-        <Button 
-          type="button" 
-          variant="secondary" 
+        <Button
+          type="button"
+          variant="secondary"
           onClick={onCancel}
+          disabled={loading}
         >
           Cancelar
         </Button>
-        <Button 
-          type="submit" 
-          variant="primary" 
-          style={{ backgroundColor: '#3921f2' }} // Tu color primario
+        <Button
+          type="submit"
+          variant="primary"
+          style={{ backgroundColor: "#3921f2" }}
+          disabled={loading}
         >
-          Guardar Cambios
+          {loading ? "Guardando..." : "Guardar Cambios"}
         </Button>
       </div>
     </form>

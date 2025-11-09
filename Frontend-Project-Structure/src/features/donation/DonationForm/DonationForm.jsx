@@ -3,6 +3,7 @@ import './DonationForm.css';
 import Input from '../../../components/ui/input/Input';
 import Button from '../../../components/ui/button/Button';
 import InfoModal from '../../../components/ui/InfoModal/InfoModal';
+import { donationService } from '../../../services/donationService'; // Importamos el servicio
 
 const DonationForm = () => {
   // Estado para el modal de éxito
@@ -18,6 +19,8 @@ const DonationForm = () => {
     lote: '',
     caducidad: '',
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,27 +30,36 @@ const DonationForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Preparamos los datos finales para enviar
-    let finalData = { ...formData };
+    setLoading(true);
+    setError(null);
 
-    // Si es 'insumo', nos aseguramos de que 'lote' y 'caducidad' se envíen vacíos o nulos
+    let finalData = { ...formData };
     if (formData.tipo === 'insumo') {
       finalData.lote = null;
-      finalData.caducidad = ''; // O null, dependiendo de lo que prefiera tu backend
+      finalData.caducidad = ''; 
     }
-
-    // TODO: BACKEND
-    // Aquí es donde haríamos la llamada (fetch) a la API del backend
-    // para enviar el objeto 'finalData'.
-    console.log('Datos de donación enviados:', finalData);
     
-    // Dejamos esto por ahora para que la UI siga funcionando
-    setShowModal(true);
+    try {
+      // Llamamos al servicio de donación
+      await donationService.postDonation(finalData);
+      
+      // Si todo sale bien, mostramos el modal de éxito
+      setShowModal(true);
+      // Opcional: Resetear el formulario
+      setFormData({
+        nombre: '', tipo: 'pastilla', concentracion: '',
+        cantidadNumerica: '', lote: '', caducidad: '',
+      });
+
+    } catch (err) {
+      setError(err.message || 'Error al enviar la donación.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Lógica para etiquetas condicionales
   const getCantidadLabel = () => {
      if (formData.tipo === 'insumo') {
       return 'Número de insumos';
@@ -70,6 +82,7 @@ const DonationForm = () => {
               pero en un futuro ideal, se conectará al backend para ser un campo
               de autocompletar.
           */}
+          {error && <p className="form-error-message">{error}</p>}
           <Input
             id="nombre"
             name="nombre"
@@ -140,8 +153,13 @@ const DonationForm = () => {
             disabled={formData.tipo === 'insumo'}
           />
 
-          <Button type="submit" variant="primary">
-            Enviar Donación
+          <Button 
+            type="submit" 
+            variant="primary" 
+            style={{ backgroundColor: '#3921f2' }}
+            disabled={loading}
+          >
+            {loading ? 'Enviando...' : 'Enviar Donación'}
           </Button>
         </form>
       </div>

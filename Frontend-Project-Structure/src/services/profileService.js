@@ -1,7 +1,9 @@
 import { httpClient } from './httpClient';
 import { 
   simulateGetProfileStats, 
-  simulateGetDonationHistoryRecent 
+  simulateGetDonationHistoryRecent,
+  simulateUpdateProfile,   
+  simulateChangePassword,   
 } from '../data/profileData'; // Importamos las funciones simuladas
 
 // --- ¡EL INTERRUPTORMÁGICO! ---
@@ -35,7 +37,26 @@ const getDonationHistoryRecent = (userId) => {
   return httpClient.get(`/donations/history/recent`);
 };
 
+// --- ¡NUEVO! ---
+const updateProfile = (userId, profileData) => {
+  if (USE_DUMMY_DATA) {
+    return simulateUpdateProfile(userId, profileData);
+  }
+  return httpClient.put(`/profile/${userId}`, profileData);
+};
+
+// --- ¡NUEVO! ---
+const changePassword = (userId, passwordData) => {
+  if (USE_DUMMY_DATA) {
+    // La simulación pide los 3 campos, pero tu backend podría solo necesitar 2
+    return simulateChangePassword(userId, passwordData.currentPassword, passwordData.newPassword);
+  }
+  return httpClient.post(`/profile/change-password`, passwordData);
+};
+
 export const profileService = {
   getProfileStats,
   getDonationHistoryRecent,
+  updateProfile,
+  changePassword,
 };

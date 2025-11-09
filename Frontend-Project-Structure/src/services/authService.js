@@ -1,5 +1,5 @@
 import { httpClient } from './httpClient';
-import { simulateLogin, simulateRegister } from '../data/userData';
+import { simulateLogin, simulateRegister , simulateForgotPassword, simulateResetPassword} from '../data/userData';
 
 // --- ¡EL INTERRUPTOR MÁGICO! ---
 // true = Usa los archivos de src/data/
@@ -33,8 +33,26 @@ const register = (registerData) => {
   return httpClient.post('/auth/register', registerData);
 };
 
+
+const forgotPassword = (email) => {
+  if (USE_DUMMY_DATA) {
+    return simulateForgotPassword(email);
+  }
+  return httpClient.post('/auth/forgot-password', { email });
+};
+
+
+const resetPassword = (token, newPassword) => {
+  if (USE_DUMMY_DATA) {
+    return simulateResetPassword(token, newPassword);
+  }
+  return httpClient.post('/auth/reset-password', { token, newPassword });
+};
+
 // Exportamos las funciones como un objeto
 export const authService = {
   login,
   register,
+  forgotPassword,
+  resetPassword,
 };
