@@ -1,0 +1,13 @@
+com\escom\mediAid\repositories\RolRepository.class
+com\escom\mediAid\MediAidConfig.class
+com\escom\mediAid\dtos\LoginDTO.class
+com\escom\mediAid\controllers\QrProxyController.class
+com\escom\mediAid\services\UsuarioService.class
+com\escom\mediAid\MediAidApplication.class
+com\escom\mediAid\controllers\UsuarioController.class
+com\escom\mediAid\models\Rol.class
+com\escom\mediAid\security\JwtFilter.class
+com\escom\mediAid\repositories\UsuarioRepository.class
+com\escom\mediAid\security\JwtUtil.class
+com\escom\mediAid\dtos\UsuarioDTO.class
+com\escom\mediAid\models\Usuario.class
