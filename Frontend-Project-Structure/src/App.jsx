@@ -12,7 +12,9 @@ import DonationPage from './pages/DonationPage/DonationPage'
 import MainLayout from './components/layout/MainLayout/MainLayout'
 import ProfilePage from './pages/ProfilePage/ProfilePage'
 
-import ProtectedRoute from './components/utility/ProtectedRoute';
+import PrivateRoute from './components/utility/PrivateRoute';
+import PublicRoute from './components/utility/PublicRoute';
+import AuthWatcher from './components/utility/AuthWatcher.jsx';
 
 import './App.css'
 
@@ -21,31 +23,38 @@ function App() {
 
   return (
     <BrowserRouter>
+      <AuthWatcher /> 
       <div className="App">
         <Routes>
           {/* Rutas de Autenticación (no usan el MainLayout) */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/registro" element={<Register />} />
-          <Route path="/recuperar-contrasena" element={<ForgotPasswordPage />} />
-          <Route path="/restablecer-contrasena" element={<ResetPasswordPage />} />
+          <Route element={<PublicRoute />}>
+            <Route path="/index" element={<LoginPage />} /> {/*  -- Página de inicio implementar después --*/}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/registro" element={<Register />} />
+            <Route path="/recuperar-contrasena" element={<ForgotPasswordPage />} />
+            <Route path="/restablecer-contrasena" element={<ResetPasswordPage />} />
+          </Route>
 
           {/* 2. Rutas Principales (usan el MainLayout) */}
-          <Route 
-            path="/" 
-            element={
-            <ProtectedRoute>
-              <MainLayout />
-            </ProtectedRoute>  
-            }
-          >
+          <Route path="/admin" element={<PrivateRoute requiredRole="admin"><MainLayout /></PrivateRoute>}>
               <Route index element={<HomePage />} />
               <Route path="catalogo" element={<CatalogPage />} />
               <Route path="donacion" element={<DonationPage />} />
               <Route path="perfil" element={<ProfilePage />} />
+              <Route path = "*" element={<Navigate to="/admin" />} />
+          </Route>
+
+          {/* 2. Rutas Principales (usan el MainLayout) */}
+          <Route path="/user" element={<PrivateRoute requiredRole="user"><MainLayout /></PrivateRoute>}>
+              <Route index element={<HomePage />} />
+              <Route path="catalogo" element={<CatalogPage />} />
+              <Route path="donacion" element={<DonationPage />} />
+              <Route path="perfil" element={<ProfilePage />} />
+              <Route path = "*" element={<Navigate to="/user" />} />
           </Route>
           
           {/* Redirección por defecto si ninguna ruta coincide */}
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<Navigate to="/index" />} />
         </Routes>
       </div>
     </BrowserRouter>

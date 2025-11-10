@@ -1,29 +1,22 @@
 import { httpClient } from './httpClient';
-import { simulateLogin, simulateRegister , simulateForgotPassword, simulateResetPassword} from '../data/userData';
+import { simulateRegister , simulateForgotPassword, simulateResetPassword} from '../data/userData';
 
 // --- ¡EL INTERRUPTOR MÁGICO! ---
 // true = Usa los archivos de src/data/
 // false = Llama a la API real de Spring Boot
 const USE_DUMMY_DATA = true;
-// ---------------------------------
-
-/**
- * Maneja el login del usuario.
- * Llama a la simulación o a la API real basado en el interruptor.
- */
+//================================================== SERVICIO LOGIN ==================================================
 const login = (email, password) => {
-  if (USE_DUMMY_DATA) {
-    return simulateLogin(email, password);
-  }
-  
-  // TODO: BACKEND
-  // El endpoint debe coincidir con tu API de Spring Boot
-  return httpClient.post('/auth/login', { email, password });
+  // Construimos el objeto para enviar
+  const usr = {
+    correo: email,
+    contrasena: password,
+  };
+  // Se llama la api con el usuario
+  return httpClient.post('/usuarios/login', usr);
 };
 
-/**
- * Maneja el registro de un nuevo usuario.
- */
+//================================================== SERVICIO REGISTER ==================================================
 const register = (registerData) => {
   if (USE_DUMMY_DATA) {
     return simulateRegister(registerData);
@@ -33,7 +26,7 @@ const register = (registerData) => {
   return httpClient.post('/auth/register', registerData);
 };
 
-
+//================================================== SERVICIO OLVIDAR CONTRASEÑA ==================================================
 const forgotPassword = (email) => {
   if (USE_DUMMY_DATA) {
     return simulateForgotPassword(email);
@@ -41,7 +34,7 @@ const forgotPassword = (email) => {
   return httpClient.post('/auth/forgot-password', { email });
 };
 
-
+//================================================== SERVICIO RESETEAR CONTRASEÑA ==================================================
 const resetPassword = (token, newPassword) => {
   if (USE_DUMMY_DATA) {
     return simulateResetPassword(token, newPassword);
@@ -49,10 +42,11 @@ const resetPassword = (token, newPassword) => {
   return httpClient.post('/auth/reset-password', { token, newPassword });
 };
 
-// Exportamos las funciones como un objeto
+//================================================== EXPORTAR SERVICIOS ==================================================
 export const authService = {
   login,
   register,
   forgotPassword,
   resetPassword,
 };
+//======================================================================================================================================================

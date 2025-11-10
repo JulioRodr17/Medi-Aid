@@ -11,7 +11,9 @@ import com.escom.mediAid.repositories.RolRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -92,7 +94,7 @@ public class UsuarioService {
 		usuarioRepo.save(usuario);
 	}
     
-    public String login(LoginDTO loginDTO) {
+    public Map<String, Object> login(LoginDTO loginDTO) {
         Usuario usuario = usuarioRepo.findByCorreo(loginDTO.getCorreo())
                 .orElseThrow(() -> new IllegalArgumentException("El correo no se encuentra registrado"));
 
@@ -100,10 +102,27 @@ public class UsuarioService {
             throw new IllegalArgumentException("La contraseña está equivocada");
         }
 
-        // Generar token JWT con correo y rol
-        String token = JwtUtil.generateToken(usuario.getCorreo(), usuario.getRol().getAdmin(), usuario.getRol().getNombreRol());
+        // Generar token JWT
+        String token = JwtUtil.generateToken(
+                usuario.getId(),
+                usuario.getRol().getNombreRol(),
+                usuario.getRol().getAdmin()
+        );
 
-        return token;
+        // Construir objeto usuario que se enviará al frontend
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("id", usuario.getId());
+        userData.put("nombre", usuario.getNombre());
+        userData.put("apellidoPaterno", usuario.getApellidoPaterno());
+        userData.put("apellidoMaterno", usuario.getApellidoMaterno());
+        userData.put("boleta", usuario.getBoleta());
+        userData.put("correo", usuario.getCorreo());
+        userData.put("telefono", usuario.getTelefono());
+        userData.put("rol", usuario.getRol().getNombreRol());
+        userData.put("admin", usuario.getRol().getAdmin());
+        userData.put("fechaCreacion", usuario.getFechaCreacion());
+        userData.put("token", token);
+
+        return userData;
     }
-
 }

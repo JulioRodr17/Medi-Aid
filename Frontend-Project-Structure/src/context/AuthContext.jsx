@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { authService } from '../services/authService';
+import { isTokenValid } from '../services/jwtService';
 
 const AuthContext = createContext();
 
@@ -24,17 +25,20 @@ export const AuthProvider = ({ children }) => {
       const storedUser = localStorage.getItem('user');
 
       if (storedToken && storedUser) {
+        if (!isTokenValid(storedToken)) {
+          console.log('Token inválido o expirado. Cerrando sesión.');
+          logout();
+          return;
+        }
+        // Token válido → inicializar estado
         setUser(JSON.parse(storedUser));
         setToken(storedToken);
         setIsAuthenticated(true);
-        // TODO: BACKEND
-        // Aquí iría la lógica para poner el token en el httpClient
-        // httpClient.setAuthToken(storedToken);
       }
+
     } catch (error) {
       console.error('Error al cargar la sesión desde localStorage:', error);
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      logout();
     } finally {
       setLoading(false);
     }
@@ -51,9 +55,6 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(userData));
       localStorage.setItem('token', userData.token);
 
-      // TODO: BACKEND
-      // httpClient.setAuthToken(userData.token);
-
     } catch (error) {
       console.error('Error en login (AuthContext):', error);
       throw error;
@@ -66,11 +67,8 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setIsAuthenticated(false);
 
-    localStorage.removeItem('authUser');
-    localStorage.removeItem('authToken');
-
-    // TODO: BACKEND
-    // httpClient.setAuthToken(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
   };
 
   const value = {

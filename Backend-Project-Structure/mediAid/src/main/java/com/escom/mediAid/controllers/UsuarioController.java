@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -42,17 +43,14 @@ public class UsuarioController {
 	}
 	// ==================================================  ==================================================
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
+	public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDTO loginDTO) {
 	    try {
-	        String token = service.login(loginDTO);
-	        return ResponseEntity.ok(token);
+	        Map<String, Object> userData = service.login(loginDTO);
+	        return ResponseEntity.ok(userData);
 	    } catch (IllegalArgumentException e) {
-	        return ResponseEntity.badRequest().body(e.getMessage());
+	        return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
 	    } catch (Exception e) {
-	        return ResponseEntity.internalServerError().body("Error al iniciar sesión");
+	        return ResponseEntity.internalServerError().body(Map.of("error", "Error al iniciar sesión"));
 	    }
 	}
-
-
-
 }
