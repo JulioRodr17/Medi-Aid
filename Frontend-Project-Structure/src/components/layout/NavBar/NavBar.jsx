@@ -68,10 +68,10 @@ const Navbar = () => {
         <NavLink to="/" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
           Inicio
         </NavLink>
-        <NavLink to="/catalogo" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+        <NavLink to="catalogo" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
           Catálogo
         </NavLink>
-        <NavLink to="/donacion" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+        <NavLink to="donacion" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
           Donación
         </NavLink>
       </nav>
@@ -95,7 +95,7 @@ const Navbar = () => {
         </div>
 
         {/* 8. El botón de perfil sigue siendo un <NavLink> */}
-        <NavLink to="/perfil" className={({ isActive }) => (isActive ? 'nav-icon-link active' : 'nav-icon-link')}>
+        <NavLink to="perfil" className={({ isActive }) => (isActive ? 'nav-icon-link active' : 'nav-icon-link')}>
           <ProfileIcon />
         </NavLink>
       </div>
