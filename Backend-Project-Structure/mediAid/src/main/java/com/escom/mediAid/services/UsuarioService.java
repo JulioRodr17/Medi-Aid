@@ -41,7 +41,7 @@ public class UsuarioService {
         return usuarioRepo.findByBoleta(boleta);
     }
 
-    public void registrar(UsuarioDTO dto) {
+    public Map<String, Object> registrar(UsuarioDTO dto) {
         // --- Validaciones ---
         if (dto.getNombre() == null || dto.getNombre().trim().isEmpty())
             throw new IllegalArgumentException("El nombre es obligatorio");
@@ -75,24 +75,48 @@ public class UsuarioService {
         // --- Hash de la contraseña ---
         String hashedPassword = passwordEncoder.encode(dto.getContrasena());
 
-        // Buscar el Rol por nombre
+        // --- Buscar el Rol ---
         Rol rol = rolRepo.findByNombreRol(dto.getRol())
-        			.orElseThrow(() -> new IllegalArgumentException("Rol no válido: " + dto.getRol()));
+                .orElseThrow(() -> new IllegalArgumentException("Rol no válido: " + dto.getRol()));
 
-		// Crear la entidad Usuario
-		Usuario usuario = new Usuario();
-		usuario.setNombre(dto.getNombre());
-		usuario.setApellidoPaterno(dto.getApellidoPaterno());
-		usuario.setApellidoMaterno(dto.getApellidoMaterno());
-		usuario.setBoleta(dto.getBoleta());
-		usuario.setCorreo(dto.getCorreo());
-		usuario.setTelefono(dto.getTelefono());
-		usuario.setContrasena(hashedPassword);
-		usuario.setRol(rol);
-		
-		// --- Guardar en BD ---
-		usuarioRepo.save(usuario);
-	}
+        // --- Crear la entidad Usuario ---
+        Usuario usuario = new Usuario();
+        usuario.setNombre(dto.getNombre());
+        usuario.setApellidoPaterno(dto.getApellidoPaterno());
+        usuario.setApellidoMaterno(dto.getApellidoMaterno());
+        usuario.setBoleta(dto.getBoleta());
+        usuario.setCorreo(dto.getCorreo());
+        usuario.setTelefono(dto.getTelefono());
+        usuario.setContrasena(hashedPassword);
+        usuario.setRol(rol);
+
+        // --- Guardar en BD ---
+        usuarioRepo.save(usuario);
+
+        // --- Generar token JWT ---
+        String token = JwtUtil.generateToken(
+                usuario.getId(),
+                usuario.getRol().getNombreRol(),
+                usuario.getRol().getAdmin()
+        );
+
+        // --- Construir respuesta (igual que login) ---
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("id", usuario.getId());
+        userData.put("nombre", usuario.getNombre());
+        userData.put("apellidoPaterno", usuario.getApellidoPaterno());
+        userData.put("apellidoMaterno", usuario.getApellidoMaterno());
+        userData.put("boleta", usuario.getBoleta());
+        userData.put("correo", usuario.getCorreo());
+        userData.put("telefono", usuario.getTelefono());
+        userData.put("rol", usuario.getRol().getNombreRol());
+        userData.put("admin", usuario.getRol().getAdmin());
+        userData.put("fechaCreacion", usuario.getFechaCreacion());
+        userData.put("token", token);
+
+        return userData;
+    }
+
     
     public Map<String, Object> login(LoginDTO loginDTO) {
         Usuario usuario = usuarioRepo.findByCorreo(loginDTO.getCorreo())

@@ -15,7 +15,7 @@ public class JwtUtil {
 	private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
 	// Tiempo de expiración: 1 hora
-	private static final long EXPIRATION_TIME = 60_000; // 1 hora en ms 
+	private static final long EXPIRATION_TIME = 600_000; // 1 hora en ms 
 
 	// ================================================== GENERACIÓN DE TOKEN DE SESION ==================================================
 	public static String generateToken(Integer userId, String rol, Boolean admin) {

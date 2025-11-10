@@ -27,20 +27,17 @@ public class UsuarioController {
 	}
 	// ================================================== Registrar un usuario ==================================================
 	@PostMapping("/registro")
-	public ResponseEntity<String> registrar(@RequestBody UsuarioDTO usuarioDTO) {
-		System.out.println("Llegó petición de registro: " + usuarioDTO);
+	public ResponseEntity<Map<String, Object>> registrar(@RequestBody UsuarioDTO usuarioDTO) {
 	    try {
-	        service.registrar(usuarioDTO);
-	        return ResponseEntity.status(HttpStatus.CREATED)
-	                             .body("Usuario registrado correctamente");
+	        Map<String, Object> userData = service.registrar(usuarioDTO);
+	        return ResponseEntity.status(HttpStatus.CREATED).body(userData);
 	    } catch (IllegalArgumentException e) {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-	                             .body(e.getMessage());
+	        return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
 	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                             .body("Ocurrió un error al registrar el usuario");
+	        return ResponseEntity.internalServerError().body(Map.of("error", "Ocurrió un error al registrar el usuario"));
 	    }
 	}
+
 	// ==================================================  ==================================================
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDTO loginDTO) {

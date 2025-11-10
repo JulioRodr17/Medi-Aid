@@ -1,5 +1,5 @@
 import { httpClient } from './httpClient';
-import { simulateRegister , simulateForgotPassword, simulateResetPassword} from '../data/userData';
+import { simulateForgotPassword, simulateResetPassword} from '../data/userData';
 
 // --- ¡EL INTERRUPTOR MÁGICO! ---
 // true = Usa los archivos de src/data/
@@ -18,12 +18,7 @@ const login = (email, password) => {
 
 //================================================== SERVICIO REGISTER ==================================================
 const register = (registerData) => {
-  if (USE_DUMMY_DATA) {
-    return simulateRegister(registerData);
-  }
-
-  // TODO: BACKEND
-  return httpClient.post('/auth/register', registerData);
+  return httpClient.post('/usuarios/registro', registerData);
 };
 
 //================================================== SERVICIO OLVIDAR CONTRASEÑA ==================================================
