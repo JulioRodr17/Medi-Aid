@@ -5,14 +5,16 @@ import LoginPage from './pages/LoginPage/LoginPage'
 import Register from './pages/RegisterPage/RegisterPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
-
 import HomePage from './pages/HomePage/HomePage'
 import CatalogPage from './pages/CatalogPage/CatalogPage'
 import DonationPage from './pages/DonationPage/DonationPage'
 import MainLayout from './components/layout/MainLayout/MainLayout'
 import ProfilePage from './pages/ProfilePage/ProfilePage'
+import InventoryPage from './pages/InventoryPage/InventoryPage';
 
 import ProtectedRoute from './components/utility/ProtectedRoute';
+import AdminRoute from './components/utility/AdminRoute';
+
 
 import './App.css'
 
@@ -42,10 +44,19 @@ function App() {
               <Route path="catalogo" element={<CatalogPage />} />
               <Route path="donacion" element={<DonationPage />} />
               <Route path="perfil" element={<ProfilePage />} />
+
+              <Route 
+              path="inventario" 
+              element={
+                <AdminRoute>
+                  <InventoryPage />
+                </AdminRoute>
+              } 
+            />
           </Route>
           
           {/* Redirección por defecto si ninguna ruta coincide */}
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </div>
     </BrowserRouter>

@@ -1,0 +1,64 @@
+.review-table-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.review-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.review-loading,
+.review-empty,
+.review-error {
+  text-align: center;
+  font-size: 1.1rem;
+  padding: 3rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.review-error {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.review-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.review-table th,
+.review-table td {
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.review-table th {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+}
+
+.review-table td {
+  font-size: 1rem;
+  color: #212529;
+}
+
+.review-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Ajustar el botón en la última celda */
+.review-table td:last-child {
+  text-align: center;
+}
