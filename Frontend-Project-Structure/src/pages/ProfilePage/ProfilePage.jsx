@@ -1,22 +1,26 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { profileService } from '../../services/profileService.js';
-import { useNavigate } from 'react-router-dom';
 import './ProfilePage.css';
 
+import { profileService } from '../../services/profileService.js';
+
+// Importaciones de componentes
 import UserProfileHeader from '../../features/profile/UserProfileHeader/UserProfileHeader';
 import UserContactInfo from '../../features/profile/UserContactInfo/UserContactInfo';
-import UserDonationStats from '../../features/profile/UserDonationStats/UserDonationStats';
-import UserDonationHistory from '../../features/profile/UserdDonationHistory/UserDonationHistory';
-import Button from '../../components/ui/button/Button';
 import Modal from '../../components/ui/Modal/Modal';
 import EditProfileForm from '../../features/profile/EditProfileForm/EditProfileForm';
 import ChangePasswordForm from '../../features/profile/ChangePasswordForm/ChangePasswordForm';
+import Button from '../../components/ui/button/Button';
+
+// --- VISTAS ESPECÍFICAS DE ROL ---
+// Importamos los componentes que el 'user' normal ve
+import UserDonationStats from '../../features/profile/UserDonationStats/UserDonationStats';
+import UserDonationHistory from '../../features/profile/UserdDonationHistory/UserDonationHistory.jsx';
+import AdminDonationChart from '../../features/profile/AdminDonationChart/AdminDonationChart';
+
 
 const ProfilePage = () => {
-  const navigate = useNavigate();
-  
-  const { user, logout } = useAuth(); 
+    const { user, logout } = useAuth(); 
 
   // --- Estados para los datos cargados ---
   const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0 });
@@ -25,7 +29,6 @@ const ProfilePage = () => {
   // --- Estados para Carga y Error ---
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
 
@@ -42,23 +45,16 @@ const ProfilePage = () => {
         setError(null);
 
         // TODO: BACKEND
-        // Aquí pasaremos el 'user.id' a los servicios
-        // const [statsData, historyData] = await Promise.all([
-        //   profileService.getProfileStats(user.id),
-        //   profileService.getDonationHistoryRecent(user.id)
-        // ]);
-        
-        // Por ahora, llamamos a los servicios dummy
+        // Pedimos los datos (los servicios dummy ya están listos)
         const [statsData, historyData] = await Promise.all([
-          profileService.getProfileStats(),
-          profileService.getDonationHistoryRecent()
+          profileService.getProfileStats(user.id),
+          profileService.getDonationHistoryRecent(user.id)
         ]);
 
         setStats(statsData);
         setHistory(historyData);
 
       } catch (err) {
-        console.error("Error al cargar datos del perfil:", err);
         setError(err.message || 'No se pudieron cargar los datos.');
       } finally {
         setLoading(false);
@@ -75,7 +71,6 @@ const ProfilePage = () => {
     logout();
   };
 
-  // 5. Función para guardar los cambios del formulario
   const handleSaveProfile = (updatedData) => {
     // TODO: BACKEND
     // Aquí es donde la llamada a la API realmente guardaría los datos.
@@ -91,15 +86,17 @@ const ProfilePage = () => {
     setIsChangePasswordModalOpen(false); // Cierra el modal
   };
 
-  if (!user) {
-    // TODO: Poner un spinner bonito aquí.
-    return <div>Cargando datos del usuario...</div>;
+  if (loading || !user) {
+    return <div className="page-loading">Cargando datos del usuario...</div>;
+  }
+  
+  if (error) {
+    return <div className="page-error">Error: {error}</div>;
   }
 
   return (
     <>
       <div className="profile-page">
-        {/* --- 1. Encabezado --- */}
         <UserProfileHeader 
           name={user.name} 
           role={user.role} 
@@ -117,14 +114,18 @@ const ProfilePage = () => {
           <>
             <div className="profile-page-content">
               <div className="profile-main-column">
-                <UserDonationStats 
-                  total={stats.total} 
-                  pending={stats.pending} 
-                  approved={stats.approved} 
-                />
-                <UserDonationHistory 
-                  history={history} 
-                />
+                {user.role === 'admin' ? (
+                <AdminDonationChart stats={stats} />
+                ) : (
+                <>
+                  <UserDonationStats 
+                    total={stats.total} 
+                    pending={stats.pending} 
+                    approved={stats.approved} 
+                  />
+                  <UserDonationHistory history={history} />
+                </>
+              )}
               </div>
               <div className="profile-sidebar-column">
                 <UserContactInfo 
@@ -136,7 +137,6 @@ const ProfilePage = () => {
           </>
         )}
 
-        {/* --- 5. Botón de Logout --- */}
         <div className="logout-section">
           <Button 
             variant="secondary" 

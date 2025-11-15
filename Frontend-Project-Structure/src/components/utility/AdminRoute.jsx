@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 
-const AdminRoute = () => {
+const AdminRoute = ({ children }) => {
   const { isAuthenticated, user, loading } = useAuth();
 
   if (loading) {
@@ -10,10 +10,10 @@ const AdminRoute = () => {
   }
 
   if (isAuthenticated && user.role === 'admin') {
-    return <Outlet />; 
+    return children;
   }
 
-  return <Navigate to="/" replace />;
+  return <Navigate to="/login" replace />;
 };
 
 export default AdminRoute;

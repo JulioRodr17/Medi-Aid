@@ -3,7 +3,6 @@ import './MedicationDetailModal.css';
 import placeholderImage from '../../../assets/images/med-placeholder.png';
 
 const MedicationDetailModal = ({ medication, onClose }) => {
-  // Evita que el clic dentro del contenido del modal cierre el modal.
   const handleContentClick = (e) => {
     e.stopPropagation();
   };
@@ -27,10 +26,15 @@ const MedicationDetailModal = ({ medication, onClose }) => {
             <h2 className="modal-title">{medication.name}</h2>
             <p className="modal-dosage">{medication.dosage}</p>
             <p className="modal-description">
-              Aquí iría una descripción más detallada del medicamento, sus usos,
-              contraindicaciones, etc. Por ahora, usamos este texto de ejemplo.
+              {medication.description || 'No hay descripción disponible.'}
             </p>
-            {/* Aquí podríamos agregar más detalles como 'categoría', 'stock', etc. */}
+              <div className="modal-extra-details">
+                <br />
+                <span><strong>Categoría:</strong> {medication.category}</span>
+                <br />
+                <span><strong>Stock:</strong> {medication.stock}</span>
+                
+              </div>      
           </div>
         </div>
       </div>

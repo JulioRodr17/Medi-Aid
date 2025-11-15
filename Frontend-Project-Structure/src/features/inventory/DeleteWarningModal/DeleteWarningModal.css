@@ -1,0 +1,24 @@
+.delete-warning-content {
+  padding: 1rem 0;
+}
+
+.delete-warning-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.delete-warning-text strong {
+  color: #e74c3c; /* Rojo */
+  font-weight: 600;
+}
+
+.delete-warning-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e9ecef;
+}

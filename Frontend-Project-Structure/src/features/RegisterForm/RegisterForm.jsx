@@ -63,7 +63,6 @@ const RegisterForm = () => {
     setError(null);
 
     try {
-      // 1. Llamamos al servicio para registrar
       const registerData = {
         name: `${formData.nombre} ${formData.apellidoP} ${formData.apellidoM}`,
         email: formData.correo,
@@ -72,10 +71,8 @@ const RegisterForm = () => {
       };
       await authService.register(registerData);
 
-      // 2. Si el registro es exitoso, logueamos al usuario automáticamente
       await login(formData.correo, formData.password);
 
-      // 3. Redirigimos a la Home
       navigate("/login");
     } catch (err) {
       setError(err.message || "Error al crear la cuenta.");
@@ -98,6 +95,21 @@ const RegisterForm = () => {
     <div className="register-form-box">
       <BackButton onClick={handleBack} />
       <h2>Crear Cuenta</h2>
+
+      {/* Sección especial para el QR */}
+      <div
+        className={`qr-scanner-section ${isQrValidated ? "validated" : ""}`}
+        onClick={handleQrClick}
+      >
+        <QrIcon />
+        <div className="qr-scanner-text">
+          <h4>Escaneo de QR</h4>
+          <p>
+            Sube tu código QR de estudiante o administrativo para una
+            validación rápida.
+          </p>
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit} className="register-form">
         {error && <p className="form-error-message">{error}</p>}
@@ -166,21 +178,6 @@ const RegisterForm = () => {
           onChange={handleChange}
           required
         />
-
-        {/* Sección especial para el QR */}
-        <div
-          className={`qr-scanner-section ${isQrValidated ? "validated" : ""}`}
-          onClick={handleQrClick}
-        >
-          <QrIcon />
-          <div className="qr-scanner-text">
-            <h4>Escaneo de QR</h4>
-            <p>
-              Sube tu código QR de estudiante o administrativo para una
-              validación rápida.
-            </p>
-          </div>
-        </div>
 
         {/* Checkbox para el aviso de privacidad */}
         <div className="privacy-checkbox-section">

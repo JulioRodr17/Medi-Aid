@@ -20,7 +20,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="footer-bottom-bar">
-        <p>&copy; {new Date().getFullYear()} Medi-Aid. Todos los derechos reservados.</p>
+        <p>&copy; {new Date().getFullYear()} Medi-Aid | Instituto Politecnico Nacional. Todos los derechos reservados.</p>
       </div>
     </footer>
   );

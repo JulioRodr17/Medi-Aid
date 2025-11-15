@@ -1,10 +1,10 @@
 // --- Simulación de la base de datos de estadísticas e historial ---
 
 const DUMMY_STATS = {
-  total: 12,
+  total: 15,
   pending: 2,
   approved: 10,
-  rejected: 0 // Añadimos este por si acaso
+  rejected: 3 // Añadimos este por si acaso
 };
 
 const DUMMY_HISTORY = [
