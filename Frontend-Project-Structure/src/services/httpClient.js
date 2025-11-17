@@ -1,33 +1,20 @@
-// TODO: BACKEND
-// Esta es la URL base de tu API de Spring Boot.
-// La ponemos aquí para que sea el ÚNICO lugar que tengamos
-// que modificar cuando movamos el backend a producción.
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+// utils/httpClient.js
+//const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = '/api';
 
-/**
- * Función genérica para manejar todas las peticiones 'fetch'.
- * @param {string} endpoint - El endpoint de la API al que se llamará (ej. '/auth/login')
- * @param {object} options - Configuración de Fetch (method, headers, body, etc.)
- * @returns {Promise<any>} Los datos de la respuesta en JSON
- */
 const request = async (endpoint, options = {}) => {
-  // Configuración por defecto
+  const token = localStorage.getItem('token');
+
   const config = {
     method: options.method || 'GET',
     headers: {
       'Content-Type': 'application/json',
-      // TODO: BACKEND
-      // Aquí es donde pondríamos el token de autenticación
-      // const token = localStorage.getItem('authToken');
-      // if (token) {
-      //   config.headers['Authorization'] = `Bearer ${token}`;
-      // }
+      ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
     ...options,
   };
 
-  // Si hay un 'body', lo convertimos a JSON
   if (options.body) {
     config.body = JSON.stringify(options.body);
   }
@@ -35,29 +22,42 @@ const request = async (endpoint, options = {}) => {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
-    // Si la respuesta no es OK (ej. 404, 500), lanzamos un error
+    // Leer body primero (JSON o vacío)
+    const contentType = response.headers.get('content-type');
+    const data = contentType && contentType.includes('application/json')
+      ? await response.json().catch(() => ({}))
+      : await response.text().then(text => ({ data: text }));
+    
+    // Manejar errores específicos
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      alert('Sesión expirada. Por favor, inicia sesión de nuevo.');
+      window.location.href = '/login';
+      return;
+    }
+
+    if (response.status === 403) {
+      alert(data.error || 'No tienes permisos para realizar esta acción.');
+      return;
+    }
+
+    // Otros errores HTTP
     if (!response.ok) {
-      // Intenta parsear el error que envía el backend
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
+      throw new Error(data.error || `Error ${response.status}: ${response.statusText}`);
     }
 
-    // Si la respuesta es 204 (No Content), no hay JSON que parsear
-    if (response.status === 204) {
-      return null;
-    }
+    // No Content
+    if (response.status === 204) return null;
 
-    // Si todo OK, devolvemos el JSON
-    return response.json();
+    // Respuesta correcta
+    return data;
 
   } catch (error) {
     console.error('Error en httpClient:', error);
-    // Relanzamos el error para que el componente que llamó lo pueda atrapar
     throw error;
   }
 };
 
-// Exportamos un objeto con los métodos HTTP más comunes
 export const httpClient = {
   get: (endpoint, options = {}) => request(endpoint, { ...options, method: 'GET' }),
   post: (endpoint, body, options = {}) => request(endpoint, { ...options, method: 'POST', body }),

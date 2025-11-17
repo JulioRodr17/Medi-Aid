@@ -1,0 +1,13 @@
+C:\Users\crisr\Desktop\MediAid\Medi-Aid\Backend-Project-Structure\mediAid\src\main\java\com\escom\mediAid\controllers\QrProxyController.java
+C:\Users\crisr\Desktop\MediAid\Medi-Aid\Backend-Project-Structure\mediAid\src\main\java\com\escom\mediAid\controllers\UsuarioController.java
+C:\Users\crisr\Desktop\MediAid\Medi-Aid\Backend-Project-Structure\mediAid\src\main\java\com\escom\mediAid\dtos\LoginDTO.java
+C:\Users\crisr\Desktop\MediAid\Medi-Aid\Backend-Project-Structure\mediAid\src\main\java\com\escom\mediAid\dtos\UsuarioDTO.java
+C:\Users\crisr\Desktop\MediAid\Medi-Aid\Backend-Project-Structure\mediAid\src\main\java\com\escom\mediAid\MediAidApplication.java
+C:\Users\crisr\Desktop\MediAid\Medi-Aid\Backend-Project-Structure\mediAid\src\main\java\com\escom\mediAid\MediAidConfig.java
+C:\Users\crisr\Desktop\MediAid\Medi-Aid\Backend-Project-Structure\mediAid\src\main\java\com\escom\mediAid\models\Rol.java
+C:\Users\crisr\Desktop\MediAid\Medi-Aid\Backend-Project-Structure\mediAid\src\main\java\com\escom\mediAid\models\Usuario.java
+C:\Users\crisr\Desktop\MediAid\Medi-Aid\Backend-Project-Structure\mediAid\src\main\java\com\escom\mediAid\repositories\RolRepository.java
+C:\Users\crisr\Desktop\MediAid\Medi-Aid\Backend-Project-Structure\mediAid\src\main\java\com\escom\mediAid\repositories\UsuarioRepository.java
+C:\Users\crisr\Desktop\MediAid\Medi-Aid\Backend-Project-Structure\mediAid\src\main\java\com\escom\mediAid\security\JwtFilter.java
+C:\Users\crisr\Desktop\MediAid\Medi-Aid\Backend-Project-Structure\mediAid\src\main\java\com\escom\mediAid\security\JwtUtil.java
+C:\Users\crisr\Desktop\MediAid\Medi-Aid\Backend-Project-Structure\mediAid\src\main\java\com\escom\mediAid\services\UsuarioService.java
