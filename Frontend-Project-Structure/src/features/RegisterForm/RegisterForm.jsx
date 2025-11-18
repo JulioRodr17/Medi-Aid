@@ -34,6 +34,7 @@ const RegisterForm = () => {
     correo: '',
     telefono: '',
     password: '',
+    foto: '',
     confirmPassword: '',
     privacyAccepted: false,
   });
@@ -65,8 +66,11 @@ const RegisterForm = () => {
       correo: formData.correo,
       telefono: formData.telefono,
       contrasena: formData.password,
+      foto: formData.foto,
       rol: formData.rol
     };
+
+    console.log(payload);
 
     if (!validateForm()) return;
     
@@ -121,7 +125,7 @@ const handleQRUpload = async () => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
     const emailRegex = /^[\w-.]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,4}$/;
     const phoneRegex = /^(\+52)?\s?\d{10}$/;
-    const boletaRegex = /^[0-9]{6,16}$/;
+    const boletaRegex = /^[0-9]{4,20}$/;
 
     const newErrors = {};
 

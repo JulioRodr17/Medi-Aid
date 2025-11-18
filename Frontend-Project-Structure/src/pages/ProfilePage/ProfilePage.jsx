@@ -66,8 +66,6 @@ const ProfilePage = () => {
 
 
   const handleLogout = () => {
-    // TODO: BACKEND
-    console.log('Cerrando sesión...');
     logout();
   };
 
@@ -98,76 +96,45 @@ const ProfilePage = () => {
     <>
       <div className="profile-page">
         <UserProfileHeader 
-          name={user.name} 
-          role={user.role} 
-          avatarUrl={user.avatarUrl} 
+          name={user.nombre + " " + user.apellidoPaterno + " " + user.apellidoMaterno} 
+          role={user.rol} 
+          avatarUrl={user.foto} 
           onEditProfileClick={() => setIsEditModalOpen(true)}
           onChangePasswordClick={() => setIsChangePasswordModalOpen(true)}
-          />
+        />
 
 
-        {loading ? (
-          <div className="page-loading">Cargando datos del perfil...</div>
-        ) : error ? (
-          <div className="page-error">Error: {error}</div>
-        ) : (
+        {loading ? (<div className="page-loading">Cargando datos del perfil...</div>) : error ? (<div className="page-error">Error: {error}</div>) : (
           <>
             <div className="profile-page-content">
               <div className="profile-main-column">
-                {user.role === 'admin' ? (
-                <AdminDonationChart stats={stats} />
-                ) : (
-                <>
-                  <UserDonationStats 
-                    total={stats.total} 
-                    pending={stats.pending} 
-                    approved={stats.approved} 
-                  />
-                  <UserDonationHistory history={history} />
-                </>
+                {user.rol === 'admin' ? (<AdminDonationChart stats={stats} />) : (
+                  <>
+                    <UserDonationStats total={stats.total} pending={stats.pending} approved={stats.approved} />
+                    <UserDonationHistory history={history} />
+                  </>
               )}
               </div>
               <div className="profile-sidebar-column">
-                <UserContactInfo 
-                  email={user.email} 
-                  phone={user.phone} 
-                />
+                <UserContactInfo email={user.correo} phone={user.telefono} />
               </div>
             </div>
           </>
         )}
 
         <div className="logout-section">
-          <Button 
-            variant="secondary" 
-            onClick={handleLogout}
-            >
+          <Button variant="secondary" onClick={handleLogout}>
             Cerrar Sesión
           </Button>
         </div>
       </div>
 
-      <Modal 
-        title="Editar Perfil"
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-      >
-        <EditProfileForm 
-          currentUser={user}
-          onSave={handleSaveProfile}
-          onCancel={() => setIsEditModalOpen(false)}
-        />
+      <Modal title="Editar Perfil" isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+        <EditProfileForm currentUser={user} onSave={handleSaveProfile} onCancel={() => setIsEditModalOpen(false)}/>
       </Modal>
 
-      <Modal 
-        title="Cambiar Contraseña"
-        isOpen={isChangePasswordModalOpen}
-        onClose={() => setIsChangePasswordModalOpen(false)}
-      >
-        <ChangePasswordForm 
-          onSave={handleSavePassword}
-          onCancel={() => setIsChangePasswordModalOpen(false)}
-        />
+      <Modal title="Cambiar Contraseña" isOpen={isChangePasswordModalOpen} onClose={() => setIsChangePasswordModalOpen(false)}>
+        <ChangePasswordForm onSave={handleSavePassword} onCancel={() => setIsChangePasswordModalOpen(false)}/>
       </Modal>
     </>
   );

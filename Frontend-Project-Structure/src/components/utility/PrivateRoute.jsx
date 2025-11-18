@@ -8,7 +8,6 @@ const PrivateRoute = ({ requiredRole, children }) => {
   if (!isAuthenticated)	return <Navigate to="/login" replace />;
 
   const isAdmin = user.admin;
-  console.log("PrivateRoute - User:", user, "RequiredRole:", requiredRole);
   if ((requiredRole === "admin" && !isAdmin) || (requiredRole === "user" && isAdmin)) return <Navigate to={isAdmin ? "/admin" : "/user"} replace />;
 
   return children ? children : <Outlet />;

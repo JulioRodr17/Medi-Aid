@@ -73,7 +73,8 @@ const isAlumnoCredential = async (qrText, setFormData, setIsQrValidated) => {
         nombre: nombres,
         apellidoP: apellidoPaterno,
         apellidoM: apellidoMaterno,
-        boleta,
+        boleta: boleta,
+        foto: "/src/assets/images/noUsrPhoto.png",
         rol: 'ESTUDIANTE'
       }));
     } else {

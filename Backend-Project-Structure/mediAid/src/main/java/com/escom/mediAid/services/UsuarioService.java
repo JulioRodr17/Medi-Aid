@@ -49,7 +49,7 @@ public class UsuarioService {
         if (dto.getApellidoPaterno() == null || dto.getApellidoPaterno().trim().isEmpty())
             throw new IllegalArgumentException("El apellido paterno es obligatorio");
 
-        if (dto.getBoleta() == null || !Pattern.matches("^[0-9]{6,16}$", dto.getBoleta()))
+        if (dto.getBoleta() == null || !Pattern.matches("^[0-9]{4,20}$", dto.getBoleta()))
             throw new IllegalArgumentException("Boleta inválida");
 
         if (dto.getCorreo() == null || !Pattern.matches("^[\\w-.]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,4}$", dto.getCorreo()))
@@ -89,7 +89,7 @@ public class UsuarioService {
         usuario.setTelefono(dto.getTelefono());
         usuario.setContrasena(hashedPassword);
         usuario.setRol(rol);
-        usuario.setFoto(dto.getTelefono());
+        usuario.setFoto(dto.getFoto());
 
         // --- Guardar en BD ---
         usuarioRepo.save(usuario);
@@ -110,6 +110,7 @@ public class UsuarioService {
         userData.put("boleta", usuario.getBoleta());
         userData.put("correo", usuario.getCorreo());
         userData.put("telefono", usuario.getTelefono());
+        userData.put("foto", usuario.getFoto());
         userData.put("rol", usuario.getRol().getNombreRol());
         userData.put("admin", usuario.getRol().getAdmin());
         userData.put("fechaCreacion", usuario.getFechaCreacion());
@@ -144,6 +145,7 @@ public class UsuarioService {
         userData.put("correo", usuario.getCorreo());
         userData.put("telefono", usuario.getTelefono());
         userData.put("rol", usuario.getRol().getNombreRol());
+        userData.put("foto", usuario.getFoto());
         userData.put("admin", usuario.getRol().getAdmin());
         userData.put("fechaCreacion", usuario.getFechaCreacion());
         userData.put("token", token);
