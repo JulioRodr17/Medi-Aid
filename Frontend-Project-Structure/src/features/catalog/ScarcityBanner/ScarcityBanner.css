@@ -1,0 +1,60 @@
+.scarcity-banner {
+  background: linear-gradient(135deg,#3921f2 0% ,#958cdd 30%, #ffffff 100%);
+  border-radius: 16px;
+  padding: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #d1e9ff;
+  box-shadow: 0 8px 32px rgba(52, 152, 219, 0.1);
+}
+
+.banner-content {
+  flex: 1;
+}
+
+.banner-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #2c3e50;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.medications-list {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.med-tag {
+  background-color: #ffffff;
+  color: #7667ec;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: 1px solid #3921f2;
+}
+
+.banner-mascot {
+  margin-left: 2rem;
+}
+
+/* --- Media Query para hacerlo responsivo en móviles --- */
+@media (max-width: 768px) {
+  .scarcity-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .banner-mascot {
+    margin-left: 0;
+  }
+
+  .banner-title {
+    font-size: 2rem;
+  }
+}

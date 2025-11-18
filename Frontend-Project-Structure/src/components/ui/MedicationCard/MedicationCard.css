@@ -1,0 +1,52 @@
+.medication-card {
+  background-color: #3921f2;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.medication-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.medication-card-image-container {
+  width: 100%;
+  padding-top: 100%; /* Truco para hacer un contenedor cuadrado (aspect-ratio: 1/1) */
+  position: relative;
+  background-color: #f0f2f5;
+}
+
+.medication-card-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 'contain' para que se vea todo, 'cover' si prefieres que llene el espacio */
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.medication-card-info {
+  padding: 1rem;
+  text-align: center;
+  border-top: 2px solid #ffffff;
+}
+
+.medication-card-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f5f5f5;
+  margin: 0 0 0.25rem 0;
+}
+
+.medication-card-dosage {
+  font-size: 0.85rem;
+  color: #aaacae;
+  margin: 0;
+}

@@ -1,0 +1,96 @@
+
+.inventory-table-container {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Para que la tabla respete el borde redondeado */
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.table-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.inventory-table th,
+.inventory-table td {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.inventory-table th {
+  font-size: 0.85rem;
+  color: #555;
+  text-transform: uppercase;
+}
+
+.inventory-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.inventory-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.med-name {
+  display: block;
+  font-weight: 600;
+  color: #333;
+}
+.med-dosage {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.stock-level.low {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.expiring-soon {
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.action-btn.edit {
+  color: #3921f2; /* Tu color */
+}
+.action-btn.edit:hover {
+  background-color: #f0f0ff;
+}
+
+.action-btn.delete {
+  color: #e74c3c;
+}
+.action-btn.delete:hover {
+  background-color: #fbeae8;
+}

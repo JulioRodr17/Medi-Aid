@@ -1,0 +1,95 @@
+.medication-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* --- ESTILOS NUEVOS --- */
+
+/* 1. Contenedor para posicionamiento */
+.filter-wrapper {
+  position: relative; /* Clave para que el menú se posicione respecto a este contenedor */
+}
+
+/* 2. Estilos para el menú desplegable */
+.filters-dropdown {
+  position: absolute;
+  top: 100%; /* Lo coloca justo debajo del contenedor */
+  left: 0;
+  margin-top: 0.5rem; /* Pequeño espacio entre el botón y el menú */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+  width: 200px; /* Ancho del menú */
+  z-index: 10; /* Para que aparezca por encima de otros elementos */
+  padding: 0.5rem 0;
+}
+
+.filters-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.filters-dropdown li a {
+  display: block;
+  padding: 0.75rem 1.5rem;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.filters-dropdown li a:hover {
+  background-color: #f8f9fa;
+}
+
+/* --- ESTILOS EXISTENTES (sin cambios) --- */
+
+.filter-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-button:hover {
+  background-color: #f8f9fa;
+  border-color: #ced4da;
+}
+
+.search-bar {
+  flex-grow: 1;
+  position: relative;
+}
+
+.search-icon-wrapper {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.search-input::placeholder {
+  color: #adb5bd;
+}
+

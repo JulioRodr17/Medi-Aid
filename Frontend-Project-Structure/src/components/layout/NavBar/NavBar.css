@@ -1,0 +1,121 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 2rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e9ecef;
+  height: 60px; /* Altura fija */
+  box-sizing: border-box;
+}
+
+/* --- Izquierda: Logo --- */
+.navbar-logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+}
+
+.navbar-logo-img {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 0.75rem;
+}
+
+.navbar-logo-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* --- Centro: Links de Navegación --- */
+.navbar-center {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+  padding: 0.5rem;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #3921f2;
+}
+
+/* Estilo para el link activo */
+.nav-link.active {
+  color: #3921f2;
+  font-weight: 600;
+}
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #3921f2;
+}
+
+
+/* --- Derecha: Iconos --- */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Contenedor del wrapper de notificaciones (para el 'clic-fuera') */
+.notification-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Botón de Icono (para Campana y Perfil) */
+.navbar-icon-button,
+.nav-icon-link {
+  color: #555;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  position: relative; /* Clave para la insignia */
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.navbar-icon-button:hover,
+.nav-icon-link:hover {
+  background-color: #f1f1f1;
+  color: #3921f2;
+}
+
+.nav-icon-link.active {
+  background-color: #e7f3ff;
+  color: #3921f2;
+}
+
+/* --- ESTILO PARA LA INSIGNIA --- */
+.notification-badge {
+  position: absolute;
+  top: 6px;  /* Ajusta según tu gusto */
+  right: 6px; /* Ajusta según tu gusto */
+  width: 10px;
+  height: 10px;
+  background-color: #3921f2; /* Azul de notificación */
+  border-radius: 50%;
+  border: 2px solid white; /* Borde blanco para que resalte sobre el ícono */
+}
+

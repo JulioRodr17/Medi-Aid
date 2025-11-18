@@ -1,0 +1,61 @@
+/* 1. Estilo base del botón */
+.ui-button {
+  width: auto; /* Dejamos que el botón se ajuste al contenido o al 100% si el padre lo fuerza */
+  min-width: 100px;
+  padding: 0.75rem 1.25rem;
+  border: 2px solid transparent; /* Borde transparente para mantener el tamaño */
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* 2. Variante Primaria (Fondo sólido) */
+.ui-button--primary {
+  background-color: #3921f2; /* ¡Tu color primario! */
+  color: white;
+  border-color: #3921f2;
+}
+
+.ui-button--primary:hover:not(:disabled) {
+  background-color: #2a16c7; /* Un tono más oscuro */
+  border-color: #2a16c7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 3. Variante Secundaria (Borde) */
+.ui-button--secondary {
+  background-color: transparent;
+  color: #555;
+  border-color: #ced4da;
+}
+
+.ui-button--secondary:hover:not(:disabled) {
+  background-color: #f8f9fa;
+  color: #333;
+  border-color: #adb5bd;
+}
+
+/* 4. Variante de Peligro (Rojo) */
+.ui-button--danger {
+  background-color: #e74c3c;
+  color: white;
+  border-color: #e74c3c;
+}
+
+.ui-button--danger:hover:not(:disabled) {
+  background-color: #c0392b;
+  border-color: #c0392b;
+}
+
+/* 5. Estado Deshabilitado */
+.ui-button--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}

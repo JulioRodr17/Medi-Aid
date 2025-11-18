@@ -1,0 +1,39 @@
+.info-card {
+  background-color: #3921f2;
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%; /* Asegura que todas las tarjetas tengan la misma altura en el grid */
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.info-card-icon {
+  font-size: 2.5rem;
+  color: #007bff;
+  margin-bottom: 1rem;
+}
+
+.info-card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  color: #fff;
+}
+
+.info-card-text {
+  font-size: 0.95rem    ;
+  color: #cccccc;
+  line-height: 1.6;
+  flex-grow: 1; /* Empuja el link hacia abajo */
+  margin-bottom: 1rem;
+}
+
+

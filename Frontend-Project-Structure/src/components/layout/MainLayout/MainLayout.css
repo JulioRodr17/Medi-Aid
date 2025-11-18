@@ -1,0 +1,10 @@
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Asegura que ocupe al menos toda la altura de la pantalla */
+}
+
+.main-content {
+  flex-grow: 1; /* Hace que el contenido principal ocupe todo el espacio disponible */
+  background-color: #f9f9f9; /* Un color de fondo suave para el contenido */
+}

@@ -1,0 +1,20 @@
+.home-grid-container {
+  display: grid;
+  /* Creamos 3 columnas de tamaño flexible (1fr) */
+  grid-template-columns: repeat(3, 1fr);
+  /* Definimos 2 filas, cada una con una altura mínima de 250px */
+  grid-auto-rows: minmax(250px, auto);
+  gap: 1.5rem; /* Espacio entre los elementos del grid */
+}
+
+.grid-quick-links {
+  /* ¡Aquí está la magia! */
+  /* Le decimos a este elemento que empiece en la columna 3... */
+  grid-column-start: 3;
+  /* ...y que termine en la columna 4 (la siguiente línea). */
+  grid-column-end: 4;
+  /* Le decimos que empiece en la fila 1... */
+  grid-row-start: 1;
+  /* ...y que se expanda hasta la fila 3 (ocupando 2 filas). */
+  grid-row-end: 3;
+}

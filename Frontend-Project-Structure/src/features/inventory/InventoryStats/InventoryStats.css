@@ -1,0 +1,35 @@
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.stat-card-value {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #3921f2; 
+}
+
+.stat-card-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.stat-card.warning .stat-card-value {
+  color: #ffc107;
+}
+
+.stat-card.urgent .stat-card-value {
+  color: #e74c3c;
+}

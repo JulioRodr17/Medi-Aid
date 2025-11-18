@@ -1,0 +1,26 @@
+.status-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+/* Verde para Aprobado */
+.status-icon.aprobado {
+  color: #28a745;
+  background-color: rgba(40, 167, 69, 0.1);
+}
+
+/* Naranja/Amarillo para Pendiente */
+.status-icon.pendiente {
+  color: #ffc107;
+  background-color: rgba(255, 193, 7, 0.1);
+}
+
+/* Rojo para Rechazado */
+.status-icon.rechazado {
+  color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.1);
+}

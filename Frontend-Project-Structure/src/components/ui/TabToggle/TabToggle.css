@@ -1,0 +1,45 @@
+.tab-toggle-container {
+  display: flex;
+  position: relative;
+  width: 100%;
+  max-width: 400px; /* O el ancho que prefieras */
+  background-color: #e9ecef; /* Color de fondo del contenedor */
+  border-radius: 30px;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+  margin-bottom: 2rem; /* Espacio antes del contenido */
+}
+
+.tab-toggle-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-color: #3921f2; /* Color del deslizador (el azul primario) */
+  border-radius: 30px;
+  transition: transform 0.3s ease-in-out; /* La animación de deslizamiento */
+  z-index: 1;
+}
+
+.tab-toggle-slider.right {
+  transform: translateX(100%);
+}
+
+.tab-toggle-button {
+  flex: 1; /* Ocupa la mitad del espacio */
+  padding: 0.75rem 1rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #495057; /* Color del texto inactivo */
+  position: relative;
+  z-index: 2; /* Se asegura de que el texto esté sobre el deslizador */
+  transition: color 0.3s ease-in-out;
+}
+
+.tab-toggle-button.active {
+  color: white; /* Color del texto activo (sobre el deslizador) */
+}

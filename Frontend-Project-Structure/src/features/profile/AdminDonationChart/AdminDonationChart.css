@@ -1,0 +1,7 @@
+.chart-container {
+  position: relative;
+  height: 300px; /* Le damos una altura fija al contenedor de la gráfica */
+  width: 100%;
+  max-width: 400px;
+  margin: 1.5rem auto 0 auto;
+}

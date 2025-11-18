@@ -1,0 +1,80 @@
+.carousel-container {
+  height: 80vh;
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden; /* La clave para que solo se vea una imagen */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-slide-container {
+  height: 100%;
+  width: 100%;
+}
+
+.carousel-slides {
+  display: flex;
+  height: 100%;
+  /* La transición le da el efecto de deslizamiento suave */
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Asegura que la imagen cubra todo el espacio sin deformarse */
+  flex-shrink: 0;
+}
+
+/* Flechas de Navegación */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  font-size: 2rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-arrow:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.left-arrow {
+  left: 10px;
+  border-radius: 0 8px 8px 0;
+}
+
+.right-arrow {
+  right: 10px;
+  border-radius: 8px 0 0 8px;
+}
+
+/* Puntos Indicadores */
+.carousel-dots {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+.carousel-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-dot:hover,
+.carousel-dot.active {
+  background-color: white;
+}

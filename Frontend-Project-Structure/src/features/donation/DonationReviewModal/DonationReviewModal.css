@@ -1,0 +1,55 @@
+
+.review-modal-content {
+  padding: 1rem;
+}
+
+.review-modal-subtitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #333;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.review-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas */
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.review-detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.detail-value {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #212529;
+}
+
+.review-modal-error {
+  text-align: center;
+  color: #dc3545;
+  font-weight: 500;
+  margin: 1rem 0;
+}
+
+.review-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e9ecef;
+  margin-top: 1.5rem;
+}

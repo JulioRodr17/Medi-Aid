@@ -1,0 +1,156 @@
+h2 {
+  font-family: 'Arial', sans-serif;
+}
+
+.info-message {
+  /*color: #1040C0;*/       /* Azul */
+  color: #10C040;       /* Verde */
+  font-size: 1rem;   /* Un poco más pequeño que el texto normal */
+  font-weight: 600;
+  margin-top: 0px;      /* Pequeño espacio sobre el mensaje */
+  display: block;       /* Asegura que esté debajo del input */
+}
+
+.error-message {
+  color: #ff4d4f;       /* Rojo */
+  font-size: 0.85rem;   /* Un poco más pequeño que el texto normal */
+  margin-top: 0px;      /* Pequeño espacio sobre el mensaje */
+  display: block;       /* Asegura que esté debajo del input */
+}
+
+.qr-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  text-align: center;
+}
+
+.qr-spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #ccc;
+  border-top-color: #007bff;
+  border-radius: 50%;
+  animation: qr-spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+.qr-loading-text {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.qr-subtext {
+  font-size: 1rem;
+  color: #555;
+  max-width: 300px;
+}
+
+@keyframes qr-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.register-form-box {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 700px; /* Hacemos la caja más ancha para que quepan los campos */
+  text-align: left; /* Alineamos el texto a la izquierda por defecto */
+}
+
+.register-form-box h2 {
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Espacio vertical entre elementos */
+}
+
+/* Contenedor para poner inputs en la misma fila */
+.form-row {
+  display: flex;
+  gap: 20px; /* Espacio entre los inputs de la misma fila */
+}
+
+/* Hacemos que cada input en una fila ocupe el espacio disponible */
+.form-row > * {
+  flex: 1;
+}
+
+/* Sección del QR */
+.qr-scanner-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.qr-scanner-section:hover {
+  border-color: #007bff;
+  background-color: #f8f9fa;
+}
+
+.qr-scanner-text h4 {
+  margin: 0 0 4px 0;
+  color: #333;
+}
+
+.qr-scanner-text p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Sección del Checkbox de Privacidad */
+.privacy-checkbox-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.privacy-checkbox-section input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.privacy-checkbox-section label {
+  font-size: 14px;
+  color: #555;
+}
+
+.privacy-checkbox-section a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.privacy-checkbox-section a:hover {
+  text-decoration: underline;
+}
