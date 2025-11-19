@@ -1,13 +1,13 @@
 package com.escom.mediAid.controllers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import com.escom.mediAid.dtos.LoginDTO;
 import com.escom.mediAid.dtos.UsuarioDTO;
 import com.escom.mediAid.models.Usuario;
 import com.escom.mediAid.services.UsuarioService;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;

@@ -58,7 +58,45 @@ const request = async (endpoint, options = {}) => {
   }
 };
 
+const getImage = async (endpoint, options = {}) => {
+  const token = localStorage.getItem('token');
+  const config = {
+    method: 'GET',
+    headers: {
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...options.headers,
+    },
+    ...options,
+  };
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      alert('Sesión expirada. Por favor, inicia sesión de nuevo.');
+      window.location.href = '/login';
+      return null;
+    }
+
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+
+    return url;
+
+  } catch (error) {
+    console.error('Error obteniendo la imagen:', error);
+    throw error;
+  }
+};
+
+
 export const httpClient = {
+  API_BASE_URL,
+  getImage,
   get: (endpoint, options = {}) => request(endpoint, { ...options, method: 'GET' }),
   post: (endpoint, body, options = {}) => request(endpoint, { ...options, method: 'POST', body }),
   put: (endpoint, body, options = {}) => request(endpoint, { ...options, method: 'PUT', body }),

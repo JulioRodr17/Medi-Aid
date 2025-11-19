@@ -33,6 +33,7 @@ public class MediAidConfig {
             .requestMatchers("/api/usuarios/recuperar-contrasena").permitAll()
             .requestMatchers("/api/proxy/qrFast").permitAll()
             .requestMatchers("/api/proxy/qrSlow").permitAll()
+            .requestMatchers("/api/noticias/activas").permitAll()
             // 🔒 Todas las demás requieren JWT válido
             .anyRequest().authenticated();
 

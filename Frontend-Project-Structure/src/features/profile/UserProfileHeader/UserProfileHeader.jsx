@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './UserProfileHeader.css';
-import UserSettingsMenu from '../UserSettingMenu/UserSettingMenu'; // Importamos el menú
-
-// --- Icono de Engrane (Ajustes) ---
+import UserSettingsMenu from '../UserSettingMenu/UserSettingMenu';
+import { httpClient } from '../../../services/httpClient';
 const SettingsIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="3"></circle>
@@ -10,11 +9,12 @@ const SettingsIcon = () => (
   </svg>
 );
 
-const UserProfileHeader = ({ name, role, avatarUrl, onEditProfileClick, onChangePasswordClick }) => {
+const UserProfileHeader = ({ name, role, avatarUrl: initialAvatarUrl, onEditProfileClick, onChangePasswordClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl);
   const menuRef = useRef(null);
 
-  // Lógica de Clic-Fuera (como en Notificaciones)
+  // Lógica de Clic-Fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -27,6 +27,29 @@ const UserProfileHeader = ({ name, role, avatarUrl, onEditProfileClick, onChange
     };
   }, []);
 
+  // 🔹 Obtener la foto si es interna
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      if (!initialAvatarUrl) return;
+
+      try {
+        // Detecta si es URL externa
+        const isExternal = /^https?:\/\//i.test(initialAvatarUrl);
+        if (isExternal) {
+          setAvatarUrl(initialAvatarUrl);
+        } else {
+          // URL interna → usar httpClient.getImage
+          const url = await httpClient.getImage(initialAvatarUrl);
+          setAvatarUrl(url);
+        }
+      } catch (error) {
+        console.error("Error cargando la foto de perfil:", error);
+      }
+    };
+
+    fetchAvatar();
+  }, [initialAvatarUrl]);
+
   return (
     <header className="profile-header">
       <img src={avatarUrl} alt="Foto de perfil" className="profile-avatar" />
@@ -38,7 +61,7 @@ const UserProfileHeader = ({ name, role, avatarUrl, onEditProfileClick, onChange
         <button 
           className="settings-button" 
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          style={{ color: '#3921f2' }} // Tu color primario
+          style={{ color: '#3921f2' }}
         >
           <SettingsIcon />
           <span>Ajustes</span>
@@ -47,10 +70,9 @@ const UserProfileHeader = ({ name, role, avatarUrl, onEditProfileClick, onChange
           <UserSettingsMenu 
             onEditProfileClick={onEditProfileClick}
             onChangePasswordClick={onChangePasswordClick}
-            onCloseMenu={() => setIsMenuOpen(false)} // Ayuda a cerrar el menú
+            onCloseMenu={() => setIsMenuOpen(false)}
           />
         )}
-        
       </div>
     </header>
   );

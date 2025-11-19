@@ -1,44 +1,73 @@
 import React, { useState, useEffect } from 'react';
+import { notificationService } from '../../../services/notificationService';
+import { httpClient   } from '../../../services/httpClient';
 import './ImageCarousel.css';
 
-
-import slide1 from '../../../assets/images/carousel/slide_1.jpg';
-import slide2 from '../../../assets/images/carousel/slide_2.jpg';
-import slide3 from '../../../assets/images/carousel/slide_3.jpg';
-
-const images = [slide1, slide2, slide3];
-
 const ImageCarousel = () => {
+  const [noticias, setNoticias] = useState([]); // <-- AQUÍ GUARDAMOS LAS NOTICIAS
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
+  // ================================
+  // Cargar noticias desde el backend
+  // ================================
   useEffect(() => {
+    const cargarNoticias = async () => {
+      try {
+        const data = await notificationService.obtenNoticias();
+        data.sort((a, b) => a.orden - b.orden);
+
+        // Convertir las URLs de cada noticia usando httpClient.getImage
+        const noticiasConSrc = await Promise.all(
+          data.map(async (n) => {
+            const src = await httpClient.getImage(n.url);  // usa tu función genérica
+            return { ...n, src };
+          })
+        );
+
+        setNoticias(noticiasConSrc);
+      } catch (error) {
+        console.error('Error cargando noticias:', error);
+      }
+    };
+
+    cargarNoticias();
+  }, []);
+
+
+  // ================================
+  // Autoplay del carrusel
+  // ================================
+  useEffect(() => {
+    if (noticias.length === 0) return;
+
     let interval;
     if (isAutoPlaying) {
       interval = setInterval(() => {
-        const isLastSlide = currentIndex === images.length - 1;
+        const isLastSlide = currentIndex === noticias.length - 1;
         const newIndex = isLastSlide ? 0 : currentIndex + 1;
         setCurrentIndex(newIndex);
       }, 5000);
     }
 
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [currentIndex, isAutoPlaying]);
+    return () => clearInterval(interval);
+  }, [currentIndex, isAutoPlaying, noticias]);
 
+  // ================================
+  // Navegación manual
+  // ================================
   const goToPrevious = () => {
+    if (noticias.length === 0) return;
     setIsAutoPlaying(false);
     const isFirstSlide = currentIndex === 0;
-    const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1;
+    const newIndex = isFirstSlide ? noticias.length - 1 : currentIndex - 1;
     setCurrentIndex(newIndex);
   };
 
   const goToNext = () => {
+    if (noticias.length === 0) return;
     setIsAutoPlaying(false);
-    const isLastSlide = currentIndex === images.length - 1;
+    const isLastSlide = currentIndex === noticias.length - 1;
     const newIndex = isLastSlide ? 0 : currentIndex + 1;
     setCurrentIndex(newIndex);
   };
@@ -50,31 +79,49 @@ const ImageCarousel = () => {
 
   return (
     <div className="carousel-container">
-      <button onClick={goToPrevious} className="carousel-arrow left-arrow">
-        &#10094;
-      </button>
-      <div className="carousel-slide-container">
-        <div
-          className="carousel-slides"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {images.map((image, index) => (
-            <img src={image} alt={`Slide ${index + 1}`} key={index} className="carousel-slide" />
-          ))}
-        </div>
-      </div>
-      <button onClick={goToNext} className="carousel-arrow right-arrow">
-        &#10095;
-      </button>
-      <div className="carousel-dots">
-        {images.map((_, slideIndex) => (
-          <div
-            key={slideIndex}
-            className={`carousel-dot ${currentIndex === slideIndex ? 'active' : ''}`}
-            onClick={() => goToSlide(slideIndex)}
-          ></div>
-        ))}
-      </div>
+
+      {/* ============================
+          SI NO HAY NOTICIAS, retornar vacío
+         ============================ */}
+      {noticias.length === 0 ? (
+        <p style={{ textAlign: 'center' }}>Cargando imágenes...</p>
+      ) : (
+        <>
+          <button onClick={goToPrevious} className="carousel-arrow left-arrow">
+            &#10094;
+          </button>
+
+          <div className="carousel-slide-container">
+            <div
+              className="carousel-slides"
+              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            >
+              {noticias.map((n, index) => (
+                <img
+                  key={n.id}
+                  src={n.src}          // <--- AQUÍ VA LA URL DEL BACKEND
+                  alt={n.titulo}
+                  className="carousel-slide"
+                />
+              ))}
+            </div>
+          </div>
+
+          <button onClick={goToNext} className="carousel-arrow right-arrow">
+            &#10095;
+          </button>
+
+          <div className="carousel-dots">
+            {noticias.map((_, slideIndex) => (
+              <div
+                key={slideIndex}
+                className={`carousel-dot ${currentIndex === slideIndex ? 'active' : ''}`}
+                onClick={() => goToSlide(slideIndex)}
+              ></div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

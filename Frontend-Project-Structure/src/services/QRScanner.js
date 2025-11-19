@@ -21,20 +21,17 @@ export const stopQrScanner = async (scanner) => {
 };
 
 //================================================== Procesar QR ==================================================
-  export const processQR = async (qrText, scanner, setFormData, setIsQrValidated) => {
+  export const processQR = async (qrText, setFormData, setIsQrValidated) => {
     if (qrText.startsWith("https://servicios.dae.ipn.mx/")) {
       console.log("Credencial de estudiante");
-      await stopQrScanner(scanner);
       await isAlumnoCredential(qrText, setFormData, setIsQrValidated);
     }
     else if (qrText.startsWith("https://www.dsapp.ipn.mx/")) {
       console.log("Credencial de empleado");
-      await stopQrScanner(scanner);
       await isEmpleadoCredential(qrText, setFormData, setIsQrValidated);
     }
     else{
       alert("El código QR no es un código QR válido.");
-      await stopQrScanner(scanner);
     }
   };
 //================================================== Credencial de alumno ==================================================
@@ -48,6 +45,7 @@ const isAlumnoCredential = async (qrText, setFormData, setIsQrValidated) => {
     let boleta = doc.querySelector(".boleta")?.textContent.trim();
     let curp = doc.querySelector(".curp")?.textContent.trim();
     let nombreCompleto = doc.querySelector(".nombre")?.textContent.trim();
+    let fotoSrc = doc.querySelector('img[width="60%"]')?.getAttribute("src");
 
     // --- Si los campos mínimos no están, intentar con qrSlow ---
     if (!nombreCompleto || !curp || !boleta) {
@@ -59,6 +57,8 @@ const isAlumnoCredential = async (qrText, setFormData, setIsQrValidated) => {
       boleta = doc.querySelector(".boleta")?.textContent.trim();
       curp = doc.querySelector(".curp")?.textContent.trim();
       nombreCompleto = doc.querySelector(".nombre")?.textContent.trim();
+      fotoSrc = doc.querySelector('img[width="60%"]')?.getAttribute("src");
+
 
       if (!nombreCompleto || !curp || !boleta) {
         throw new Error("No se pudieron obtener los datos del QR ni con qrFast ni con qrSlow");
@@ -74,7 +74,7 @@ const isAlumnoCredential = async (qrText, setFormData, setIsQrValidated) => {
         apellidoP: apellidoPaterno,
         apellidoM: apellidoMaterno,
         boleta: boleta,
-        foto: "/src/assets/images/noUsrPhoto.png",
+        foto: fotoSrc || "/src/assets/images/noUsrPhoto.png",
         rol: 'ESTUDIANTE'
       }));
     } else {

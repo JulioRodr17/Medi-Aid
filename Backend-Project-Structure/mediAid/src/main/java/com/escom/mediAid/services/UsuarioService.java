@@ -8,6 +8,7 @@ import com.escom.mediAid.repositories.UsuarioRepository;
 import com.escom.mediAid.security.JwtUtil;
 import com.escom.mediAid.repositories.RolRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,8 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepo;
     private final RolRepository rolRepo;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private FotoService fotoService;
 
     public UsuarioService(UsuarioRepository usuarioRepo, RolRepository rolRepo) {
         this.usuarioRepo = usuarioRepo;
@@ -89,7 +92,13 @@ public class UsuarioService {
         usuario.setTelefono(dto.getTelefono());
         usuario.setContrasena(hashedPassword);
         usuario.setRol(rol);
-        usuario.setFoto(dto.getFoto());
+        
+        String foto = dto.getFoto();
+        String rutaFotoFinal;
+        if (foto != null && (foto.startsWith("http://") || foto.startsWith("https://"))) rutaFotoFinal = foto;
+        else if (foto != null && foto.startsWith("data:image")) rutaFotoFinal = fotoService.guardarUsrPhotoBas64(dto.getBoleta(), foto);
+        else rutaFotoFinal = "UserPhotos/default.png";
+        usuario.setFoto(rutaFotoFinal);
 
         // --- Guardar en BD ---
         usuarioRepo.save(usuario);

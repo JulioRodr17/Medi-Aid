@@ -7,7 +7,9 @@ import {
 // --- ¡EL INTERRUPTOR MÁGICO! ---
 const USE_DUMMY_DATA = true;
 // ---------------------------------
-
+const obtenNoticias = () => {
+  return httpClient.get('/noticias/activas');
+};
 /**
  * Obtiene la lista de notificaciones del usuario.
  */
@@ -33,6 +35,7 @@ const markAllAsRead = () => {
 };
 
 export const notificationService = {
+  obtenNoticias,
   getNotifications,
-  markAllAsRead,
+  markAllAsRead
 };

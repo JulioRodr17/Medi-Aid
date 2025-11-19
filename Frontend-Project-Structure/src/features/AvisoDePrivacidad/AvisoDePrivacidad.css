@@ -1,0 +1,125 @@
+/* Fondo semitransparente */
+.modal-Privacy{
+  padding: 40px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center; /* Centrado horizontal */
+  align-items: center;     /* Centrado vertical */
+  z-index: 1000;
+  padding: 20px;           /* Evita que toque los bordes en pantallas pequeñas */
+}
+
+/* Contenido del modal */
+.modal-content {
+  background: #fff;
+  max-width: 800px;       /* Ancho máximo */
+  width: 100%;            /* Ocupa todo el ancho disponible hasta el máximo */
+  max-height: 90%;        /* Máximo alto para permitir scroll */
+  overflow-y: auto;       /* Scroll vertical si excede altura */
+  padding: 30px 40px;     /* Espaciado interior tipo contrato */
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  font-family: "Times New Roman", serif; /* Tipografía tipo contrato */
+  line-height: 1.6;       /* Espaciado entre líneas para lectura */
+  text-align: justify;    /* Justificado como un contrato */
+  position: relative;      /* Para posicionar el botón de cierre */
+}
+
+/* Botón de cerrar */
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+/* Estilos para títulos y subtítulos */
+.modal-Privacy h3 {
+  text-align: center;      /* Título centrado */
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.modal-Privacy h4 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+/* Viñetas y párrafos */
+.modal-Privacy ul {
+  margin-left: 20px;
+  margin-bottom: 15px;
+}
+
+.modal-Privacy p {
+  margin-bottom: 15px;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 10px; /* Menor padding en pantalla pequeña */
+    align-items: flex-start; /* Para que quede alineado al top si es muy alto */
+  }
+
+  .modal-content {
+    padding: 20px 15px; /* Espacio interior reducido */
+    max-width: 95%;     /* Casi todo el ancho de la pantalla */
+    max-height: 95%;    /* Ajusta altura para scroll */
+    font-size: 0.95rem; /* Fuente ligeramente más pequeña */
+  }
+
+  .modal-close {
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+  }
+
+  .modal-Privacy h3 {
+    font-size: 1.3rem; /* Título más pequeño */
+  }
+
+  .modal-Privacy h4 {
+    font-size: 1.1rem; /* Subtítulos más pequeños */
+  }
+
+  .modal-Privacy ul {
+    margin-left: 15px;
+  }
+
+  .modal-Privacy p {
+    font-size: 0.95rem;
+  }
+}
+
+/* Responsive extra pequeño (móviles muy pequeños) */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 15px 10px;
+    font-size: 0.9rem;
+  }
+
+  .modal-Privacy h3 {
+    font-size: 1.1rem;
+  }
+
+  .modal-Privacy h4 {
+    font-size: 1rem;
+  }
+
+  .modal-close {
+    font-size: 1.3rem;
+  }
+}

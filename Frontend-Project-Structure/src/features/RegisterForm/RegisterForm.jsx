@@ -4,6 +4,8 @@ import { authService } from "../../services/authService";
 import Input from "../../components/ui/input/Input";
 import Button from "../../components/ui/button/Button";
 import BackButton from "../../components/ui/backbutton/BackButton";
+import PrivacyModal from "../AvisoDePrivacidad/AvisoDePrivacidad";
+import QrModal from "./QrModal";
 
 import "./RegisterForm.css";
 
@@ -23,6 +25,9 @@ const Upload = () => (
 );
 
 const RegisterForm = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+
 //================================================== Variables ==================================================
   const navigate = useNavigate();
 
@@ -39,11 +44,8 @@ const RegisterForm = () => {
     privacyAccepted: false,
   });
   
-  const scannerRef = useRef(null);
-
   const [errors, setErrors] = useState({}); // Estado para los errores
   const [isQrValidated, setIsQrValidated] = useState(false);
-  const [isQrloading, setIsQrloading] = useState(false);
 
 //================================================== Manejo de cambios en el formulario ==================================================
   const handleChange = (e) => {
@@ -58,6 +60,12 @@ const RegisterForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     
+    if (!validateForm()) return;
+    else if (!isQrValidated) {
+      setErrors((prev) => ({ ...prev, qr: '*Debes validar tu QR antes de continuar.' }));
+      return;
+    }
+
     const payload = {
       nombre: formData.nombre,
       apellidoPaterno: formData.apellidoP,
@@ -70,17 +78,8 @@ const RegisterForm = () => {
       rol: formData.rol
     };
 
-    console.log(payload);
-
-    if (!validateForm()) return;
-    
-    else if (!isQrValidated) {
-      setErrors((prev) => ({ ...prev, qr: '*Debes validar tu QR antes de continuar.' }));
-      return;
-    }
-
     try {
-      const datos = await authService.register(payload);
+      await authService.register(payload);
       alert('Registro exitoso');
       navigate("/login");
     } catch (error) { 
@@ -95,30 +94,10 @@ const RegisterForm = () => {
     navigate(-1);
   };
 
-//================================================== Manejo de el escaneo por cámara ==================================================
-  const handleQRCam = async () => {
-    const scanner = initQrScanner(scannerRef, "reader");
-    await stopQrScanner(scanner);
-
-    try {
-      await scanner.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: 400 },
-        async (decodedText) => {
-          setIsQrloading(true);
-          await processQR(decodedText, scanner, setFormData, setIsQrValidated);
-          setIsQrloading(false);
-        }
-      );
-      
-    } catch (err) {
-      console.error("Error al iniciar cámara:", err);
-    }
-  }
 //================================================== Manejo de el escaneo por archivo ==================================================
-const handleQRUpload = async () => {
+  const handleQRUpload = async () => {
 
-};
+  };
 
 //================================================== Validación del formulario ==================================================
   const validateForm = () => {
@@ -150,6 +129,27 @@ return (
       <h2>Crear Cuenta</h2>
 
       <form onSubmit={handleSubmit} className="register-form">
+        {/* QR */}
+        <div className={`qr-scanner-section ${isQrValidated ? 'validated' : ''}`} >
+          <div className="qr-scanner-text" onClick={() => setIsQrModalOpen(true)}>
+            <QrCode size={80}/>
+            <p>Escanear QR</p>
+          </div>
+          <QrModal isOpen={isQrModalOpen} onClose={() => setIsQrModalOpen(false)} setFormData={setFormData} setIsQrValidated={setIsQrValidated} />
+          <div className="qr-scanner-text">
+            <h4>Escaneo de QR</h4>
+            <p>Sube o escanea tu código QR de estudiante o administrativo para validar tu cuenta.</p>
+            <p>Nota: Este código se encuentra al reverso de tu credencial.</p>
+            {errors.qr && <span className="error-message">{errors.qr}</span>}
+          </div>
+          <div className="qr-scanner-text" onClick={handleQRUpload}>
+            <Upload size={80}/>
+            <p>Subir QR</p>
+          </div>
+        </div>
+        {formData.rol && <span className="info-message">El QR corresponde a {formData.rol}</span>}
+        <br></br><br></br>
+
         <div className="form-row">
           <div>
             <Input id="nombre" name="nombre" label="Nombre(s)" value={formData.nombre} onChange={handleChange} required />
@@ -192,45 +192,18 @@ return (
           {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
         </div>
 
-        {/* QR */}
-        <div className={`qr-scanner-section ${isQrValidated ? 'validated' : ''}`} >
-          <div className="qr-scanner-text" onClick={handleQRCam}>
-            <QrCode size={80}/>
-            <p>Escanear QR</p>
-          </div>
-          <div className="qr-scanner-text">
-            <h4>Escaneo de QR</h4>
-            <p>Sube o escanea tu código QR de estudiante o administrativo para validar tu cuenta.</p>
-            <p>Nota: Este código se encuentra al reverso de tu credencial.</p>
-            {errors.qr && <span className="error-message">{errors.qr}</span>}
-          </div>
-          <div className="qr-scanner-text" onClick={handleQRUpload}>
-            <Upload size={80}/>
-            <p>Subir QR</p>
-          </div>
-        </div>
-        {formData.rol && <span className="info-message">El QR corresponde a {formData.rol}</span>}
-
-
-        {/* Contenedor para la vista previa del QR */}
-        <div id="reader" style={{ maxWidth: 500, maxHeight: 400 }}>
-          {isQrloading && (
-          <div className="qr-loading">
-            <div className="qr-spinner"></div>
-            <p className="qr-loading-text">Cargando...</p>
-            <p className="qr-subtext">Esto podría demorar algunos segundos, por favor espere.</p>
-          </div>
-        )}
-        </div>
-        
-
         <div className="privacy-checkbox-section">
           <input type="checkbox" id="privacyAccepted" name="privacyAccepted" checked={formData.privacyAccepted} onChange={handleChange} required />
           <label htmlFor="privacyAccepted">
-            He leído y acepto el <a href="/aviso-privacidad" target="_blank">aviso de privacidad</a>.
+            He leído y acepto la{' '}
+            <span style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => setIsModalOpen(true)}>
+              Política de Uso y Privacidad
+            </span>.
           </label>
           {errors.privacyAccepted && <span className="error-message">{errors.privacyAccepted}</span>}
-        </div>
+
+          <PrivacyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        </div><br></br>
 
         <Button type="submit" variant="primary" disabled={!isQrValidated || !formData.privacyAccepted}>
           Registrarse

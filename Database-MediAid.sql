@@ -70,6 +70,7 @@ CREATE TABLE usuarios (
     correo VARCHAR(150) UNIQUE NOT NULL,
     contrasena VARCHAR(255) NOT NULL,
     telefono VARCHAR(20),
+    foto VARCHAR(255),
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_rol) REFERENCES cat_roles(id_rol)
 );
@@ -127,6 +128,19 @@ CREATE TABLE movimientos_medicamentos (
     FOREIGN KEY (id_usuario_registra) REFERENCES usuarios(id),
     FOREIGN KEY (id_detalle_donacion) REFERENCES detalle_donacion(id_detalle_donacion)
 );
+
+CREATE TABLE noticias(
+    id SERIAL PRIMARY KEY,
+    url TEXT NOT NULL,
+    fecha_inicio DATE NOT NULL DEFAULT CURRENT_DATE,
+    fecha_expiracion DATE NOT NULL,
+    titulo VARCHAR(255),
+    descripcion TEXT,
+    activo BOOLEAN NOT NULL DEFAULT true,
+    orden INT DEFAULT 0,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 
 -- =============================================
 -- DATOS INICIALES DE CATÁLOGOS
