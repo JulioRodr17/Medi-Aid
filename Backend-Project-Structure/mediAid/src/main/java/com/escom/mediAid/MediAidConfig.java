@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.config.Customizer;
 
 import com.escom.mediAid.security.JwtFilter;
 
@@ -19,28 +20,33 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class MediAidConfig {
-
+    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors().and().csrf().disable()
-            // 🔹 Aquí agregas tu filtro personalizado antes del de autenticación
+            // CORS y CSRF
+            .cors(Customizer.withDefaults())
+            .csrf(csrf -> csrf.disable())
+
+            // 🔹 Filtro JWT antes del de autenticación
             .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class)
-            .authorizeHttpRequests()
-            // 🔓 Rutas públicas (sin token)
-            .requestMatchers("/api/usuarios/registro").permitAll()
-            .requestMatchers("/api/usuarios/login").permitAll()
-            .requestMatchers("/api/usuarios/recuperar-contrasena").permitAll()
-            .requestMatchers("/api/proxy/qrFast").permitAll()
-            .requestMatchers("/api/proxy/qrSlow").permitAll()
-            .requestMatchers("/api/noticias/activas").permitAll()
-            // 🔒 Todas las demás requieren JWT válido
-            .anyRequest().authenticated();
+
+            // Autorizaciones
+            .authorizeHttpRequests(auth -> auth
+                // 🔓 Rutas públicas
+                .requestMatchers("/api/usuarios/registro").permitAll()
+                .requestMatchers("/api/usuarios/login").permitAll()
+                .requestMatchers("/api/usuarios/recuperar-contrasena").permitAll()
+                .requestMatchers("/api/proxy/qrFast").permitAll()
+                .requestMatchers("/api/proxy/qrSlow").permitAll()
+                .requestMatchers("/api/noticias/activas").permitAll()
+                // 🔒 Resto requiere autenticación
+                .anyRequest().authenticated()
+            );
 
         return http.build();
     }
 
- 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

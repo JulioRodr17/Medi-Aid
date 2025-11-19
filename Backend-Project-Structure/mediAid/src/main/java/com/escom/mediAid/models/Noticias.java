@@ -12,7 +12,7 @@ public class Noticias {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String url;
 
     @Column(name = "fecha_inicio", nullable = false)

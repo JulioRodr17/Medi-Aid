@@ -37,8 +37,8 @@ public class Usuario {
     @Column(length = 20)
     private String telefono;
 
-	@Column(name = "fecha_creacion")
-	private LocalDateTime fechaCreacion = LocalDateTime.now();
+	@Column(name = "fecha_creacion", updatable = false, insertable = false)
+	private LocalDateTime fechaCreacion;
 
     @Column(length = 255)
     private String foto;
