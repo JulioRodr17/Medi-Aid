@@ -55,7 +55,7 @@ public class UsuarioService {
         if (dto.getBoleta() == null || !Pattern.matches("^[0-9]{4,20}$", dto.getBoleta()))
             throw new IllegalArgumentException("Boleta inválida");
 
-        if (dto.getCorreo() == null || !Pattern.matches("^[\\w-.]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,4}$", dto.getCorreo()))
+        if (dto.getCorreo() == null || !Pattern.matches("^[\\w.-]+@.*ipn\\.mx$", dto.getCorreo()))
             throw new IllegalArgumentException("Correo inválido");
 
         if (dto.getTelefono() != null && !dto.getTelefono().trim().isEmpty()) {

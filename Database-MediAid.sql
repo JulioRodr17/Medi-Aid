@@ -171,6 +171,12 @@ INSERT INTO categorias (nombre_categoria, descripcion) VALUES
 ('Antibióticos', 'Medicamentos para tratar infecciones bacterianas.'),
 ('Antihistamínicos', 'Medicamentos para alergias.');
 
+INSERT INTO noticias (url, fecha_inicio, fecha_expiracion, titulo, descripcion, activo, orden, fecha_creacion) VALUES
+('/public/Noticias/slide_1.jpg', CURRENT_DATE, CURRENT_DATE + INTERVAL '1 day', 'Noticia de 1 día', 'Descripción de la noticia que durará un día.', TRUE, 1, CURRENT_TIMESTAMP),
+('/public/Noticias/slide_2.jpg', CURRENT_DATE, CURRENT_DATE + INTERVAL '7 days', 'Noticia de 1 semana', 'Descripción de la noticia que durará una semana.', TRUE, 2, CURRENT_TIMESTAMP),
+('/public/Noticias/slide_3.jpg', CURRENT_DATE, CURRENT_DATE + INTERVAL '14 days', 'Noticia de 2 semanas', 'Descripción de la noticia que durará dos semanas.', TRUE, 3, CURRENT_TIMESTAMP);
+
+
 -- =============================================
 -- DATOS DE PRUEBA (MEDICAMENTOS)
 -- =============================================
