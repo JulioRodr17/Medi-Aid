@@ -25,7 +25,8 @@ public class JwtFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // 🔹 Excluir rutas públicas (sin token)
-        if (path.startsWith("/api/usuarios/login") ||
+        if (path.startsWith("/api/public/verify") ||
+        	path.startsWith("/api/usuarios/login") ||
             path.startsWith("/api/usuarios/registro") ||
             path.startsWith("/api/usuarios/recuperar-contrasena") ||
             path.startsWith("/api/proxy/qrFast") ||

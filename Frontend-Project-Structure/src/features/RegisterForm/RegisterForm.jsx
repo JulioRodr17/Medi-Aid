@@ -77,8 +77,8 @@ const RegisterForm = () => {
     };
 
     try {
-      await authService.register(payload);
-      alert('Registro exitoso');
+      const datos = await authService.register(payload);
+      alert(datos.mensaje);
       navigate("/login");
     } catch (error) { 
       alert('Error en el registro: ' + error.message);

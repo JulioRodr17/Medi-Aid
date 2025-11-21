@@ -40,8 +40,11 @@ public class Usuario {
 	@Column(name = "fecha_creacion", updatable = false, insertable = false)
 	private LocalDateTime fechaCreacion;
 
-    @Column(length = 255)
+	@Column(length = 255)
     private String foto;
+	
+	@Column(nullable = false)
+	private boolean active = false;
 	
 	public Usuario() {
 	}
@@ -133,5 +136,13 @@ public class Usuario {
 
 	public void setFoto(String foto) {
 		this.foto = foto;
+	}
+	
+	public boolean getActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 }

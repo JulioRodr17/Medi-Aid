@@ -72,7 +72,19 @@ CREATE TABLE usuarios (
     telefono VARCHAR(20),
     foto VARCHAR(255),
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    active BOOLEAN NOT NULL DEFAULT false,
     FOREIGN KEY (id_rol) REFERENCES cat_roles(id_rol)
+);
+
+CREATE TABLE verification_token (
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    usuario_id BIGINT NOT NULL,
+    expiration TIMESTAMP NOT NULL,
+    CONSTRAINT fk_verification_token_usuario
+        FOREIGN KEY (usuario_id)
+        REFERENCES usuario(id)
+        ON DELETE CASCADE
 );
 
 -- Tabla de Medicamentos

@@ -1,10 +1,12 @@
 package com.escom.mediAid.services;
 
 import com.escom.mediAid.models.Usuario;
+import com.escom.mediAid.models.VerificationToken;
 import com.escom.mediAid.dtos.LoginDTO;
 import com.escom.mediAid.dtos.UsuarioDTO;
 import com.escom.mediAid.models.Rol;
 import com.escom.mediAid.repositories.UsuarioRepository;
+import com.escom.mediAid.repositories.VerificationTokenRepository;
 import com.escom.mediAid.security.JwtUtil;
 import com.escom.mediAid.repositories.RolRepository;
 
@@ -12,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Service
@@ -23,12 +27,18 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepo;
     private final RolRepository rolRepo;
+    private final VerificationTokenService verificationTokenService;
+    private final VerificationTokenRepository verificationTokenRepo;
+    private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Autowired
     private FotoService fotoService;
 
-    public UsuarioService(UsuarioRepository usuarioRepo, RolRepository rolRepo) {
-        this.usuarioRepo = usuarioRepo;
+    public UsuarioService(UsuarioRepository usuarioRepo, RolRepository rolRepo, VerificationTokenRepository verificationTokenRepo, VerificationTokenService verificationTokenService, EmailService emailService) {
+    	this.verificationTokenService = verificationTokenService;
+    	this.verificationTokenRepo = verificationTokenRepo;
+        this.emailService = emailService;
+    	this.usuarioRepo = usuarioRepo;
         this.rolRepo = rolRepo;
     }
 
@@ -61,15 +71,39 @@ public class UsuarioService {
         if (dto.getTelefono() != null && !dto.getTelefono().trim().isEmpty()) {
             if (!Pattern.matches("^(\\+52)?\\s?\\d{10}$", dto.getTelefono()))
                 throw new IllegalArgumentException("Teléfono inválido");
-            if (usuarioRepo.existsByTelefono(dto.getTelefono()))
-                throw new IllegalArgumentException("Teléfono ya registrado");
         }
 
-        if (usuarioRepo.existsByCorreo(dto.getCorreo()))
-            throw new IllegalArgumentException("Correo ya registrado");
+     // --- Revisar si el correo ya existe ---
+        Optional<Usuario> existingUserOpt = usuarioRepo.findByCorreo(dto.getCorreo());
+        if (existingUserOpt.isPresent()) {
+            Usuario existingUser = existingUserOpt.get();
+            if (existingUser.getActive()) {
+                throw new IllegalArgumentException("Correo ya registrado");
+            } else {
+                // Usuario existe pero no está activo → revisar token
+            	VerificationToken vt = verificationTokenRepo.findByUsuarioId(existingUser.getId())
+            	        .orElse(null);
+
+                if (vt == null || vt.isExpired()) {
+                    // Generar nuevo token y enviar correo
+                    VerificationToken newToken = verificationTokenService.createTokenForUser(existingUser);
+                    emailService.sendVerificationEmail(existingUser.getCorreo(), newToken.getToken());
+                    Map<String, Object> userData = new HashMap<>();
+                    userData.put("mensaje", "Se ha enviado un nuevo correo de verificación.");
+                    return userData;
+                } else {
+                    Map<String, Object> userData = new HashMap<>();
+                    userData.put("mensaje", "El correo ya estaba registrado pero no verificado. Revisa tu correo anterior.");
+                    return userData;
+                }
+            }
+        }
 
         if (usuarioRepo.existsByBoleta(dto.getBoleta()))
             throw new IllegalArgumentException("Boleta ya registrada");
+        
+        if (usuarioRepo.existsByTelefono(dto.getTelefono()))
+            throw new IllegalArgumentException("Teléfono ya registrado");
 
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$";
         if (!Pattern.matches(passwordRegex, dto.getContrasena()))
@@ -100,31 +134,19 @@ public class UsuarioService {
         else rutaFotoFinal = "UserPhotos/default.png";
         usuario.setFoto(rutaFotoFinal);
 
-        // --- Guardar en BD ---
+     // --- Guardar en BD ---
         usuarioRepo.save(usuario);
 
-        // --- Generar token JWT ---
-        String token = JwtUtil.generateToken(
-                usuario.getId(),
-                usuario.getRol().getNombreRol(),
-                usuario.getRol().getAdmin()
-        );
+        // --- Crear token de verificación usando el service ---
+        VerificationToken vt = verificationTokenService.createTokenForUser(usuario);
 
-        // --- Construir respuesta (igual que login) ---
+        // --- Enviar correo ---
+        emailService.sendVerificationEmail(usuario.getCorreo(), vt.getToken());
+
+
         Map<String, Object> userData = new HashMap<>();
-        userData.put("id", usuario.getId());
-        userData.put("nombre", usuario.getNombre());
-        userData.put("apellidoPaterno", usuario.getApellidoPaterno());
-        userData.put("apellidoMaterno", usuario.getApellidoMaterno());
-        userData.put("boleta", usuario.getBoleta());
-        userData.put("correo", usuario.getCorreo());
-        userData.put("telefono", usuario.getTelefono());
-        userData.put("foto", usuario.getFoto());
-        userData.put("rol", usuario.getRol().getNombreRol());
-        userData.put("admin", usuario.getRol().getAdmin());
-        userData.put("fechaCreacion", usuario.getFechaCreacion());
-        userData.put("token", token);
-
+        userData.put("mensaje", "Se ha enviado un correo de verificación.");
+        
         return userData;
     }
 
@@ -136,6 +158,22 @@ public class UsuarioService {
         if (!passwordEncoder.matches(loginDTO.getContrasena(), usuario.getContrasena())) {
             throw new IllegalArgumentException("La contraseña está equivocada");
         }
+        
+        if (!usuario.getActive()) {
+            VerificationToken existingToken = verificationTokenRepo.findByUsuarioId(usuario.getId()).orElse(null);
+
+            if (existingToken == null || existingToken.isExpired()) {
+                // Generar y guardar nuevo token
+                VerificationToken newToken = verificationTokenService.createTokenForUser(usuario);
+                // Mandar el token real por correo
+                emailService.sendVerificationEmail(usuario.getCorreo(), newToken.getToken());
+                throw new IllegalArgumentException("Se ha enviado un correo para verificar su cuenta.");
+            } 
+
+
+            throw new IllegalArgumentException("Por favor verifique su cuenta para iniciar sesión.");
+        }
+
 
         // Generar token JWT
         String token = JwtUtil.generateToken(

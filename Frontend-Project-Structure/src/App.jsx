@@ -17,6 +17,7 @@ import PublicRoute from './components/utility/PublicRoute';
 import AuthWatcher from './components/utility/AuthWatcher.jsx';
 
 import './App.css'
+import TokenValidator from './features/RegisterForm/Verificación.js';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -33,6 +34,7 @@ function App() {
             <Route path="/registro" element={<Register />} />
             <Route path="/recuperar-contrasena" element={<ForgotPasswordPage />} />
             <Route path="/restablecer-contrasena" element={<ResetPasswordPage />} />
+            <Route path="/verify" element={<TokenValidator/>}/>
           </Route>
 
           {/* 2. Rutas Principales (usan el MainLayout) */}

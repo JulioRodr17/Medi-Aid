@@ -34,6 +34,7 @@ public class MediAidConfig {
             // Autorizaciones
             .authorizeHttpRequests(auth -> auth
                 // 🔓 Rutas públicas
+                .requestMatchers("/api/public/verify").permitAll()
                 .requestMatchers("/api/usuarios/registro").permitAll()
                 .requestMatchers("/api/usuarios/login").permitAll()
                 .requestMatchers("/api/usuarios/recuperar-contrasena").permitAll()
