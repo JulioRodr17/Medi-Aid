@@ -1,5 +1,6 @@
 package com.escom.mediAid.services;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,9 @@ import java.util.UUID;
 @Service
 public class VerificationTokenService {
 
+    @Value("${app.expRegistro}") 
+    private int expRegistro;
+	
     private final VerificationTokenRepository tokenRepo;
 
     public VerificationTokenService(VerificationTokenRepository tokenRepo) {
@@ -33,10 +37,10 @@ public class VerificationTokenService {
             // Si ya existe, actualizamos el token y la fecha de expiración
             vt = optToken.get();
             vt.setToken(token);
-            vt.setExpiration(LocalDateTime.now().plusMinutes(1)); // por ejemplo, 60 minutos de validez
+            vt.setExpiration(LocalDateTime.now().plusMinutes(expRegistro)); // por ejemplo, 60 minutos de validez
         } else {
             // Si no existe, creamos uno nuevo
-            vt = new VerificationToken(usuario, token, 1);
+            vt = new VerificationToken(usuario, token, expRegistro);
         }
 
         return tokenRepo.save(vt);

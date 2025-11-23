@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.escom.mediAid.models.Usuario;
 import com.escom.mediAid.models.VerificationToken;
-import com.escom.mediAid.repositories.RolRepository;
 import com.escom.mediAid.repositories.UsuarioRepository;
 import com.escom.mediAid.repositories.VerificationTokenRepository;
 import com.escom.mediAid.services.EmailService;
@@ -14,7 +13,6 @@ import com.escom.mediAid.services.VerificationTokenService;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -95,12 +93,14 @@ public class PublicController {
             emailService.sendVerificationEmail(usuario.getCorreo(), newToken.getToken());
             return ResponseEntity.badRequest().body("El token ha expirado. Se ha enviado un nuevo correo de verificación.");
         }
+        else if(usuario.getActive()) {
+            return ResponseEntity.badRequest().body("Su cuenta ya se encuentra activa.");
+        }
 
         usuario.setActive(true);
         usuarioRepo.save(usuario);
 
         return ResponseEntity.ok("Correo verificado correctamente");
     }
-
 
 }

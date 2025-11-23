@@ -87,6 +87,19 @@ CREATE TABLE verification_token (
         ON DELETE CASCADE
 );
 
+CREATE TABLE password_reset_token (
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    usuario_id BIGINT NOT NULL,
+    expiration TIMESTAMP NOT NULL,
+    
+    CONSTRAINT fk_password_reset_user
+        FOREIGN KEY (usuario_id)
+        REFERENCES usuarios(id)
+        ON DELETE CASCADE
+);
+
+
 -- Tabla de Medicamentos
 CREATE TABLE medicamentos (
     id_medicamento SERIAL PRIMARY KEY,

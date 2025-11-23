@@ -4,10 +4,14 @@ import com.escom.mediAid.models.Usuario;
 import com.escom.mediAid.models.VerificationToken;
 import com.escom.mediAid.dtos.LoginDTO;
 import com.escom.mediAid.dtos.UsuarioDTO;
+import com.escom.mediAid.models.PasswordResetToken;
 import com.escom.mediAid.models.Rol;
 import com.escom.mediAid.repositories.UsuarioRepository;
 import com.escom.mediAid.repositories.VerificationTokenRepository;
 import com.escom.mediAid.security.JwtUtil;
+
+import jakarta.transaction.Transactional;
+
 import com.escom.mediAid.repositories.RolRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +33,16 @@ public class UsuarioService {
     private final RolRepository rolRepo;
     private final VerificationTokenService verificationTokenService;
     private final VerificationTokenRepository verificationTokenRepo;
+    private final PasswordResetTokenService passwordResetTokenService;
     private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Autowired
     private FotoService fotoService;
 
-    public UsuarioService(UsuarioRepository usuarioRepo, RolRepository rolRepo, VerificationTokenRepository verificationTokenRepo, VerificationTokenService verificationTokenService, EmailService emailService) {
+    public UsuarioService(UsuarioRepository usuarioRepo, RolRepository rolRepo, VerificationTokenRepository verificationTokenRepo, VerificationTokenService verificationTokenService, PasswordResetTokenService passwordResetTokenService, EmailService emailService) {
     	this.verificationTokenService = verificationTokenService;
     	this.verificationTokenRepo = verificationTokenRepo;
+    	this.passwordResetTokenService = passwordResetTokenService;
         this.emailService = emailService;
     	this.usuarioRepo = usuarioRepo;
         this.rolRepo = rolRepo;
@@ -199,4 +205,20 @@ public class UsuarioService {
 
         return userData;
     }
+    
+    public Map<String, Object> forgotPass(String correo) {
+        Map<String, Object> response = new HashMap<>();
+
+        Usuario usuario = usuarioRepo.findByCorreo(correo)
+                .orElseThrow(() -> new IllegalArgumentException("El correo no se encuentra registrado"));
+
+        if(usuario != null) {
+        	PasswordResetToken token = passwordResetTokenService.createTokenForUser(usuario);
+        	emailService.sendPasswordResetEmail(usuario.getCorreo(), token.getToken());
+        	response.put("mensaje", "Se ha enviado un enlace a su correo.");
+        }
+        return response;
+    }
+
+
 }

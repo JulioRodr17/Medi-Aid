@@ -1,5 +1,6 @@
 package com.escom.mediAid;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -20,6 +21,9 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class MediAidConfig {
+	
+    @Value("${app.rutaReact}")	private String rutaReact;
+    @Value("${app.timeout}")	private Integer timeOut;
     
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -35,11 +39,15 @@ public class MediAidConfig {
             .authorizeHttpRequests(auth -> auth
                 // 🔓 Rutas públicas
                 .requestMatchers("/api/public/verify").permitAll()
+                
                 .requestMatchers("/api/usuarios/registro").permitAll()
                 .requestMatchers("/api/usuarios/login").permitAll()
-                .requestMatchers("/api/usuarios/recuperar-contrasena").permitAll()
+                .requestMatchers("/api/usuarios/forgot-password").permitAll()
+                .requestMatchers("/api/usuarios/reset-password").permitAll()
+                
                 .requestMatchers("/api/proxy/qrFast").permitAll()
                 .requestMatchers("/api/proxy/qrSlow").permitAll()
+                
                 .requestMatchers("/api/noticias/activas").permitAll()
                 // 🔒 Resto requiere autenticación
                 .anyRequest().authenticated()
@@ -51,7 +59,7 @@ public class MediAidConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://135.224.184.142")); // tu frontend
+        configuration.setAllowedOrigins(List.of(rutaReact)); // tu frontend
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -65,8 +73,8 @@ public class MediAidConfig {
     @Bean
     public RestTemplate restTemplate() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(60000); // 60 segundos para conectarse
-        factory.setReadTimeout(60000);    // 60 segundos para leer la respuesta
+        factory.setConnectTimeout(timeOut); // 60 segundos para conectarse
+        factory.setReadTimeout(timeOut);    // 60 segundos para leer la respuesta
         return new RestTemplate(factory);
     }
 }

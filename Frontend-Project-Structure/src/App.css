@@ -1,4 +1,6 @@
 .App {
   height: 100%;
   width: 100%;
+
+  background: linear-gradient(135deg, #e0eafc 0%, #988cf0 40%,#5d49f5 90%);
 }

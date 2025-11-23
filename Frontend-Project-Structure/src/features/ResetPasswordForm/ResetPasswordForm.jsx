@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 // Importamos nuestros componentes de UI reutilizables
 import Input from '../../components/ui/input/Input';
 import Button from '../../components/ui/button/Button';
 import BackButton from '../../components/ui/backbutton/BackButton';
 
-import {useNavigate} from 'react-router-dom';
 import { authService } from '../../services/authService'; // Importamos el servicio
 // TODO: Necesitamos 'useSearchParams' para leer el token de la URL
 // import { useSearchParams } from 'react-router-dom';
@@ -13,17 +13,18 @@ import { authService } from '../../services/authService'; // Importamos el servi
 import './ResetPasswordForm.css';
 
 const ResetPasswordForm = () => {
-  const navigate = useNavigate();
-  const token = 'dummy_token'; // Usamos un token dummy por ahora
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState({
     newPassword: '',
     confirmPassword: '',
   });
-  
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+
+
+  const navigate = useNavigate();
+  const token = searchParams.get("token");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,9 +39,18 @@ const ResetPasswordForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
     
     if (formData.newPassword !== formData.confirmPassword) {
       setError('Las contraseñas no coinciden.');
+      return;
+    }
+
+    // Validar seguridad de contraseña
+    if (!passwordRegex.test(formData.newPassword)) {
+      setError(
+        'La contraseña debe tener mínimo 8 caracteres, incluir mayúscula, minúscula, número y un carácter especial.'
+      );
       return;
     }
     
@@ -51,10 +61,9 @@ const ResetPasswordForm = () => {
     try {
       await authService.resetPassword(token, formData.newPassword);
       setSuccess(true);
-      // Damos 3 segundos antes de redirigir al login
       setTimeout(() => {
         navigate('/login');
-      }, 3000);
+      }, 2000);
 
     } catch (err) {
       setError(err.message || 'Error al restablecer la contraseña.');

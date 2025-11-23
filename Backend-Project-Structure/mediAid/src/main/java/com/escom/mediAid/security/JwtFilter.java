@@ -26,11 +26,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // 🔹 Excluir rutas públicas (sin token)
         if (path.startsWith("/api/public/verify") ||
+        	
         	path.startsWith("/api/usuarios/login") ||
             path.startsWith("/api/usuarios/registro") ||
-            path.startsWith("/api/usuarios/recuperar-contrasena") ||
+            path.startsWith("/api/usuarios/forgot-password") ||
+            path.startsWith("/api/usuarios/reset-password") ||
+
             path.startsWith("/api/proxy/qrFast") ||
             path.startsWith("/api/proxy/qrSlow") ||
+            
             path.startsWith("/api/noticias/activas")) {
             filterChain.doFilter(request, response);
             return;

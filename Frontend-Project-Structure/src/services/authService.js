@@ -23,18 +23,12 @@ const register = (registerData) => {
 
 //================================================== SERVICIO OLVIDAR CONTRASEÑA ==================================================
 const forgotPassword = (email) => {
-  if (USE_DUMMY_DATA) {
-    return simulateForgotPassword(email);
-  }
-  return httpClient.post('/auth/forgot-password', { email });
+  return httpClient.post('/usuarios/forgot-password', { correo: email });
 };
 
 //================================================== SERVICIO RESETEAR CONTRASEÑA ==================================================
 const resetPassword = (token, newPassword) => {
-  if (USE_DUMMY_DATA) {
-    return simulateResetPassword(token, newPassword);
-  }
-  return httpClient.post('/auth/reset-password', { token, newPassword });
+  return httpClient.post('/usuarios/reset-password', { token: token, contrasena: newPassword });
 };
 
 //================================================== EXPORTAR SERVICIOS ==================================================

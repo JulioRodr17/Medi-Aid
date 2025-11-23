@@ -33,7 +33,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/registro" element={<Register />} />
             <Route path="/recuperar-contrasena" element={<ForgotPasswordPage />} />
-            <Route path="/restablecer-contrasena" element={<ResetPasswordPage />} />
+            <Route path="/restablecerPassword" element={<ResetPasswordPage />} />
             <Route path="/verify" element={<TokenValidator/>}/>
           </Route>
 

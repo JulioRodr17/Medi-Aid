@@ -14,9 +14,9 @@ public class JwtUtil {
 	// Clave secreta para firmar el token (en producción ponerla en variables de entorno)
 	private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-	// Tiempo de expiración: 1 hora
-	private static final long EXPIRATION_TIME = 3600_000; // 1 hora en ms 
-
+    //@Value("${app.expirationTime}") 
+    private static long EXPIRATION_TIME = 3600_000; // No funciona el value
+    
 	// ================================================== GENERACIÓN DE TOKEN DE SESION ==================================================
 	public static String generateToken(Integer userId, String rol, Boolean admin) {
 		Date now = new Date();

@@ -1,0 +1,37 @@
+/* Contenedor que centra el box en la pantalla */
+.verificacion-container {
+  display: flex;
+  justify-content: center;  /* centra horizontalmente */
+  align-items: center;      /* centra verticalmente */
+  height: 100vh;            /* ocupa toda la altura de la ventana */
+}
+
+.verificacion-form-box {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+  position: relative; /* Necesario para posicionar el BackButton */
+}
+
+.verificacion-form-box h2 {
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.form-instructions {
+  color: #666;
+  margin-bottom: 24px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.verificacion-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
