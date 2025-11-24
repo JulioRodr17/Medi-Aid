@@ -10,10 +10,13 @@ const AuthWatcher = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const isDummyToken = typeof token === 'string' && token.startsWith("dummy-");
+
     // Solo validar si hay token (usuario logueado)
-    if (token && !isTokenValid(token)) {
+    if (token && !isDummyToken && !isTokenValid(token)) {
+      console.warn("AuthWatcher: Token real expirado o inválido.");
       alert("Sesión expirada, cerrando sesión...");
-      logout(); // limpia estado y localStorage
+      logout(); 
       navigate("/login", { replace: true });
     }
   }, [location.pathname, token, logout, navigate]);

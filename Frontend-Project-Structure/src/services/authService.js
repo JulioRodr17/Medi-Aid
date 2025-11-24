@@ -1,5 +1,5 @@
 import { httpClient } from './httpClient';
-import { simulateForgotPassword, simulateResetPassword} from '../data/userData';
+import { simulateLogin,simulateForgotPassword, simulateResetPassword} from '../data/userData';
 
 // --- ¡EL INTERRUPTOR MÁGICO! ---
 // true = Usa los archivos de src/data/
@@ -12,6 +12,9 @@ const login = (email, password) => {
     correo: email,
     contrasena: password,
   };
+  if (USE_DUMMY_DATA) {
+    return simulateLogin(email, password); 
+  }
   // Se llama la api con el usuario
   return httpClient.post('/usuarios/login', usr);
 };

@@ -26,19 +26,18 @@ export const AuthProvider = ({ children }) => {
 
       if (storedToken && storedUser) {
         const isDummyToken = storedToken.startsWith("dummy-");
-
+      
         if (!isDummyToken && !isTokenValid(storedToken)) {
           console.log('Token inválido o expirado. Cerrando sesión.');
           logout();
           return;
-        }
+        }        
         setUser(JSON.parse(storedUser));
         setToken(storedToken);
         setIsAuthenticated(true);
       }
-
     } catch (error) {
-      console.error('Error al cargar la sesión desde localStorage:', error);
+      console.error('Error al cargar la sesión:', error);
       logout();
     } finally {
       setLoading(false);
@@ -47,15 +46,18 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const userData = await authService.login(email, password);
+      const data = await authService.login(email, password);
       
+      const { token: responseToken, ...userData } = data;
+
       setUser(userData);
-      setToken(userData.token);
+      setToken(responseToken);
       setIsAuthenticated(true);
 
-      // Guardamos en localStorage
-      localStorage.setItem('authUser', JSON.stringify(userData));
-      localStorage.setItem('authToken', responseToken);
+      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem('token', responseToken);
+
+      return userData;
 
     } catch (error) {
       console.error('Error en login (AuthContext):', error);
