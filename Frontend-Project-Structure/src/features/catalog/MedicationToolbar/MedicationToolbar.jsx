@@ -14,43 +14,48 @@ const SearchIcon = () => (
   </svg>
 );
 
-const MedicationToolbar = ({ onSearchChange }) => {
+const MedicationToolbar = ({ categories, onFilterChange }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  // 1. Creamos el estado para controlar la visibilidad del menú. Por defecto, está cerrado.
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
+    onFilterChange({ search: event.target.value, category: selectedCategory });
   };
 
-  // 2. Creamos la función que abrirá/cerrará el menú.
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+    onFilterChange({ search: searchTerm, category: event.target.value });
+  };
+
   const toggleFilterMenu = () => {
-    setIsMenuOpen(!isMenuOpen); // Invierte el valor actual (true -> false, false -> true)
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
     <div className="medication-toolbar">
-      {/* 3. Envolvemos el botón y el menú en un div para posicionar el menú relativo al botón. */}
       <div className="filter-wrapper">
         <button className="filter-button" onClick={toggleFilterMenu}>
           <FilterIcon />
           <span>Filtros</span>
         </button>
 
-        {/* 4. Renderizado Condicional: El menú solo se muestra si isMenuOpen es true. */}
         {isMenuOpen && (
           <div className="filters-dropdown">
-            <ul>
-              <li><a href="#">Opción 1</a></li>
-              <li><a href="#">Opción 2</a></li>
-              <li><a href="#">Opción 3</a></li>
-            </ul>
+            <select value={selectedCategory} onChange={handleCategoryChange}>
+              <option value="">Todas las categorías</option>
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.nombreCategoria}
+                </option>
+              ))}
+            </select>
           </div>
         )}
       </div>
 
       <div className="search-bar">
-        {/* ... (el campo de búsqueda no cambia) ... */}
         <div className="search-icon-wrapper">
           <SearchIcon />
         </div>
@@ -65,6 +70,7 @@ const MedicationToolbar = ({ onSearchChange }) => {
     </div>
   );
 };
+
 
 export default MedicationToolbar;
 

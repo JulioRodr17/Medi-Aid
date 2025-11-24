@@ -33,6 +33,14 @@ let DUMMY_MEDICATIONS = Array.from({ length: 25 }, (_, i) => ({
   imageUrl: '' // Usará el placeholder
 }));
 
+const DUMMY_CATEGORIES = [
+  { id_categoria: 1, nombre_categoria: 'Analgésicos', descripcion: 'Medicamentos para aliviar el dolor' },
+  { id_categoria: 2, nombre_categoria: 'Antibióticos', descripcion: 'Medicamentos que combaten infecciones bacterianas' },
+  { id_categoria: 3, nombre_categoria: 'Antiinflamatorios', descripcion: 'Reducen la inflamación y el dolor' },
+  { id_categoria: 4, nombre_categoria: 'Antihipertensivos', descripcion: 'Controlan la presión arterial alta' },
+  { id_categoria: 5, nombre_categoria: 'Vitaminas y suplementos', descripcion: 'Complementos nutricionales' }
+];
+
 const DUMMY_SCARCE_MEDS = [
   { id: 'm1', name: 'Paracetamol' },
   { id: 'm3', name: 'Amoxicilina' },
@@ -40,6 +48,16 @@ const DUMMY_SCARCE_MEDS = [
   { id: 'm12', name: 'Omeprazol' },
   { id: 'm5', name: 'Ibuprofeno' }
 ];
+
+// Simulación de obtener categorías
+export const simulateGetCategories = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('Simulando API: obteniendo categorías');
+      resolve(DUMMY_CATEGORIES);
+    }, 200); // Pequeña demora para simular llamada real
+  });
+};
 
 // --- Simulación de la lógica de la API ---
 
@@ -49,8 +67,8 @@ export const simulateGetMedications = (filters = {}) => {
       // Aquí en un futuro podríamos simular la búsqueda y paginación
       console.log('Simulando API: Obteniendo medicamentos con filtros:', filters);
       resolve({
-        data: DUMMY_MEDICATIONS,
-        totalPages: Math.ceil(DUMMY_MEDICATIONS.length / 8) // Asumiendo 8 por página
+        data: DUMMY_MEDICATIONS.slice(filters.page * filters.size, (filters.page + 1) * filters.size),
+        totalPages: Math.ceil(DUMMY_MEDICATIONS.length / filters.size) // Asumiendo 8 por página
       });
     }, 400);
   });

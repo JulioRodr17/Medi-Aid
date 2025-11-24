@@ -32,21 +32,27 @@ const InventoryTable = ({ inventory, onEdit, onDelete, onAdd }) => {
           {inventory.map((med) => (
             <tr key={med.id}>
               <td>
-                <span className="med-name">{med.name}</span>
-                <span className="med-dosage">{med.dosage}</span>
+                <span className="med-name">{med.nombreMedicamento}</span>
+                <span className="med-dosage">{med.dosis}</span>
               </td>
-              <td>{med.category}</td>
+              <td>{med.categoria.nombreCategoria}</td>
               <td>
-                <span className={`stock-level ${med.stock < 10 ? 'low' : ''}`}>
-                  {med.stock}
+                <span className={`stock-level ${med.cantidadStock < med.stockMinimo ? 'low' : ''}`}>
+                  {med.cantidadStock}
                 </span>
               </td>
               <td>
-                {med.expiringSoon ? (
-                  <span className="expiring-soon">Próximo a caducar</span>
-                ) : (
-                  'En regla'
-                )}
+                {med.fechaCaducidad ? (() => {
+                  const hoy = new Date();
+                  const fechaCad = new Date(med.fechaCaducidad);
+                  const diffTime = fechaCad - hoy; // diferencia en milisegundos
+                  const diffDays = diffTime / (1000 * 60 * 60 * 24); // convertir a días
+                  return diffDays <= 30 && diffDays >= 0 ? (
+                    <span className="expiring-soon">{med.fechaCaducidad}</span>
+                  ) : (
+                    <span>{med.fechaCaducidad}</span>
+                  );
+                })() : ( <span>No hay fecha</span> )}
               </td>
               <td className="action-buttons">
                 <button className="action-btn edit" onClick={() => onEdit(med)}>

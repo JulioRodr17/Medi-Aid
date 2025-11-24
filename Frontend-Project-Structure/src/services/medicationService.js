@@ -1,81 +1,44 @@
 import { httpClient } from './httpClient';
-import { 
-  simulateGetMedications, 
-  simulateGetScarceMedications,
-  simulateGetInventoryStats,
-  simulateAddMedication,
-  simulateUpdateMedication,
-  simulateDeleteMedication
-} from '../data/medicationData';
-const USE_DUMMY_DATA = true;
 
-
-
-/**
- * Obtiene la lista de medicamentos (paginada/filtrada).
- */
 const getMedications = (filters = {}) => {
-  if (USE_DUMMY_DATA) {
-    return simulateGetMedications(filters);
-  }
-
-  // TODO: BACKEND
-  // En un futuro, los filtros se pasarán como query params
-  // ej. /medications?page=1&search=paracetamol
-  return httpClient.get('/medications', { params: filters });
+  return httpClient.get('/medicamentos/filtrados', { params: filters });
 };
 
-/**
- * Obtiene la lista de medicamentos escasos.
- */
+// Obtener nombres
+const getNombres = (filters = {}) => {
+  return httpClient.get('/medicamentos/nombres', { params: filters });
+};
+
+// Servicio para entregar las categorías de medicamentos
+export const getCategories = async () => {
+  return httpClient.get('/medicamentos/categorias');
+};
+
+// Medicamentos escasos
 const getScarceMedications = () => {
-  if (USE_DUMMY_DATA) {
-    return simulateGetScarceMedications();
-  }
-
-  // TODO: BACKEND
-  return httpClient.get('/medications/scarce');
-};
-
-const getInventoryStats = () => {
-  if (USE_DUMMY_DATA) {
-    return simulateGetInventoryStats();
-  }
-  // TODO: BACKEND
-  return httpClient.get('/admin/inventory/stats');
+  return httpClient.get('/medicamentos/scarce');
 };
 
 const addMedication = (medData) => {
-  if (USE_DUMMY_DATA) {
-    return simulateAddMedication(medData);
-  }
-  // TODO: BACKEND
-  return httpClient.post('/admin/inventory', medData);
+  return httpClient.post('/medicamentos/agregar', medData);
 };
 
-const updateMedication = (medId, medData) => {
-  if (USE_DUMMY_DATA) {
-    return simulateUpdateMedication(medId, medData);
-  }
-  // TODO: BACKEND
-  return httpClient.put(`/admin/inventory/${medId}`, medData);
+const updateMedication = (medData) => {
+  return httpClient.put('/medicamentos/actualizar', medData);
 };
 
 const deleteMedication = (medId) => {
-  if (USE_DUMMY_DATA) {
-    return simulateDeleteMedication(medId);
-  }
-  // TODO: BACKEND
-  return httpClient.delete(`/admin/inventory/${medId}`);
+  return httpClient.delete(`/medicamentos/inactivar/${medId}`);
 };
 
 
 export const medicationService = {
   // Usuario
+  getCategories,
   getMedications,
+  getNombres,
   getScarceMedications,
   // Admin
-  getInventoryStats,
   addMedication,
   updateMedication,
   deleteMedication,

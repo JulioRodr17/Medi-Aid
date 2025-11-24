@@ -2,49 +2,135 @@ import React, { useState, useEffect } from 'react';
 import './MedicationForm.css';
 import Input from '../../../components/ui/input/Input';
 import Button from '../../../components/ui/button/Button';
+import { medicationService } from '../../../services/medicationService';
 
-//TODO: Agregar categorias que existen en servicio medico
-const CATEGORIES = [
-  'Analgésico', 'Antibiótico', 'Antiinflamatorio', 'Antihistamínico',
-  'Antiácido', 'Relajante muscular', 'Antiviral', 'Broncodilatador',
-  'Diurético', 'Protector gástrico'
-];
-
-/**
- * Formulario para Agregar o Editar un Medicamento.
- * @param {object | null} medication - El objeto del medicamento a editar, o null si es para agregar.
- * @param {function} onSave - Función que se llama al guardar (recibe los nuevos datos).
- * @param {function} onCancel - Función que se llama al cancelar (cierra el modal).
- */
 const MedicationForm = ({ medication, onSave, onCancel }) => {
-  
-  const [formData, setFormData] = useState({
-    name: medication?.name || '',
-    dosage: medication?.dosage || '',
-    category: medication?.category || CATEGORIES[0], 
-    stock: medication?.stock || 0,
-    description: medication?.description || '',
-    expirationDate: medication?.expirationDate || '', 
-  })
 
+  const [formData, setFormData] = useState({
+    id: medication?.id || null,
+    nombreMedicamento: medication?.nombreMedicamento || '',
+    categoria: medication?.categoria.id,
+    descripcion: medication?.descripcion || '',
+    presentacion: medication?.presentacion || '',
+    dosis: medication?.dosis || '',
+    cantidadStock: medication?.cantidadStock || 0,
+    stockMinimo: medication?.stockMinimo || 5,
+    fechaCaducidad: medication?.fechaCaducidad || '',
+    uso: medication?.uso || ''
+  });
+
+  const [categories, setCategories] = useState([]);
+  const [nombres, setNombres] = useState([]);
+  const [selectedNombre, setSelectedNombre] = useState("otro"); // default
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  /** ─────────────────────────────────────────
+   *  Cargar categorías y nombres de medicamentos
+   * ────────────────────────────────────────── */
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const categoriesResponse = await medicationService.getCategories();
+        const nombresResponse = await medicationService.getNombres();
+
+        console.log(formData);
+
+        setCategories(categoriesResponse);
+        setNombres(nombresResponse);
+
+        // Manejo de categoría
+        if (!medication) {
+          setFormData(prev => ({
+            ...prev,
+            categoria: categoriesResponse[0]?.id
+          }));
+        } else {
+          setFormData(prev => ({
+            ...prev,
+            categoria: medication.categoria?.id
+          }));
+        }
+
+        // Manejo del select de nombres
+        const exists = nombresResponse.some(n => n === medication?.nombreMedicamento);
+
+        if (medication) {
+          if (exists) {
+            setSelectedNombre(medication.nombreMedicamento);
+          } else {
+            setSelectedNombre("otro");
+          }
+        }
+
+      } catch (err) {
+        console.error("Error cargando datos:", err);
+      }
+    };
+
+    fetchData();
+  }, [medication]);
+
+  /** ─────────────────────────────────────────
+   *  Manejo del cambio en inputs y selects
+   * ────────────────────────────────────────── */
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    
+    if (name === "categoria") {
+      setFormData(prev => ({
+        ...prev,
+        [name]: Number(value) // guardar siempre como número
+      }));
+      return;
+    }
+    // Si se cambia el select de nombre
+    if (name === "nombreMedicamentoSelect") {
+      setSelectedNombre(value);
+
+      if (value !== "otro") {
+        // Si selecciona uno de la lista, actualizar directamente
+        setFormData(prev => ({ ...prev, nombreMedicamento: value }));
+      } else {
+        // Si selecciona "otro", limpiar el input
+        setFormData(prev => ({ ...prev, nombreMedicamento: '' }));
+      }
+
+      return;
+    }
+
+    // Para el input de nombre manual
+    if (name === "nombreMedicamento") {
+      setFormData(prev => ({
+        ...prev,
+        nombreMedicamento: value
+      }));
+      return;
+    }
+
+    // Para el resto del formulario
     setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
   };
 
+  /** ─────────────────────────────────────────
+   *  Enviar form
+   * ────────────────────────────────────────── */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    
+
+    const payload = {
+      ...formData,
+      categoria: categories.find(cat => cat.id === formData.categoria) || null
+    };
+
     try {
-      await onSave(formData);
+      await onSave(payload);
     } catch (err) {
       setError(err.message || 'Error al guardar el medicamento.');
     } finally {
@@ -52,72 +138,115 @@ const MedicationForm = ({ medication, onSave, onCancel }) => {
     }
   };
 
-return (
+  return (
     <form onSubmit={handleSubmit} className="medication-form">
-      <div className="med-form-row">
+
+      {/* SELECT DE NOMBRE DEL MEDICAMENTO */}
+      <div className="form-group">
+        <label htmlFor="nombreMedicamentoSelect">Nombre del Medicamento</label>
+        <select
+          id="nombreMedicamentoSelect"
+          name="nombreMedicamentoSelect"
+          value={selectedNombre}
+          onChange={handleChange}
+          disabled={loading}
+        >
+          {nombres.map(nombre => (
+            <option key={nombre} value={nombre}>{nombre}</option>
+          ))}
+          <option value="otro">Otro...</option>
+        </select>
+      </div>
+
+      {/* INPUT cuando selecciona "otro" */}
+      {selectedNombre === "otro" && (
         <Input
-          id="name"
-          name="name"
-          label="Nombre del Medicamento"
-          value={formData.name}
+          id="nombreMedicamento"
+          name="nombreMedicamento"
+          label="Nombre Personalizado"
+          value={formData.nombreMedicamento}
           onChange={handleChange}
           disabled={loading}
           required
         />
+      )}
+
+      <div className="med-form-row">
         <Input
-          id="dosage"
-          name="dosage"
+          id="dosis"
+          name="dosis"
           label="Dosis (ej. 500 mg)"
-          value={formData.dosage}
+          value={formData.dosis}
+          onChange={handleChange}
+          disabled={loading}
+        />
+
+        <Input
+          id="presentacion"
+          name="presentacion"
+          label="Presentación"
+          value={formData.presentacion}
           onChange={handleChange}
           disabled={loading}
         />
       </div>
-      
+
       <div className="form-group">
-        <label htmlFor="category">Categoría</label>
-        <select 
-          id="category" 
-          name="category" 
-          value={formData.category} 
+        <label htmlFor="categoria">Categoría</label>
+        <select
+          id="categoria"
+          name="categoria"
+          value={formData.categoria}
           onChange={handleChange}
-          disabled={loading}
+          disabled={loading || categories.length === 0}
           required
         >
-          {CATEGORIES.map(cat => (
-            <option key={cat} value={cat}>{cat}</option>
+          {categories.map(cat => (
+            <option key={cat.id} value={cat.id}>{cat.nombreCategoria}</option>
           ))}
         </select>
       </div>
-      
+
       <div className="med-form-row">
         <Input
-          id="stock"
-          name="stock"
+          id="cantidadStock"
+          name="cantidadStock"
           label="Stock (Unidades)"
           type="number"
           min="0"
-          value={formData.stock}
+          value={formData.cantidadStock}
           onChange={handleChange}
           disabled={loading}
           required
         />
+
         <Input
-          id="expirationDate"
-          name="expirationDate"
+          id="stockMinimo"
+          name="stockMinimo"
+          label="Stock Mínimo"
+          type="number"
+          min="0"
+          value={formData.stockMinimo}
+          onChange={handleChange}
+          disabled={loading}
+        />
+
+        <Input
+          id="fechaCaducidad"
+          name="fechaCaducidad"
           label="Fecha de Caducidad"
           type="date"
-          value={formData.expirationDate}
+          value={formData.fechaCaducidad}
           onChange={handleChange}
           disabled={loading}
         />
       </div>
-      
+
       <Input
-        id="description"
-        name="description"
+        id="descripcion"
+        name="descripcion"
         label="Descripción"
-        value={formData.description}
+        value={formData.descripcion}
         onChange={handleChange}
         disabled={loading}
       />
@@ -128,9 +257,10 @@ return (
         <Button type="button" variant="secondary" onClick={onCancel} disabled={loading}>
           Cancelar
         </Button>
-        <Button 
-          type="submit" 
-          variant="primary" 
+
+        <Button
+          type="submit"
+          variant="primary"
           style={{ backgroundColor: '#3921f2' }}
           disabled={loading}
         >

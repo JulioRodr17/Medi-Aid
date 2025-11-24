@@ -3,6 +3,7 @@ import './DeleteWarningModal.css';
 import Button from '../../../components/ui/Button/Button';
 
 const DeleteWarningModal = ({ medication, onConfirm, onCancel }) => {
+  console.log(medication);
   const [loading, setLoading] = useState(false);
 
   const handleConfirm = async () => {
@@ -15,7 +16,7 @@ const DeleteWarningModal = ({ medication, onConfirm, onCancel }) => {
     <div className="delete-warning-content">
       <p className="delete-warning-text">
         ¿Estás seguro de que quieres eliminar el medicamento 
-        <strong> {medication?.name} ({medication?.dosage})</strong>?
+        <strong> {medication.cantidadStock} {medication.presentacion} {medication?.nombreMedicamento} ({medication?.dosis}), ({medication.fechaCaducidad})</strong>?
         <br />
         Esta acción no se puede deshacer.
       </p>

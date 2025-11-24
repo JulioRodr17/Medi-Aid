@@ -19,20 +19,20 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button
         className="pagination-button"
         onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
+        disabled={currentPage === 0}
       >
         <ChevronLeft />
         <span>Anterior</span>
       </button>
 
       <span className="pagination-info">
-        Página <strong>{currentPage}</strong> de <strong>{totalPages}</strong>
+        Página <strong>{currentPage + 1}</strong> de <strong>{totalPages}</strong>
       </span>
 
       <button
         className="pagination-button"
         onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
+        disabled={currentPage === totalPages - 1}
       >
         <span>Siguiente</span>
         <ChevronRight />

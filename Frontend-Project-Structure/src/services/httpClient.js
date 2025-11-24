@@ -5,6 +5,14 @@ const API_BASE_URL = 'http://localhost:8080/api';     // Desarrollo
 const request = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
 
+  let url = `${API_BASE_URL}${endpoint}`;
+
+  // --- Construir query params ---
+  if (options.params) {
+    const query = new URLSearchParams(options.params).toString();
+    if (query) url += `?${query}`;
+  }
+
   const config = {
     method: options.method || 'GET',
     headers: {
@@ -20,15 +28,13 @@ const request = async (endpoint, options = {}) => {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+    const response = await fetch(url, config);
 
-    // Leer body primero (JSON o vacío)
     const contentType = response.headers.get('content-type');
     const data = contentType && contentType.includes('application/json')
       ? await response.json().catch(() => ({}))
       : await response.text().then(text => ({ data: text }));
-    
-    // Manejar errores específicos
+
     if (response.status === 401) {
       localStorage.removeItem('token');
       alert('Sesión expirada. Por favor, inicia sesión de nuevo.');
@@ -41,15 +47,12 @@ const request = async (endpoint, options = {}) => {
       return;
     }
 
-    // Otros errores HTTP
     if (!response.ok) {
       throw new Error(data.error || `Error ${response.status}: ${response.statusText}`);
     }
 
-    // No Content
     if (response.status === 204) return null;
 
-    // Respuesta correcta
     return data;
 
   } catch (error) {

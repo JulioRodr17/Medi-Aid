@@ -3,6 +3,7 @@ import './MedicationDetailModal.css';
 import placeholderImage from '../../../assets/images/med-placeholder.png';
 
 const MedicationDetailModal = ({ medication, onClose }) => {
+  console.log(medication);
   const handleContentClick = (e) => {
     e.stopPropagation();
   };
@@ -18,21 +19,21 @@ const MedicationDetailModal = ({ medication, onClose }) => {
           <div className="modal-image-container">
             <img 
               src={medication.imageUrl || placeholderImage} 
-              alt={medication.name} 
+              alt={medication.nombreMedicamento}  
               className="modal-image"
             />
           </div>
           <div className="modal-info">
-            <h2 className="modal-title">{medication.name}</h2>
-            <p className="modal-dosage">{medication.dosage}</p>
+            <h2 className="modal-title">{medication.nombreMedicamento}</h2>
+            <p className="modal-dosage">{medication.dosis}</p>
             <p className="modal-description">
-              {medication.description || 'No hay descripción disponible.'}
+              {medication.descripcion || 'No hay descripción disponible.'}
             </p>
               <div className="modal-extra-details">
                 <br />
-                <span><strong>Categoría:</strong> {medication.category}</span>
+                <span><strong>Categoría:</strong> {medication.categoria.nombreCategoria}</span>
                 <br />
-                <span><strong>Stock:</strong> {medication.stock}</span>
+                <span><strong>Stock:</strong> {medication.cantidadStock}</span>
                 
               </div>      
           </div>

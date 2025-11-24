@@ -25,10 +25,7 @@ const ProfileIcon = () => (
 
 const Navbar = () => {
   const { user } = useAuth();
-  const isAdmin = user.admin;
-
-  console.log(user);
-  
+  const isAdmin = user.admin;  
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   // TODO: BACKEND
   // Este valor debe venir de una llamada a la API que

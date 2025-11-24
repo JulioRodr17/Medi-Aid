@@ -28,14 +28,10 @@ const InventoryPage = () => {
     try {
       setLoading(true);
       setError(null);
-      
-      // TODO: BACKEND - Llamamos a los servicios
-      // Usamos Promise.all para que se carguen al mismo tiempo
-      const [statsData, inventoryData] = await Promise.all([
-        medicationService.getInventoryStats(),
-        medicationService.getMedications() // Reutilizamos este servicio
-      ]);
-      
+
+      //const inventoryData = await medicationService.getMedications({ size: 0, sortBy: "fechaCaducidad", sortDirection: "DESC" });
+      const inventoryData = await medicationService.getMedications({ size: 0, sortBy: "nombreMedicamento", sortDirection: "ASC" });
+      const statsData = summarizeMedicamentos(inventoryData.data);
       setStats(statsData);
       setInventory(inventoryData.data); // getMedications devuelve { data: [...] }
 
@@ -46,6 +42,46 @@ const InventoryPage = () => {
       setLoading(false);
     }
   };
+
+  function summarizeMedicamentos(medicamentos) {
+    const hoy = new Date();
+    const proximos30Dias = 30 * 24 * 60 * 60 * 1000; // 30 días en milisegundos
+
+    let totalMeds = 0;
+    const nombreMedicamentosSet = new Set();
+    let expiringSoon = 0;
+    const scarceMedsSet = new Set();
+
+    medicamentos.forEach(med => {
+      // Total de cantidadStock
+      totalMeds += med.cantidadStock;
+
+      // Nombres de medicamentos diferentes
+      nombreMedicamentosSet.add(med.nombreMedicamento);
+
+      // Próximo a caducar
+      if (med.fechaCaducidad) {
+        const fechaCad = new Date(med.fechaCaducidad);
+        const diffTime = fechaCad - hoy;
+        if (diffTime >= 0 && diffTime <= proximos30Dias) {
+          expiringSoon += med.cantidadStock;
+        }
+      }
+
+      // Medicamentos escasos
+      if (med.cantidadStock <= med.stockMinimo) {
+        scarceMedsSet.add(med.nombreMedicamento);
+      }
+    });
+
+    return {
+      totalMeds,
+      typesOfMeds: nombreMedicamentosSet.size,
+      expiringSoon,
+      scarceMedsCount: scarceMedsSet.size
+    };
+  }
+
 
   // Cargar datos al montar el componente
   useEffect(() => {
@@ -83,13 +119,10 @@ const InventoryPage = () => {
 
   const handleSave = async (formData) => {
     try {
+      console.log(formData);
       if (selectedMedication) {
-        // --- Lógica de ACTUALIZAR ---
-        // TODO: BACKEND - Llamar al servicio de actualización
-        await medicationService.updateMedication(selectedMedication.id, formData);
+        await medicationService.updateMedication(formData);
       } else {
-        // --- Lógica de AGREGAR ---
-        // TODO: BACKEND - Llamar al servicio de agregar
         await medicationService.addMedication(formData);
       }
       
@@ -107,8 +140,6 @@ const InventoryPage = () => {
     if (!selectedMedication) return;
     
     try {
-      // --- Lógica de BORRAR ---
-      // TODO: BACKEND - Llamar al servicio de borrado
       await medicationService.deleteMedication(selectedMedication.id);
       
       handleCloseModals(); // Cierra el modal

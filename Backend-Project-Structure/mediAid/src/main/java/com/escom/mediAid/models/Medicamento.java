@@ -24,11 +24,26 @@ public class Medicamento {
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
+    @Column(name = "presentacion", length = 100)
+    private String presentacion;
+
+    @Column(name = "dosis", length = 50)
+    private String dosis;
+
+    @Column(name = "cantidad_stock")
+    private Integer cantidadStock;
+    
+    @Column(name = "stock_minimo ")
+    private Integer stockMinimo;
+
     @Column(name = "fecha_caducidad")
     private LocalDate fechaCaducidad;
 
-    @Column(nullable = false, length = 50)
-    private String estado = "ACTIVO";
+    @Column(columnDefinition = "TEXT")
+    private String uso;
+
+    @Column(name = "activo", nullable = false)
+    private Boolean activo = true;  // Antes era estado VARCHAR
 
     @Column(name = "fecha_registro", nullable = false, updatable = false)
     private LocalDateTime fechaRegistro = LocalDateTime.now();
@@ -70,6 +85,39 @@ public class Medicamento {
         this.descripcion = descripcion;
     }
 
+    public String getPresentacion() {
+        return presentacion;
+    }
+
+    public void setPresentacion(String presentacion) {
+        this.presentacion = presentacion;
+    }
+
+    public String getDosis() {
+        return dosis;
+    }
+
+    public void setDosis(String dosis) {
+        this.dosis = dosis;
+    }
+
+    public Integer getCantidadStock() {
+        return cantidadStock;
+    }
+
+    public void setCantidadStock(Integer cantidadStock) {
+        this.cantidadStock = cantidadStock;
+    }
+
+    public Integer getStockMinimo() {
+        return stockMinimo;
+    }
+
+    public void setStockMinimo(Integer stockMinimo) {
+        this.stockMinimo = stockMinimo;
+    }
+
+    
     public LocalDate getFechaCaducidad() {
         return fechaCaducidad;
     }
@@ -78,12 +126,24 @@ public class Medicamento {
         this.fechaCaducidad = fechaCaducidad;
     }
 
-    public String getEstado() {
-        return estado;
+    public String getUso() {
+        return uso;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setUso(String uso) {
+        this.uso = uso;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+    
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    public void setEstado(Boolean activo) {
+        this.activo = activo;
     }
 
     public LocalDateTime getFechaRegistro() {
