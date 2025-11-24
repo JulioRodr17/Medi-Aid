@@ -25,10 +25,11 @@ const ProfileIcon = () => (
 
 const Navbar = () => {
   const { user } = useAuth();
-  const [isNotifOpen, setIsNotifOpen] = useState(false);
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user.admin;
 
-  // 2. Estado para la insignia (badge)
+  console.log(user);
+  
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
   // TODO: BACKEND
   // Este valor debe venir de una llamada a la API que
   // verifique si hay notificaciones no leídas.
@@ -69,7 +70,7 @@ const Navbar = () => {
         </NavLink>
 
         {isAdmin && (
-          <NavLink to="/inventario" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+          <NavLink to="inventario" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
             Inventario
           </NavLink>
         )}
@@ -99,4 +100,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

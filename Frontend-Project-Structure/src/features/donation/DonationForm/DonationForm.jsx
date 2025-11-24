@@ -26,7 +26,7 @@ const DonationForm = () => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value.toLowerCase(),
     }));
   };
 
@@ -155,8 +155,7 @@ const DonationForm = () => {
 
           <Button 
             type="submit" 
-            variant="primary" 
-            style={{ backgroundColor: '#3921f2' }}
+            variant="primary"
             disabled={loading}
           >
             {loading ? 'Enviando...' : 'Enviar Donación'}

@@ -9,6 +9,9 @@ const AdminRoute = ({ children }) => {
     return <div>Cargando...</div>; // O un <Spinner />
   }
 
+  console.log("AdminRoute Check:", { isAuthenticated, role: user?.role });
+
+
   if (isAuthenticated && user.role === 'admin') {
     return children;
   }

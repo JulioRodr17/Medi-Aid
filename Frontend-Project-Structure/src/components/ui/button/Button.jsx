@@ -9,13 +9,16 @@ const Button = ({
   disabled = false,
   style = {}
 }) => {
-  const mode = `ui-button--${variant}`; 
+  const baseClass = `ui-button`; 
+  const variantClass = `ui-button--${variant}`;
   const disabledClass = disabled ? 'ui-button--disabled' : '';
+
+  const finalClasses = [baseClass, variantClass, disabledClass].join(' ');
 
   return (
     <button
       type={type}
-      className={['ui-button', mode, disabledClass].join(' ')}
+      className={finalClasses}
       onClick={onClick}
       style={style}
       disabled={disabled}
