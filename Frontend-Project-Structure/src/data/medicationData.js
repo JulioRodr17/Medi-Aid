@@ -1,17 +1,10 @@
 // --- Simulación de la base de datos de medicamentos ---
 
-// 1. Creamos nuestra lista de 10 categorías
 const CATEGORIES = [
-  'Analgésico',
-  'Antibiótico',
-  'Antiinflamatorio',
-  'Antihistamínico',
-  'Antiácido',
-  'Relajante muscular',
-  'Antiviral',
-  'Broncodilatador',
-  'Diurético',
-  'Protector gástrico'
+  'Pastillas', 
+  'Capsulas', 
+  'Jarabes', 
+  'Insumos'
 ];
 
 const getRandomExpiration = () => {

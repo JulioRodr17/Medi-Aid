@@ -25,12 +25,13 @@ export const AuthProvider = ({ children }) => {
       const storedUser = localStorage.getItem('user');
 
       if (storedToken && storedUser) {
-        if (!isTokenValid(storedToken)) {
+        const isDummyToken = storedToken.startsWith("dummy-");
+
+        if (!isDummyToken && !isTokenValid(storedToken)) {
           console.log('Token inválido o expirado. Cerrando sesión.');
           logout();
           return;
         }
-        // Token válido → inicializar estado
         setUser(JSON.parse(storedUser));
         setToken(storedToken);
         setIsAuthenticated(true);
@@ -52,8 +53,9 @@ export const AuthProvider = ({ children }) => {
       setToken(userData.token);
       setIsAuthenticated(true);
 
-      localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('token', userData.token);
+      // Guardamos en localStorage
+      localStorage.setItem('authUser', JSON.stringify(userData));
+      localStorage.setItem('authToken', responseToken);
 
     } catch (error) {
       console.error('Error en login (AuthContext):', error);

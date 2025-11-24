@@ -53,7 +53,7 @@ function App() {
               <Route path="catalogo" element={<CatalogPage />} />
               <Route path="donacion" element={<DonationPage />} />
               <Route path="perfil" element={<ProfilePage />} />
-              <Route path="inventario" element={<InventoryPage />}/>
+              {/* <Route path="inventario" element={<InventoryPage />}/> */}
               <Route path = "*" element={<Navigate to="/user" />} />
           </Route>
           

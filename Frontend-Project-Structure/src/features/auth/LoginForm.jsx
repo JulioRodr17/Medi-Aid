@@ -11,10 +11,11 @@ import logo from '../../assets/images/logoMediAid.jpeg';
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { login } = useAuth();
 
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -23,8 +24,16 @@ const LoginForm = () => {
     setError(null);
 
     try{
-      await login(email, password);
-      navigate('/'); // Redirigir al dashboard después del login exitoso
+      const loggedInUser = await login(email, password);
+      
+      if (loggedInUser && loggedInUser.role === 'admin') {
+        console.log("Redirigiendo a Admin...");
+        navigate('/admin', { replace: true }); 
+      } else {
+        console.log("Redirigiendo a User...");
+        navigate('/user', { replace: true });
+      }
+
     } catch (err) {
       console.error('Error during login:', err);
       setError(err.message || 'Error desconocido');

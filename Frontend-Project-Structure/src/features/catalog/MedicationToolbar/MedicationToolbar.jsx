@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './MedicationToolbar.css';
 
-// --- Íconos SVG (sin cambios) ---
 const FilterIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M22 3H2L10 12.46V19L14 21V12.46L22 3Z" stroke="#333" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -14,43 +13,63 @@ const SearchIcon = () => (
   </svg>
 );
 
-const MedicationToolbar = ({ categories, onFilterChange }) => {
+const CATEGORIES = [
+  'Pastillas', 
+  'Capsulas', 
+  'Jarabes', 
+  'Insumos'
+];
+
+const MedicationToolbar = ({ onSearch, onFilterSelect }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeFilterLabel, setActiveFilterLabel] = useState('Todos');
+
 
   const handleInputChange = (event) => {
-    setSearchTerm(event.target.value);
-    onFilterChange({ search: event.target.value, category: selectedCategory });
+    const value = event.target.value;
+    setSearchTerm(value);
+    onSearch(value);
   };
 
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
-    onFilterChange({ search: searchTerm, category: event.target.value });
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      console.log("Buscando:", searchTerm); // Para depurar
+      onSearch(searchTerm);
+    }
   };
 
-  const toggleFilterMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const handleFilterClick = (filterType, label) => {
+    onFilterSelect(filterType); 
+    setActiveFilterLabel(label);
+    setIsMenuOpen(false);
   };
 
   return (
     <div className="medication-toolbar">
       <div className="filter-wrapper">
-        <button className="filter-button" onClick={toggleFilterMenu}>
+        <button 
+          className={`filter-button ${isMenuOpen ? 'active' : ''}`} 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
           <FilterIcon />
-          <span>Filtros</span>
+          <span>Filtro: {activeFilterLabel}</span>
         </button>
 
         {isMenuOpen && (
           <div className="filters-dropdown">
-            <select value={selectedCategory} onChange={handleCategoryChange}>
-              <option value="">Todas las categorías</option>
-              {categories.map(cat => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.nombreCategoria}
-                </option>
+            <ul>
+              <li onClick={() => handleFilterClick('all', 'Todos')}>Todos</li>
+              <li onClick={() => handleFilterClick('low_stock', 'Poco Stock (<10)')}>Poco Stock</li>
+              
+              <li className="filter-divider">Categorías</li>
+              
+              {CATEGORIES.map(cat => (
+                <li key={cat} onClick={() => handleFilterClick(cat, cat)}>
+                  {cat}
+                </li>
               ))}
-            </select>
+            </ul>
           </div>
         )}
       </div>
@@ -61,10 +80,11 @@ const MedicationToolbar = ({ categories, onFilterChange }) => {
         </div>
         <input
           type="text"
-          placeholder="Buscar medicamento por nombre..."
+          placeholder="Buscar medicamento..."
           className="search-input"
           value={searchTerm}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
         />
       </div>
     </div>

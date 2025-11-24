@@ -9,11 +9,17 @@ import MedicationGrid from '../../features/catalog/MedicationGrid/MedicationGrid
 import MedicationDetailModal from '../../features/catalog/MedicationDetailModal/MedicationDetailModal';
 
 const CatalogPage = () => {
-  const [medications, setMedications] = useState([]);
+    // --- Estado de Datos ---
+  const [allMedications, setAllMedications] = useState([]);
+  const [filteredMedications, setFilteredMedications] = useState([]);
   const [scarceMeds, setScarceMeds] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [selectedMedication, setSelectedMedication] = useState(null);
+  
+  // --- Estado de Filtros ---
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeFilter, setActiveFilter] = useState('all');
 
+  // --- Estado de UI ---
+  const [selectedMedication, setSelectedMedication] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
@@ -29,50 +35,50 @@ const CatalogPage = () => {
     const loadInitData = async () => {
       try {
         setLoading(true);
-
-        const categoriesResponse = await medicationService.getCategories();
-        const scarceResponse = await medicationService.getScarceMedications();
-        setCategories(categoriesResponse);
+        const [medsResponse, scarceResponse] = await Promise.all([
+          medicationService.getMedications(),
+          medicationService.getScarceMedications()
+        ]);
+        
+        setAllMedications(medsResponse.data);
+        setFilteredMedications(medsResponse.data);
         setScarceMeds(scarceResponse);
       } catch (err) {
-        setError(err.message || 'Error cargando datos iniciales');
+        setError(err.message || 'No se pudieron cargar los datos.');
       } finally {
         setLoading(false);
       }
     };
-
-    loadInitData();
-  }, []); // <--- solo la primera vez
+    loadCatalogData();
+  }, []);
 
   useEffect(() => {
-    const loadMedications = async () => {
-      try {
-        const medsResponse = await medicationService.getMedications(filters);
-        setMedications(medsResponse.data);
-        setTotalPages(medsResponse.totalPages);
+    let result = allMedications;
 
-      } catch (err) {
-        setError(err.message || 'Error cargando medicamentos');
+    if (searchTerm) {
+      const lowerTerm = searchTerm.toLowerCase();
+      result = result.filter(med => 
+        med.name.toLowerCase().includes(lowerTerm)
+      );
+    }
+
+    if (activeFilter !== 'all') {
+      if (activeFilter === 'low_stock') {
+        result = result.filter(med => med.stock < 10);
+      } else {
+        result = result.filter(med => med.category === activeFilter);
       }
-    };
+    }
 
-    loadMedications();
-  }, [filters]); // <--- solo recarga cuando cambian los filtros
+    setFilteredMedications(result);
 
+  }, [searchTerm, activeFilter, allMedications]);
 
-  const handleFilterChange = (newFilters) => {
-    setFilters(prev => ({ ...prev, ...newFilters, page: 0 })); // Reset page al cambiar filtro
-  };
-
-  const handlePageChange = (newPage) => {
-    setFilters(prev => ({ ...prev, page: newPage }));
-  };
-
-  const handleCardClick = (medicationData) => {
-    setSelectedMedication(medicationData);
-  };
-
+  const handleSearch = (term) => setSearchTerm(term);
+  const handleFilterSelect = (filterType) => setActiveFilter(filterType);
+  const handleCardClick = (med) => setSelectedMedication(med);
   const handleCloseModal = () => setSelectedMedication(null);
+
 
   if (loading) return <div className="page-loading">Cargando catálogo...</div>;
   if (error) return <div className="page-error">Error: {error}</div>;
@@ -81,18 +87,14 @@ const CatalogPage = () => {
     <div className="catalog-page">
       <ScarcityBanner scarceMeds={scarceMeds} />
       <h2 className="page-title">Medicamentos Disponibles</h2>
-
       <MedicationToolbar 
-        categories={categories} 
-        onFilterChange={handleFilterChange} 
+        onSearch={handleSearch} 
+        onFilterSelect={handleFilterSelect} 
       />
 
       <MedicationGrid 
-        medications={medications}
-        onCardClick={handleCardClick}
-        currentPage={filters.page}
-        totalPages={totalPages}   // viene de la respuesta del backend
-        onPageChange={handlePageChange}
+        medications={filteredMedications} 
+        onCardClick={handleCardClick} 
       />
 
 

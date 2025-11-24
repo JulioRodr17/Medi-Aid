@@ -6,25 +6,22 @@
   width: 100%;
 }
 
-/* --- ESTILOS NUEVOS --- */
-
-/* 1. Contenedor para posicionamiento */
 .filter-wrapper {
-  position: relative; /* Clave para que el menú se posicione respecto a este contenedor */
+  position: relative;
+  display: inline-block; 
 }
 
-/* 2. Estilos para el menú desplegable */
 .filters-dropdown {
   position: absolute;
-  top: 100%; /* Lo coloca justo debajo del contenedor */
+  top: 110%; 
   left: 0;
-  margin-top: 0.5rem; /* Pequeño espacio entre el botón y el menú */
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 220px; 
+  background-color: #ffffff;
   border: 1px solid #e9ecef;
-  width: 200px; /* Ancho del menú */
-  z-index: 10; /* Para que aparezca por encima de otros elementos */
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); 
+  z-index: 100; 
+  overflow: hidden;
   padding: 0.5rem 0;
 }
 
@@ -34,19 +31,20 @@
   padding: 0;
 }
 
-.filters-dropdown li a {
-  display: block;
-  padding: 0.75rem 1.5rem;
+.filters-dropdown li{
+  padding: 0.75rem 1.25rem;
   color: #333;
-  text-decoration: none;
+  font-size: 0.95rem;
+  cursor: pointer; /* ¡Esto pone la manita! */
   transition: background-color 0.2s ease;
+  display: block;
 }
 
-.filters-dropdown li a:hover {
-  background-color: #f8f9fa;
+.filters-dropdown li:hover {
+  background-color: #f0f0ff; /* Un fondo moradito muy suave */
+  color: #3921f2; /* Texto morado */
+  font-weight: 500;
 }
-
-/* --- ESTILOS EXISTENTES (sin cambios) --- */
 
 .filter-button {
   display: flex;
@@ -56,15 +54,19 @@
   background-color: #fff;
   border: 1px solid #dee2e6;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-width: 180px;
+  justify-content: space-between;
 }
 
-.filter-button:hover {
+.filter-button:hover,
+.filter-button.active {
   background-color: #f8f9fa;
-  border-color: #ced4da;
+  border-color: #3921f2; /* Tu color morado */
+  color: #3921f2;
 }
 
 .search-bar {
@@ -78,6 +80,8 @@
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
+    color: #adb5bd;
+
 }
 
 .search-input {
@@ -87,9 +91,30 @@
   border-radius: 8px;
   font-size: 1rem;
   box-sizing: border-box;
+  transition: border-color 0.2s ease;
 }
 
 .search-input::placeholder {
   color: #adb5bd;
 }
 
+.filter-divider {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #adb5bd;
+  background-color: #f8f9fa;
+  padding: 0.5rem 1.25rem;
+  border-top: 1px solid #e9ecef;
+  border-bottom: 1px solid #e9ecef;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+  cursor: default !important; 
+  pointer-events: none; 
+}
+
+.filter-divider:hover {
+  background-color: #f9f9f9 !important;
+  color: #999 !important;
+}

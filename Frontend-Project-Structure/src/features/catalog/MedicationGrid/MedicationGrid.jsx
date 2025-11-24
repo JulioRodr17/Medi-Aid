@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import MedicationCard from '../../../components/ui/MedicationCard/MedicationCard';
 import Pagination from '../../../components/ui/Pagination/Pagination';
 import './MedicationGrid.css';

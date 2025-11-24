@@ -2,7 +2,14 @@ import React, { useState, useEffect } from 'react';
 import './MedicationForm.css';
 import Input from '../../../components/ui/input/Input';
 import Button from '../../../components/ui/button/Button';
-import { medicationService } from '../../../services/medicationService';
+
+//TODO: Agregar categorias que existen en servicio medico
+const CATEGORIES = [
+  'Pastillas', 
+  'Capsulas', 
+  'Jarabes', 
+  'Insumos'
+];
 
 const MedicationForm = ({ medication, onSave, onCancel }) => {
 
