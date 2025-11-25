@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './CatalogPage.css';
 
 import { medicationService } from '../../services/medicationService';
@@ -7,6 +7,8 @@ import ScarcityBanner from '../../features/catalog/ScarcityBanner/ScarcityBanner
 import MedicationToolbar from '../../features/catalog/MedicationToolbar/MedicationToolbar';
 import MedicationGrid from '../../features/catalog/MedicationGrid/MedicationGrid';
 import MedicationDetailModal from '../../features/catalog/MedicationDetailModal/MedicationDetailModal';
+import Spinner from '../../components/ui/Spinner/Spinner';
+import EmptyState from '../../components/ui/EmptyState/EmptyState';
 
 const CatalogPage = () => {
     // --- Estado de Datos ---
@@ -31,26 +33,28 @@ const CatalogPage = () => {
     size: 8
   });
 
-  useEffect(() => {
-    const loadInitData = async () => {
-      try {
-        setLoading(true);
-        const [medsResponse, scarceResponse] = await Promise.all([
-          medicationService.getMedications(),
-          medicationService.getScarceMedications()
-        ]);
-        
-        setAllMedications(medsResponse.data);
-        setFilteredMedications(medsResponse.data);
-        setScarceMeds(scarceResponse);
-      } catch (err) {
-        setError(err.message || 'No se pudieron cargar los datos.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadCatalogData();
+  const loadInitData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const [medsResponse, scarceResponse] = await Promise.all([
+        medicationService.getMedications(),
+        medicationService.getScarceMedications()
+      ]);
+      
+      setAllMedications(medsResponse.data);
+      setFilteredMedications(medsResponse.data);
+      setScarceMeds(scarceResponse);
+    } catch (err) {
+      setError(err.message || 'No se pudieron cargar los datos.');
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    loadInitData();
+  }, [loadInitData]);
 
   useEffect(() => {
     let result = allMedications;
@@ -80,8 +84,17 @@ const CatalogPage = () => {
   const handleCloseModal = () => setSelectedMedication(null);
 
 
-  if (loading) return <div className="page-loading">Cargando catálogo...</div>;
-  if (error) return <div className="page-error">Error: {error}</div>;
+  if (loading) return <Spinner label="Cargando catálogo..." />;
+  if (error) {
+    return (
+      <EmptyState
+        icon="⚠️"
+        title="No pudimos cargar el catálogo"
+        message={error}
+        action={{ label: 'Reintentar', onClick: loadInitData }}
+      />
+    );
+  }
 
   return (
     <div className="catalog-page">

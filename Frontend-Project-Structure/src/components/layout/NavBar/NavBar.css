@@ -9,6 +9,26 @@
   box-sizing: border-box;
 }
 
+.navbar-menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem;
+}
+
+.navbar-menu-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: #333;
+  transition: transform 0.2s ease;
+}
+
 /* --- Izquierda: Logo --- */
 .navbar-logo-link {
   display: flex;
@@ -117,5 +137,67 @@
   background-color: #3921f2; /* Azul de notificación */
   border-radius: 50%;
   border: 2px solid white; /* Borde blanco para que resalte sobre el ícono */
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.75rem 1rem;
+    position: relative; /* Para el posicionamiento absoluto del menú */
+  }
+
+  /* Mostrar el botón de menú */
+  .navbar-menu-toggle {
+    display: flex;
+    margin-left: 0; /* Reset margin */
+    margin-right: 1rem; /* Espacio entre hamburguesa y logo */
+  }
+
+  /* Ajustar el logo */
+  .navbar-logo-text {
+    font-size: 1.25rem; /* Un poco más pequeño en móvil */
+  }
+
+  /* Ocultar/Mostrar menú lateral */
+  .navbar-center {
+    position: absolute;
+    top: 60px; /* Altura del navbar */
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    
+    /* Animación de entrada */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+  }
+
+  .navbar-center.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    display: flex; /* Asegurar display flex */
+  }
+
+  .nav-link {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+  }
+
+  .nav-link:hover {
+    background-color: #f8f9fa;
+  }
+
+  /* Ajustar iconos derecha */
+  .navbar-right {
+    gap: 0.5rem;
+  }
 }
 

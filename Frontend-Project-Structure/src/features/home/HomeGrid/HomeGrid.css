@@ -4,7 +4,8 @@
   grid-template-columns: repeat(3, 1fr);
   /* Definimos 2 filas, cada una con una altura mínima de 250px */
   grid-auto-rows: minmax(250px, auto);
-  gap: 1.5rem; /* Espacio entre los elementos del grid */
+  gap: 1.5rem;
+  /* Espacio entre los elementos del grid */
 }
 
 .grid-quick-links {
@@ -17,4 +18,19 @@
   grid-row-start: 1;
   /* ...y que se expanda hasta la fila 3 (ocupando 2 filas). */
   grid-row-end: 3;
+}
+
+@media (max-width: 768px) {
+  .home-grid-container {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    /* Dejar que la altura sea automática */
+  }
+
+  .grid-quick-links {
+    grid-column: auto;
+    grid-row: auto;
+    margin-top: 1rem;
+    /* Un poco de espacio extra antes de contacto */
+  }
 }

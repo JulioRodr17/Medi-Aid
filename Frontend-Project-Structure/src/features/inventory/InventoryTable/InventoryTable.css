@@ -6,6 +6,26 @@
   overflow: hidden; /* Para que la tabla respete el borde redondeado */
 }
 
+.inventory-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.inventory-inline-error {
+  margin: 0 1.5rem 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #fff4f4;
+  color: #b42318;
+  font-size: 0.9rem;
+}
+
+.inventory-scarce-counter {
+  margin: 0 1.5rem 1rem;
+  font-size: 0.9rem;
+  color: #4b5a87;
+}
+
 .table-header {
   display: flex;
   justify-content: space-between;
@@ -93,4 +113,62 @@
 }
 .action-btn.delete:hover {
   background-color: #fbeae8;
+}
+
+.scarce-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid #d4d8f0;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.scarce-toggle input {
+  display: none;
+}
+
+.scarce-toggle.active {
+  background: #f4f6ff;
+  border-color: #3921f2;
+  color: #3921f2;
+}
+
+.scarce-toggle.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.scarce-toggle.locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .inventory-table-container {
+    border-radius: 8px;
+  }
+
+  .inventory-table-wrapper {
+    margin-bottom: 0.5rem;
+  }
+
+  .inventory-table th,
+  .inventory-table td {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .inventory-table {
+    min-width: 600px;
+  }
+
+  .inventory-inline-error,
+  .inventory-scarce-counter {
+    margin: 0 1rem 0.75rem;
+  }
 }

@@ -108,7 +108,7 @@ const ProfilePage = () => {
           <>
             <div className="profile-page-content">
               <div className="profile-main-column">
-                {user.rol === 'admin' ? (
+                {user.role === 'admin' ? (
                   <AdminDonationChart stats={stats} />) : (
                   <>
                     <UserDonationStats total={stats.total} pending={stats.pending} approved={stats.approved} />

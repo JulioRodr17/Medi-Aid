@@ -1,10 +1,15 @@
 import React from 'react';
 import './InventoryStats.css';
+import Spinner from '../../../components/ui/Spinner/Spinner';
 
 const InventoryStats = ({ stats }) => {
   // Guardia por si las stats aún no han cargado
   if (!stats) {
-    return <div className="stats-grid loading">Cargando estadísticas...</div>;
+    return (
+      <div className="stats-grid loading">
+        <Spinner label="Cargando estadísticas..." />
+      </div>
+    );
   }
 
   return (

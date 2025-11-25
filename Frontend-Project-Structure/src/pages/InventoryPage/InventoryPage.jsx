@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './InventoryPage.css';
 import { medicationService } from '../../services/medicationService';
 import InventoryStats from '../../features/inventory/InventoryStats/InventoryStats';
@@ -8,6 +8,10 @@ import InventoryTable from '../../features/inventory/InventoryTable/InventoryTab
 import Modal from '../../components/ui/Modal/Modal';
 import MedicationForm from '../../features/inventory/MedicationForm/MedicationForm';
 import DeleteWarningModal from '../../features/inventory/DeleteWarningModal/DeleteWarningModal';
+import Spinner from '../../components/ui/Spinner/Spinner';
+import EmptyState from '../../components/ui/EmptyState/EmptyState';
+
+const SCARCE_LIMIT = 5;
 
 const InventoryPage = () => {
   // Estados para los datos
@@ -17,6 +21,8 @@ const InventoryPage = () => {
   // Estados de UI
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [scarceActionError, setScarceActionError] = useState(null);
+  const [scarceUpdatingId, setScarceUpdatingId] = useState(null);
   
   // Estados para los modales
   const [isAddOrEditModalOpen, setIsAddOrEditModalOpen] = useState(false);
@@ -31,9 +37,18 @@ const InventoryPage = () => {
 
       //const inventoryData = await medicationService.getMedications({ size: 0, sortBy: "fechaCaducidad", sortDirection: "DESC" });
       const inventoryData = await medicationService.getMedications({ size: 0, sortBy: "nombreMedicamento", sortDirection: "ASC" });
-      const statsData = summarizeMedicamentos(inventoryData.data);
-      setStats(statsData);
-      setInventory(inventoryData.data); // getMedications devuelve { data: [...] }
+      const normalizedInventory = (inventoryData.data || []).map(med => {
+        const identifier = med.id || med.id_medicamento || med.idMedicamento || med.codigo || `med-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+        return {
+          ...med,
+          id: identifier,
+          isScarce: med.isScarce ?? med.esEscaso ?? false,
+        };
+      });
+
+      const computedStats = summarizeMedicamentos(normalizedInventory);
+      setStats(computedStats);
+      setInventory(normalizedInventory); // getMedications devuelve { data: [...] }
 
     } catch (err) {
       console.error("Error al cargar inventario:", err);
@@ -69,7 +84,7 @@ const InventoryPage = () => {
       }
 
       // Medicamentos escasos
-      if (med.cantidadStock <= med.stockMinimo) {
+      if (med.cantidadStock <= med.stockMinimo || med.isScarce) {
         scarceMedsSet.add(med.nombreMedicamento);
       }
     });
@@ -150,11 +165,42 @@ const InventoryPage = () => {
       // TODO: Mostrar el error en el modal
     }
   };
+
+  const scarceCount = useMemo(() => inventory.filter(item => item.isScarce).length, [inventory]);
+
+  const handleToggleScarce = async (med, nextValue) => {
+    if (!med) return;
+    if (nextValue && scarceCount >= SCARCE_LIMIT) {
+      setScarceActionError(`Solo puedes marcar ${SCARCE_LIMIT} medicamentos como escasos.`);
+      return;
+    }
+    try {
+      setScarceActionError(null);
+      setScarceUpdatingId(med.id);
+      await medicationService.setScarceStatus(med.id, nextValue);
+      setInventory(prev => {
+        const updated = prev.map(item => (item.id === med.id ? { ...item, isScarce: nextValue } : item));
+        setStats(summarizeMedicamentos(updated));
+        return updated;
+      });
+    } catch (err) {
+      setScarceActionError(err.message || 'No se pudo actualizar la lista de escasez.');
+    } finally {
+      setScarceUpdatingId(null);
+    }
+  };
   
   // --- Renderizado ---
   
   if (error) {
-    return <div className="page-error">Error al cargar: {error}</div>;
+    return (
+      <EmptyState
+        icon="⚠️"
+        title="No pudimos cargar el inventario"
+        message={error}
+        action={{ label: 'Reintentar', onClick: loadData }}
+      />
+    );
   }
 
   return (
@@ -165,13 +211,18 @@ const InventoryPage = () => {
         <InventoryStats stats={stats} />
         
         {loading && !stats ? ( // Muestra "cargando" solo si aún no hay nada
-          <p>Cargando inventario...</p>
+          <Spinner label="Cargando inventario..." />
         ) : (
           <InventoryTable 
-          inventory={inventory}
-          onAdd={handleOpenAdd}
-          onEdit={handleOpenEdit}
-          onDelete={handleOpenDelete}
+            inventory={inventory}
+            onAdd={handleOpenAdd}
+            onEdit={handleOpenEdit}
+            onDelete={handleOpenDelete}
+            onToggleScarce={handleToggleScarce}
+            togglingId={scarceUpdatingId}
+            scarceMessage={scarceActionError}
+            scarceCount={scarceCount}
+            scarceLimit={SCARCE_LIMIT}
           />
         )}
       </div>

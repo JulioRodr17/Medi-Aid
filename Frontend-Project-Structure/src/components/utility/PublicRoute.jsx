@@ -1,12 +1,13 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
+import Spinner from "../ui/Spinner/Spinner";
 
 const PublicRoute = () => {
   const { isAuthenticated, user, loading } = useAuth();
 
   if (loading) {
-    return <div>Cargando...</div>;
+    return <Spinner label="Validando sesión..." />;
   }
 
   if (isAuthenticated) {

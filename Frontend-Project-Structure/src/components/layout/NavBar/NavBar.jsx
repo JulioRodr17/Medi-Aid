@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext.jsx';
 
 import './Navbar.css';
@@ -25,8 +25,10 @@ const ProfileIcon = () => (
 
 const Navbar = () => {
   const { user } = useAuth();
-  const isAdmin = user.admin;  
+  const location = useLocation();
+  const isAdmin = user?.role === 'admin' || user?.admin;  
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   // TODO: BACKEND
   // Este valor debe venir de una llamada a la API que
   // verifique si hay notificaciones no leídas.
@@ -45,9 +47,26 @@ const Navbar = () => {
     };
   }, []); 
 
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
+  const handleLinkClick = () => setIsMenuOpen(false);
+
 
   return (
     <header className="navbar">
+      <button
+        className="navbar-menu-toggle"
+        onClick={() => setIsMenuOpen(prev => !prev)}
+        aria-label="Abrir menú"
+        aria-expanded={isMenuOpen}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
+
       {/* --- Izquierda --- */}
       <Link to="/" className="navbar-logo-link">
         <img src={logo} alt="Medi-Aid Logo" className="navbar-logo-img" />
@@ -55,19 +74,19 @@ const Navbar = () => {
       </Link>
 
       {/* --- Centro --- */}
-      <nav className="navbar-center">
-        <NavLink to="/" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+      <nav className={`navbar-center ${isMenuOpen ? 'open' : ''}`}>
+        <NavLink to="/" onClick={handleLinkClick} className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
           Inicio
         </NavLink>
-        <NavLink to="catalogo" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+        <NavLink to="catalogo" onClick={handleLinkClick} className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
           Catálogo
         </NavLink>
-        <NavLink to="donacion" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+        <NavLink to="donacion" onClick={handleLinkClick} className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
           Donación
         </NavLink>
 
         {isAdmin && (
-          <NavLink to="inventario" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+          <NavLink to="inventario" onClick={handleLinkClick} className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
             Inventario
           </NavLink>
         )}

@@ -3,6 +3,8 @@ import './DonationStatusTable.css';
 import StatusIcon from '../../../components/ui/StatusIcon/StatusIcon';
 import { donationService } from '../../../services/donationService';
 import { useAuth } from '../../../context/AuthContext.jsx';
+import Spinner from '../../../components/ui/Spinner/Spinner';
+import EmptyState from '../../../components/ui/EmptyState/EmptyState';
 
 
 
@@ -37,7 +39,7 @@ const DonationStatusTable = () => {
   }, [user]);
 
   if (loading) {
-    return <p className="status-table-empty">Cargando tu historial...</p>;
+    return <Spinner label="Cargando tu historial..." />;
   }
 
   if (error) {
@@ -45,7 +47,13 @@ const DonationStatusTable = () => {
   }
 
   if (donations.length === 0) {
-    return <p className="status-table-empty">Aún no has realizado ninguna donación.</p>;
+    return (
+      <EmptyState
+        icon="🎁"
+        title="Sin donaciones registradas"
+        message="Cuando dones un medicamento podrás consultar su estado aquí."
+      />
+    );
   }
 
   return (

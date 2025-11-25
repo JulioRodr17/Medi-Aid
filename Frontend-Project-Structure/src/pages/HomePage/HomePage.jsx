@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './HomePage.css';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { homeService } from '../../services/homeService';
@@ -9,6 +9,8 @@ import HomeGrid from '../../features/home/HomeGrid/HomeGrid';
 import Modal from '../../components/ui/Modal/Modal';
 import EditCarouselModal from '../../features/home/EditHomeModals/EditCarouselModal';
 import EditInfoCardsModal from '../../features/home/EditHomeModals/EditInfoCardsModal';
+import Spinner from '../../components/ui/Spinner/Spinner';
+import EmptyState from '../../components/ui/EmptyState/EmptyState';
 
 // Datos iniciales dummy para las cards (por si falla el back)
 const INITIAL_CARDS = [
@@ -28,31 +30,33 @@ const HomePage = () => {
     infoCards: [] 
   });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   // Estados de Modales
   const [isCarouselModalOpen, setIsCarouselModalOpen] = useState(false);
   const [isCardsModalOpen, setIsCardsModalOpen] = useState(false);
 
-  useEffect(() => {
-    const cargarDatos = async () => {
-      try {
-        setLoading(true);
-        
-        // Llamamos al servicio correcto que devuelve { carouselImages, infoCards }
-        const data = await homeService.getHomeContent();
-        
-        // Guardamos todo en el estado
-        setHomeData(data);
-
-      } catch (error) {
-        console.error('Error cargando home:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    cargarDatos();
+  const loadHomeData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await homeService.getHomeContent();
+      setHomeData(data);
+    } catch (error) {
+      console.error('Error cargando home:', error);
+      setError(error.message || 'No se pudo cargar el contenido.');
+      setHomeData(prev => ({
+        ...prev,
+        infoCards: prev.infoCards.length ? prev.infoCards : INITIAL_CARDS,
+      }));
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    loadHomeData();
+  }, [loadHomeData]);
 
   // Handlers de Guardado (Simulados por ahora)
   const handleSaveCarousel = (newImages) => {
@@ -68,7 +72,18 @@ const HomePage = () => {
   };
 
   if (authLoading || loading) {
-    return <div className="page-loading">Cargando contenido...</div>;
+    return <Spinner label="Cargando contenido..." />;
+  }
+
+  if (error) {
+    return (
+      <EmptyState
+        icon="⚠️"
+        title="No pudimos cargar la página de inicio"
+        message={error}
+        action={{ label: 'Reintentar', onClick: loadHomeData }}
+      />
+    );
   }
 
   return (
