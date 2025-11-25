@@ -36,9 +36,23 @@ const DonationForm = () => {
     setError(null);
 
     let finalData = { ...formData };
+
+    // Convertir cantidad a número entero
+    finalData.cantidadNumerica = parseInt(finalData.cantidadNumerica, 10);
+
     if (formData.tipo === 'insumo') {
+      // Para insumos, estos campos no aplican y deben ser null en la BD
       finalData.lote = null;
-      finalData.caducidad = ''; 
+      finalData.caducidad = null; 
+      finalData.concentracion = null;
+    } else {
+      // Para medicamentos, si el lote no se llenó (opcional), enviar null
+      if (!finalData.lote) finalData.lote = null;
+
+      // Si el tipo no requiere concentración (ej. jarabe según la UI actual), enviar null
+      if (formData.tipo !== 'pastilla' && formData.tipo !== 'capsula') {
+        finalData.concentracion = null;
+      }
     }
     
     try {
