@@ -3,6 +3,8 @@ import './DonationReviewTable.css';
 import { donationService } from '../../../services/donationService';
 import StatusIcon from '../../../components/ui/StatusIcon/StatusIcon';
 import Button from '../../../components/ui/button/Button';
+import Spinner from '../../../components/ui/Spinner/Spinner';
+import EmptyState from '../../../components/ui/EmptyState/EmptyState';
 
 import DonationReviewModal from '../DonationReviewModal/DonationReviewModal';
 import Modal from '../../../components/ui/Modal/Modal'; 
@@ -40,7 +42,7 @@ const DonationReviewTable = () => {
   };
 
   if (loading) {
-    return <div className="review-loading">Cargando revisiones...</div>;
+    return <Spinner label="Cargando revisiones..." />;
   }
 
   if (error) {
@@ -53,38 +55,44 @@ const DonationReviewTable = () => {
         <h2 className="review-title">Revisión de Donaciones Pendientes</h2>
         
         {pendingDonations.length === 0 ? (
-          <p className="review-empty">¡Buen trabajo! No hay donaciones pendientes.</p>
+          <EmptyState
+            icon="✅"
+            title="No hay donaciones pendientes"
+            message="Las nuevas donaciones aparecerán aquí para su revisión."
+          />
         ) : (
-          <table className="review-table">
-            <thead>
-              <tr>
-                <th>Usuario</th>
-                <th>Medicamento</th>
-                <th>Cantidad</th>
-                <th>Caducidad</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pendingDonations.map((donation) => (
-                <tr key={donation.id}>
-                  <td>{donation.userName}</td>
-                  <td>{donation.name}</td>
-                  <td>{`${donation.cantidadNumerica} ${donation.cantidadDonada}`}</td>
-                  <td>{donation.caducidad || 'N/A'}</td>
-                  <td>
-                    <Button 
-                      variant="primary" 
-                      onClick={() => setSelectedDonation(donation)}
-                      style={{ backgroundColor: '#3921f2' }} // Tu color primario
-                    >
-                      Revisar
-                    </Button>
-                  </td>
+          <div className="review-table-scroll">
+            <table className="review-table">
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Medicamento</th>
+                  <th>Cantidad</th>
+                  <th>Caducidad</th>
+                  <th>Acciones</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {pendingDonations.map((donation) => (
+                  <tr key={donation.id}>
+                    <td>{donation.userName}</td>
+                    <td>{donation.name}</td>
+                    <td>{`${donation.cantidadNumerica} ${donation.cantidadDonada}`}</td>
+                    <td>{donation.caducidad || 'N/A'}</td>
+                    <td>
+                      <Button 
+                        variant="primary" 
+                        onClick={() => setSelectedDonation(donation)}
+                        style={{ backgroundColor: '#3921f2' }} // Tu color primario
+                      >
+                        Revisar
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 

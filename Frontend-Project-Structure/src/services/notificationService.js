@@ -7,8 +7,12 @@ import {
 // --- ¡EL INTERRUPTOR MÁGICO! ---
 const USE_DUMMY_DATA = true;
 // ---------------------------------
-const obtenNoticias = () => {
-  return httpClient.get('/noticias/activas');
+const obtenNoticias = (inactivas = false) => {
+  return httpClient.get('/noticias/activas', { params: {inactivas: inactivas} });
+};
+
+const obtenCards = (inactivas = false) => {
+  return httpClient.get('/noticias/cards', { params: {inactivas: inactivas} });
 };
 /**
  * Obtiene la lista de notificaciones del usuario.
@@ -36,6 +40,7 @@ const markAllAsRead = () => {
 
 export const notificationService = {
   obtenNoticias,
+  obtenCards,
   getNotifications,
   markAllAsRead
 };

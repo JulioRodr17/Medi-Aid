@@ -1,8 +1,8 @@
 .ui-button {
-  width: auto; 
+  width: auto;
   min-width: 100px;
   padding: 0.75rem 1.25rem;
-  border: 2px solid transparent; 
+  border: 2px solid transparent;
   border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 600;
@@ -13,13 +13,13 @@
 }
 
 .ui-button--primary {
-  background-color: #3921f2; 
+  background-color: #3921f2;
   color: white;
   border-color: #3921f2;
 }
 
 .ui-button--primary:hover:not(:disabled) {
-  background-color: #2a16c7; 
+  background-color: #2a16c7;
   border-color: #2a16c7;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -53,4 +53,10 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+@media (max-width: 600px) {
+  .ui-button {
+    width: 100%;
+  }
 }

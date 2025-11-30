@@ -1,12 +1,23 @@
 /* Estilos para el contenedor de la página de Login */
 .login-page-container {
   display: flex;
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center;    /* Centra verticalmente */
-  height: 100%;           /* Ocupa todo el alto disponible */
-  width: 100%;            /* Ocupa todo el ancho disponible */
-  
+  justify-content: center;
+  /* Centra horizontalmente */
+  align-items: center;
+  /* Centra verticalmente */
+  height: 100%;
+  /* Ocupa todo el alto disponible */
+  width: 100%;
+  /* Ocupa todo el ancho disponible */
 
-  background: linear-gradient(135deg, #e0eafc 0%, #988cf0 40%,#5d49f5 90%);
+
+  background: linear-gradient(135deg, #e0eafc 0%, #988cf0 40%, #5d49f5 90%);
 }
 
+@media (max-width: 768px) {
+  .login-page-container {
+    padding: 1rem;
+    height: auto;
+    min-height: 100vh;
+  }
+}

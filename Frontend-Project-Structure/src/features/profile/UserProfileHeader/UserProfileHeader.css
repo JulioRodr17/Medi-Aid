@@ -17,7 +17,8 @@
 }
 
 .profile-info {
-  flex-grow: 1; /* Empuja el botón de ajustes a la derecha */
+  flex-grow: 1;
+  /* Empuja el botón de ajustes a la derecha */
 }
 
 .profile-name {
@@ -30,14 +31,16 @@
 .profile-role {
   font-size: 1.1rem;
   font-weight: 500;
-  color: #3921f2; /* Tu color primario */
+  color: #3921f2;
+  /* Tu color primario */
   background-color: #f0f0ff;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
 }
 
 .profile-settings {
-  position: relative; /* Padre para el menú flotante */
+  position: relative;
+  /* Padre para el menú flotante */
 }
 
 .settings-button {
@@ -65,4 +68,44 @@
 
 .settings-button:hover svg {
   transform: rotate(60deg);
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    /* Centrar la imagen */
+    text-align: left;
+    /* Texto a la izquierda (aunque el contenedor se alinee al centro, sus hijos se alinean según esto) */
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+
+  .profile-avatar {
+    width: 140px;
+    /* Más grande */
+    height: 140px;
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .profile-info {
+    width: 100%;
+    /* Ocupar todo el ancho */
+    text-align: left;
+    /* Asegurar alineación izquierda */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* Alinear items a la izquierda */
+    gap: 0.5rem;
+  }
+
+  .profile-settings {
+    width: 100%;
+    /* Ocupar todo el ancho */
+    display: flex;
+    justify-content: flex-start;
+    /* Alinear botón a la izquierda */
+  }
 }

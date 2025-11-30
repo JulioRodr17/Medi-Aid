@@ -1,6 +1,7 @@
 .notification-panel {
   position: absolute;
-  top: calc(100% + 15px); /* 100% del navbar + 15px de espacio */
+  top: calc(100% + 15px);
+  /* 100% del navbar + 15px de espacio */
   right: 0;
   width: 340px;
   max-height: 450px;
@@ -10,7 +11,7 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
   border: 1px solid #e9ecef;
   z-index: 1000;
-  
+
   /* Animación de entrada */
   opacity: 0;
   transform: translateY(-10px) scale(0.98);
@@ -22,6 +23,7 @@
     opacity: 0;
     transform: translateY(-10px) scale(0.98);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -95,4 +97,22 @@
   text-align: center;
   color: #6c757d;
   font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .notification-panel {
+    position: fixed;
+    top: 70px;
+    /* Debajo del navbar */
+    right: 1rem;
+    /* Un poco de margen a la derecha */
+    left: 1rem;
+    /* Un poco de margen a la izquierda */
+    width: auto;
+    /* Ancho automático basado en left/right */
+    max-width: none;
+    max-height: 60vh;
+    /* Altura máxima razonable */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
 }

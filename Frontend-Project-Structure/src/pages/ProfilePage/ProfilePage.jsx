@@ -13,14 +13,13 @@ import ChangePasswordForm from '../../features/profile/ChangePasswordForm/Change
 import Button from '../../components/ui/button/Button';
 
 // --- VISTAS ESPECÍFICAS DE ROL ---
-// Importamos los componentes que el 'user' normal ve
 import UserDonationStats from '../../features/profile/UserDonationStats/UserDonationStats';
 import UserDonationHistory from '../../features/profile/UserdDonationHistory/UserDonationHistory.jsx';
 import AdminDonationChart from '../../features/profile/AdminDonationChart/AdminDonationChart';
 
 
 const ProfilePage = () => {
-    const { user, logout } = useAuth(); 
+  const { user, logout } = useAuth(); 
 
   // --- Estados para los datos cargados ---
   const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0 });
@@ -33,9 +32,7 @@ const ProfilePage = () => {
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
 
   useEffect(() => {
-    // Si no hay usuario, no intentes cargar nada.
     if (!user) {
-      setLoading(false);
       return;
     }
 
@@ -43,18 +40,26 @@ const ProfilePage = () => {
       try {
         setLoading(true);
         setError(null);
+        // Definimos las promesas base (Stats siempre se cargan)
+        const promises = [profileService.getProfileStats(user.id)];
 
-        // TODO: BACKEND
-        // Pedimos los datos (los servicios dummy ya están listos)
-        const [statsData, historyData] = await Promise.all([
-          profileService.getProfileStats(user.id),
-          profileService.getDonationHistoryRecent(user.id)
-        ]);
+        // Si es usuario normal, también cargamos su historial
+        if (user.admin) {
+          promises.push(profileService.getDonationHistoryRecent(user.id));
+        }
 
-        setStats(statsData);
-        setHistory(historyData);
+        // Ejecutamos las peticiones
+        const results = await Promise.all(promises);
+        
+        // Asignamos resultados
+        setStats(results[0]); // El primero siempre es stats
+        
+        if (user.admin) {
+          setHistory(results[1]); // El segundo es history (solo si no es admin)
+        }
 
       } catch (err) {
+        console.error(err);
         setError(err.message || 'No se pudieron cargar los datos.');
       } finally {
         setLoading(false);
@@ -70,16 +75,11 @@ const ProfilePage = () => {
   };
 
   const handleSaveProfile = (updatedData) => {
-    // TODO: BACKEND
-    // Aquí es donde la llamada a la API realmente guardaría los datos.
     console.log('Guardando perfil:', updatedData);
     setIsEditModalOpen(false); // Cierra el modal
   };
 
   const handleSavePassword = (passwordData) => {
-    // TODO: BACKEND
-    // Aquí se llamaría a la API para guardar la nueva contraseña.
-    // 'passwordData' contiene { currentPassword, newPassword, confirmPassword }
     console.log('Enviando al backend:', passwordData);
     setIsChangePasswordModalOpen(false); // Cierra el modal
   };
@@ -108,7 +108,8 @@ const ProfilePage = () => {
           <>
             <div className="profile-page-content">
               <div className="profile-main-column">
-                {user.rol === 'admin' ? (<AdminDonationChart stats={stats} />) : (
+                {user.admin? (
+                  <AdminDonationChart stats={stats} />) : (
                   <>
                     <UserDonationStats total={stats.total} pending={stats.pending} approved={stats.approved} />
                     <UserDonationHistory history={history} />

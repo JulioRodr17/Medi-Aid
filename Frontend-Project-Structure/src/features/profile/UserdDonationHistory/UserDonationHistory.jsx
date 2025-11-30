@@ -5,15 +5,25 @@ import StatusIcon from '../../../components/ui/StatusIcon/StatusIcon';
 import Button from '../../../components/ui/button/Button';
 import '../UserContactInfo/UserContactInfo.css';
 
+import { useAuth } from '../../../context/AuthContext.jsx';
 
 const UserDonationHistory = ({ history }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const goToDonations = () => {
-    // Te lleva a la página de donación y (en un futuro)
-    // podríamos pasar estado para que abra la pestaña correcta.
-    navigate('/donacion');
+    const prefix = user?.role === 'admin' ? '/admin' : '/user';
+    navigate(`${prefix}/donacion`);
   };
+
+  if (!history) {
+     return (
+      <div className="profile-card">
+        <h3 className="profile-card-title">Historial Reciente</h3>
+        <p className="history-empty-message">Cargando historial...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="profile-card">

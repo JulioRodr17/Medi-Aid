@@ -40,3 +40,11 @@
   padding: 1rem 0;
   font-style: italic;
 }
+
+@media (max-width: 768px) {
+  .history-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

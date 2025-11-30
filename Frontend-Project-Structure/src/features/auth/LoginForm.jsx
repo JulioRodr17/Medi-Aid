@@ -71,7 +71,7 @@ const LoginForm = () => {
         </Button>
       </form>
       <div className="login-links">
-        <Link to="/recuperar-contrasena">¿Olvidaste tu contraseña?</Link>
+        <Link to="/recuperarContrasena">¿Olvidaste tu contraseña?</Link>
         <Link to="/registro">¿No tienes cuenta? Regístrate</Link>
       </div>
     </div>

@@ -8,6 +8,11 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
 }
 
+.review-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .review-title {
   font-size: 1.75rem;
   font-weight: 700;
@@ -61,4 +66,21 @@
 /* Ajustar el botón en la última celda */
 .review-table td:last-child {
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .review-table-container {
+    padding: 1.25rem;
+  }
+
+  .review-title {
+    font-size: 1.4rem;
+  }
+
+  .review-table th,
+  .review-table td {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
 }

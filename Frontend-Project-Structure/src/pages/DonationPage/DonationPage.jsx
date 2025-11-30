@@ -8,6 +8,7 @@ import TabToggle from '../../components/ui/TabToggle/TabToggle';
 import DonationForm from '../../features/donation/DonationForm/DonationForm';
 import DonationStatusTable from '../../features/donation/DonationStatusTable/DonationStatusTable';
 import DonationReviewTable from '../../features/donation/DonationReviewTable/DonationReviewTable';
+import Spinner from '../../components/ui/Spinner/Spinner';
 
 const UserView = () => {
   const [activeTab, setActiveTab] = useState('option1'); // 'option1' = Realizar
@@ -52,7 +53,7 @@ const DonationPage = () => {
   
   // Guardia de seguridad mientras carga el usuario
   if (!user) {
-    return <div>Cargando...</div>; // O un <Spinner />
+    return <Spinner label="Cargando vista..." />;
   }
 
   // 4. Renderizado Condicional: 

@@ -3,19 +3,28 @@ h2 {
 }
 
 .info-message {
-  /*color: #1040C0;*/       /* Azul */
-  color: #10C040;       /* Verde */
-  font-size: 1rem;   /* Un poco más pequeño que el texto normal */
+  /*color: #1040C0;*/
+  /* Azul */
+  color: #10C040;
+  /* Verde */
+  font-size: 1rem;
+  /* Un poco más pequeño que el texto normal */
   font-weight: 600;
-  margin-top: 0px;      /* Pequeño espacio sobre el mensaje */
-  display: block;       /* Asegura que esté debajo del input */
+  margin-top: 0px;
+  /* Pequeño espacio sobre el mensaje */
+  display: block;
+  /* Asegura que esté debajo del input */
 }
 
 .error-message {
-  color: #ff4d4f;       /* Rojo */
-  font-size: 0.85rem;   /* Un poco más pequeño que el texto normal */
-  margin-top: 0px;      /* Pequeño espacio sobre el mensaje */
-  display: block;       /* Asegura que esté debajo del input */
+  color: #ff4d4f;
+  /* Rojo */
+  font-size: 0.85rem;
+  /* Un poco más pequeño que el texto normal */
+  margin-top: 0px;
+  /* Pequeño espacio sobre el mensaje */
+  display: block;
+  /* Asegura que esté debajo del input */
 }
 
 .qr-loading {
@@ -70,8 +79,10 @@ h2 {
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 700px; /* Hacemos la caja más ancha para que quepan los campos */
-  text-align: left; /* Alineamos el texto a la izquierda por defecto */
+  max-width: 700px;
+  /* Hacemos la caja más ancha para que quepan los campos */
+  text-align: left;
+  /* Alineamos el texto a la izquierda por defecto */
 }
 
 .register-form-box h2 {
@@ -84,18 +95,27 @@ h2 {
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 12px; /* Espacio vertical entre elementos */
+  gap: 12px;
+  /* Espacio vertical entre elementos */
 }
 
 /* Contenedor para poner inputs en la misma fila */
 .form-row {
   display: flex;
-  gap: 20px; /* Espacio entre los inputs de la misma fila */
+  gap: 20px;
+  /* Espacio entre los inputs de la misma fila */
 }
 
 /* Hacemos que cada input en una fila ocupe el espacio disponible */
-.form-row > * {
+.form-row>* {
   flex: 1;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
 }
 
 /* Sección del QR */

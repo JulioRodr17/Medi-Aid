@@ -1,40 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { notificationService } from '../../../services/notificationService';
-import { httpClient   } from '../../../services/httpClient';
 import './ImageCarousel.css';
+import Button from '../../../components/ui/button/Button';
 
-const ImageCarousel = () => {
-  const [noticias, setNoticias] = useState([]); // <-- AQUÍ GUARDAMOS LAS NOTICIAS
+
+const ImageCarousel = ({noticias = [],isAdmin, onEdit }) => {
+  //const [noticias, setNoticias] = useState([]); // <-- AQUÍ GUARDAMOS LAS NOTICIAS
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-
-  // ================================
-  // Cargar noticias desde el backend
-  // ================================
-  useEffect(() => {
-    const cargarNoticias = async () => {
-      try {
-        const data = await notificationService.obtenNoticias();
-        data.sort((a, b) => a.orden - b.orden);
-
-        // Convertir las URLs de cada noticia usando httpClient.getImage
-        const noticiasConSrc = await Promise.all(
-          data.map(async (n) => {
-            const src = await httpClient.getImage(n.url);  // usa tu función genérica
-            return { ...n, src };
-          })
-        );
-
-        setNoticias(noticiasConSrc);
-      } catch (error) {
-        console.error('Error cargando noticias:', error);
-      }
-    };
-
-    cargarNoticias();
-  }, []);
-
-
   // ================================
   // Autoplay del carrusel
   // ================================
@@ -80,36 +52,37 @@ const ImageCarousel = () => {
   return (
     <div className="carousel-container">
 
-      {/* ============================
-          SI NO HAY NOTICIAS, retornar vacío
-         ============================ */}
+      {isAdmin && (
+        <div style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 20 }}>
+          <Button variant="secondary" onClick={(e) => onEdit(e)} style={{ backgroundColor: 'white', opacity: 0.9 }}>
+            ✏️ Editar Carrusel
+          </Button>
+        </div>
+      )}
+
       {noticias.length === 0 ? (
-        <p style={{ textAlign: 'center' }}>Cargando imágenes...</p>
+        <p style={{ textAlign: 'center', padding: '2rem' }}>No hay noticias para mostrar.</p>
       ) : (
         <>
-          <button onClick={goToPrevious} className="carousel-arrow left-arrow">
-            &#10094;
-          </button>
+          <button onClick={goToPrevious} className="carousel-arrow left-arrow">&#10094;</button>
 
           <div className="carousel-slide-container">
             <div
               className="carousel-slides"
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
-              {noticias.map((n, index) => (
+              {noticias.map((n) => (
                 <img
                   key={n.id}
-                  src={n.src}          // <--- AQUÍ VA LA URL DEL BACKEND
-                  alt={n.titulo}
+                  src={n.src} 
+                  alt={n.titulo || 'Imagen de carrusel'}
                   className="carousel-slide"
                 />
               ))}
             </div>
           </div>
 
-          <button onClick={goToNext} className="carousel-arrow right-arrow">
-            &#10095;
-          </button>
+          <button onClick={goToNext} className="carousel-arrow right-arrow">&#10095;</button>
 
           <div className="carousel-dots">
             {noticias.map((_, slideIndex) => (

@@ -171,6 +171,15 @@ CREATE TABLE noticias(
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE info_cards (
+    id SERIAL PRIMARY KEY,
+    icon VARCHAR(50) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    text TEXT NOT NULL,
+    activo BOOLEAN NOT NULL DEFAULT true,
+    orden INT DEFAULT 0,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- =============================================
 -- DATOS INICIALES DE CATÁLOGOS
@@ -260,6 +269,11 @@ INSERT INTO noticias (url, fecha_inicio, fecha_expiracion, titulo, descripcion, 
 ('/public/Noticias/slide_2.jpg', CURRENT_DATE, CURRENT_DATE + INTERVAL '7 days', 'Noticia de 1 semana', 'Descripción de la noticia que durará una semana.', TRUE, 2, CURRENT_TIMESTAMP),
 ('/public/Noticias/slide_3.jpg', CURRENT_DATE, CURRENT_DATE + INTERVAL '14 days', 'Noticia de 2 semanas', 'Descripción de la noticia que durará dos semanas.', TRUE, 3, CURRENT_TIMESTAMP);
 
+INSERT INTO info_cards (icon, title, text, orden) VALUES
+('📰', 'Noticias Recientes', 'Mantente al día con las últimas novedades y comunicados.', 1),
+('🤝', 'Programas de Apoyo', 'Descubre los programas y campañas activas.', 2),
+('❤️', 'Consejos de Salud', 'Artículos y guías para cuidar tu bienestar.', 3),
+('📄', 'Documentos Oficiales', 'Accede a reglamentos, guías y otros documentos.', 4);
 
 -- =============================================
 -- DATOS DE PRUEBA (MEDICAMENTOS)

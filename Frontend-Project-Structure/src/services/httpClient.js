@@ -1,6 +1,6 @@
 // utils/httpClient.js
-const API_BASE_URL = 'http://localhost:8080/api';     // Desarrollo
-//const API_BASE_URL = '/api';                            // Producción 
+const API_BASE_URL = 'http://localhost:8080/api'; // Desarrollo
+// const API_BASE_URL = '/api'; // Producción
 
 const request = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
@@ -13,18 +13,24 @@ const request = async (endpoint, options = {}) => {
     if (query) url += `?${query}`;
   }
 
+  // Configuración base
   const config = {
     method: options.method || 'GET',
     headers: {
-      'Content-Type': 'application/json',
       ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
     ...options,
   };
 
+  // Manejar body según sea JSON o FormData
   if (options.body) {
-    config.body = JSON.stringify(options.body);
+    if (options.body instanceof FormData) {
+      config.body = options.body; // fetch asignará Content-Type multipart/form-data automáticamente
+    } else {
+      config.body = JSON.stringify(options.body);
+      config.headers['Content-Type'] = 'application/json';
+    }
   }
 
   try {
@@ -95,7 +101,6 @@ const getImage = async (endpoint, options = {}) => {
     throw error;
   }
 };
-
 
 export const httpClient = {
   API_BASE_URL,

@@ -32,8 +32,8 @@ function App() {
             <Route path="/index" element={<LoginPage />} /> {/*  -- Página de inicio implementar después --*/}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/registro" element={<Register />} />
-            <Route path="/recuperar-contrasena" element={<ForgotPasswordPage />} />
-            <Route path="/restablecerPassword" element={<ResetPasswordPage />} />
+            <Route path="/recuperarContrasena" element={<ForgotPasswordPage />} />
+            <Route path="/restablecerContrasena" element={<ResetPasswordPage />} />
             <Route path="/verify" element={<TokenValidator/>}/>
           </Route>
 
@@ -53,7 +53,7 @@ function App() {
               <Route path="catalogo" element={<CatalogPage />} />
               <Route path="donacion" element={<DonationPage />} />
               <Route path="perfil" element={<ProfilePage />} />
-              <Route path="inventario" element={<InventoryPage />}/>
+              {/*<Route path="inventario" element={<InventoryPage />}/>*/}
               <Route path = "*" element={<Navigate to="/user" />} />
           </Route>
           

@@ -9,7 +9,7 @@ public class VerificationToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false, unique = true)
     private String token;
@@ -32,10 +32,10 @@ public class VerificationToken {
     }
 
     // Getter y Setter de id
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

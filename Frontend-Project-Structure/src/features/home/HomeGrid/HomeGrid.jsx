@@ -1,29 +1,36 @@
 import React from 'react';
 import InfoCard from '../../../components/ui/infoCard/InfoCard';
 import QuickLinks from '../QuickLinks/QuickLinks';
+import Button from '../../../components/ui/button/Button';
 import './HomeGrid.css';
 
-// Datos para las tarjetas (esto en un futuro vendría del backend)
-const cardsData = [
-  { icon: '📰', title: 'Lorem Ipsum', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-  { icon: '🤝', title: 'Lorem Ipsum', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-  { icon: '❤️', title: 'Lorem Ipsum', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-  { icon: '📄', title: 'Lorem Ipsum', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-];
 
-const HomeGrid = () => {
+
+const HomeGrid = ({ cards = [], isAdmin, onEdit }) => {
   return (
-    <div className="home-grid-container">
-      {cardsData.map((card, index) => (
-        <InfoCard
-          key={index}
-          icon={card.icon}
-          title={card.title}
-          text={card.text}
-        />
-      ))}
-      <div className="grid-quick-links">
-        <QuickLinks />
+   <div className="home-grid-wrapper" style={{ position: 'relative', marginTop: '2rem' }}>
+      
+      {/* --- BOTÓN DE ADMIN --- */}
+      {isAdmin && (
+        <div style={{ position: 'absolute', top: '-40px', right: 0, zIndex: 10 }}>
+          <Button variant="secondary" onClick={(e) => onEdit(e)} style={{ fontSize: '0.8rem' }}>
+            ✏️ Editar Tarjetas
+          </Button>
+        </div>
+      )}
+
+      <div className="home-grid-container">
+        {cards.map((card, index) => (
+          <InfoCard
+            key={card.id || index}
+            icon={card.icon}
+            title={card.title}
+            text={card.text}
+          />
+        ))}
+        <div className="grid-quick-links">
+          <QuickLinks />
+        </div>
       </div>
     </div>
   );

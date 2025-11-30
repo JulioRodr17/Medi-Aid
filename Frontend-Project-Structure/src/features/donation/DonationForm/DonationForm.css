@@ -1,11 +1,13 @@
 .donation-form-container {
   width: 100%;
-  max-width: 700px; /* Un poco más ancho para formularios */
+  max-width: 700px;
+  /* Un poco más ancho para formularios */
   margin: 0 auto;
 }
 
 .info-banner {
-  background-color: #fff3cd; /* Amarillo pálido de advertencia */
+  background-color: #fff3cd;
+  /* Amarillo pálido de advertencia */
   border: 1px solid #ffeeba;
   color: #856404;
   padding: 1rem 1.5rem;
@@ -17,7 +19,8 @@
 .donation-form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem; /* Espacio entre campos */
+  gap: 1.25rem;
+  /* Espacio entre campos */
 }
 
 /* Estilos para los <select> que se ven consistentes */
@@ -47,4 +50,10 @@
   outline: none;
   border-color: #3921f2;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+  .donation-form-container {
+    padding: 0 1rem;
+  }
 }
