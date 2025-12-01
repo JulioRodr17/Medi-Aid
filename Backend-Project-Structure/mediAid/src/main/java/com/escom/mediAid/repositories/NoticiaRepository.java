@@ -14,4 +14,7 @@ public interface NoticiaRepository extends JpaRepository<Noticias, Integer> {
     List<Noticias> findByActivoTrueAndFechaInicioLessThanEqualAndFechaExpiracionGreaterThanEqual(
             LocalDate fechaInicio, LocalDate fechaExpiracion
     );
+    
+    List<Noticias> findAllByOrderByActivoDescFechaExpiracionAsc();
+
 }

@@ -83,7 +83,7 @@ CREATE TABLE verification_token (
     expiration TIMESTAMP NOT NULL,
     CONSTRAINT fk_verification_token_usuario
         FOREIGN KEY (usuario_id)
-        REFERENCES usuario(id)
+        REFERENCES usuarios(id)
         ON DELETE CASCADE
 );
 
@@ -104,6 +104,7 @@ CREATE TABLE password_reset_token (
 CREATE TABLE medicamentos (
     id_medicamento SERIAL PRIMARY KEY,
     id_categoria INT NOT NULL,
+    url TEXT,
     nombre_medicamento VARCHAR(255) NOT NULL,
     descripcion TEXT,
     presentacion VARCHAR(100),           -- Tableta, cápsula, jarabe, etc.
@@ -264,16 +265,15 @@ VALUES
 (5, 'Multivitamínico', 'Suplemento multivitamínico', 'Cápsula', '1 cápsula', 150, '2027-04-30', 'Complemento nutricional');
 
 
-INSERT INTO noticias (url, fecha_inicio, fecha_expiracion, titulo, descripcion, activo, orden, fecha_creacion) VALUES
-('/public/Noticias/slide_1.jpg', CURRENT_DATE, CURRENT_DATE + INTERVAL '1 day', 'Noticia de 1 día', 'Descripción de la noticia que durará un día.', TRUE, 1, CURRENT_TIMESTAMP),
-('/public/Noticias/slide_2.jpg', CURRENT_DATE, CURRENT_DATE + INTERVAL '7 days', 'Noticia de 1 semana', 'Descripción de la noticia que durará una semana.', TRUE, 2, CURRENT_TIMESTAMP),
-('/public/Noticias/slide_3.jpg', CURRENT_DATE, CURRENT_DATE + INTERVAL '14 days', 'Noticia de 2 semanas', 'Descripción de la noticia que durará dos semanas.', TRUE, 3, CURRENT_TIMESTAMP);
-
 INSERT INTO info_cards (icon, title, text, orden) VALUES
 ('📰', 'Noticias Recientes', 'Mantente al día con las últimas novedades y comunicados.', 1),
 ('🤝', 'Programas de Apoyo', 'Descubre los programas y campañas activas.', 2),
 ('❤️', 'Consejos de Salud', 'Artículos y guías para cuidar tu bienestar.', 3),
 ('📄', 'Documentos Oficiales', 'Accede a reglamentos, guías y otros documentos.', 4);
+
+-- usuario doctor
+INSERT INTO usuarios (id_rol, nombre, apellido_paterno, apellido_materno, boleta, correo, contrasena, telefono, foto, active) 
+VALUES (1, 'MediAid', 'ESCOM', 'IPN', 'm3d1a1dESCOM', 'escomediaid@gmail.com', '$2a$10$gqvjzU3NdYeBC/iC7Sz6bOnrb9hmZBTpeOO67EFWz2s9rChIsbOoW', '5557296000 52014', '/public/UserPhoto/mediAid.jpg', true);
 
 -- =============================================
 -- DATOS DE PRUEBA (MEDICAMENTOS)

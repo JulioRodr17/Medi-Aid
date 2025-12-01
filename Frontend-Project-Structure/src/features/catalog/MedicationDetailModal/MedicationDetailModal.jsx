@@ -8,7 +8,7 @@ const MedicationDetailModal = ({ medication, onClose }) => {
   const displayDescription = medication.descripcion || medication.description || 'No hay descripción disponible.';
   const displayCategory = medication.categoria?.nombreCategoria || medication.category || 'Sin categoría';
   const displayStock = medication.cantidadStock ?? medication.stock ?? 'N/A';
-  const displayImage = medication.imageUrl || placeholderImage;																   
+  const displayImage = medication.src || medication.url || placeholderImage;																   
 
   const handleContentClick = (e) => {
     e.stopPropagation();

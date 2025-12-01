@@ -32,6 +32,7 @@ const CatalogPage = () => {
 
         const categoriesResponse = await medicationService.getCategories();
         const scarceResponse = await medicationService.getScarceMedications();
+
         setCategories(categoriesResponse);
         setScarceMeds(scarceResponse);
       } catch (err) {
@@ -47,7 +48,8 @@ const CatalogPage = () => {
   useEffect(() => {
     const loadMedications = async () => {
       try {
-        const medsResponse = await medicationService.getMedications(filters);
+        const medsResponse = await medicationService.getMedWithPhoto(filters);
+        console.log(scarceMeds);
         setMedications(medsResponse.data);
         setTotalPages(medsResponse.totalPages);
 

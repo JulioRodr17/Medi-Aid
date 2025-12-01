@@ -2,35 +2,22 @@ package com.escom.mediAid.controllers;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.escom.mediAid.dtos.LoginDTO;
-import com.escom.mediAid.dtos.ResetPasswordDTO;
+import com.escom.mediAid.dtos.MedicamentoDTO;
 import com.escom.mediAid.dtos.ScarceMedicamentoDTO;
-import com.escom.mediAid.dtos.UsuarioDTO;
 import com.escom.mediAid.models.Categoria;
 import com.escom.mediAid.models.Medicamento;
-import com.escom.mediAid.models.PasswordResetToken;
-import com.escom.mediAid.models.Usuario;
-import com.escom.mediAid.models.VerificationToken;
-import com.escom.mediAid.repositories.PasswordResetTokenRepository;
-import com.escom.mediAid.repositories.UsuarioRepository;
-import com.escom.mediAid.repositories.VerificationTokenRepository;
 import com.escom.mediAid.services.CategoriaService;
-import com.escom.mediAid.services.EmailService;
+import com.escom.mediAid.services.FotoService;
 import com.escom.mediAid.services.MedicamentoService;
-import com.escom.mediAid.services.PasswordResetTokenService;
-import com.escom.mediAid.services.UsuarioService;
-import com.escom.mediAid.services.VerificationTokenService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/medicamentos")
@@ -38,10 +25,12 @@ public class MedicamentosController {
     
     private final CategoriaService categoriaService;
     private final MedicamentoService medicamentoService;
+    private final FotoService fotoService;
 
-    public MedicamentosController(CategoriaService categoriaService, MedicamentoService medicamentoService) {
+    public MedicamentosController(CategoriaService categoriaService, MedicamentoService medicamentoService, FotoService fotoService) {
         this.categoriaService = categoriaService;
         this.medicamentoService = medicamentoService;
+        this.fotoService = fotoService;
     }
 	// ================================================== Listar usuarios ==================================================
     @GetMapping("/filtrados")
@@ -95,21 +84,77 @@ public class MedicamentosController {
     } 
     
     // ==================================================  ==================================================
-    // AGREGAR
     @PostMapping("/agregar")
-    public ResponseEntity<Medicamento> agregar(@RequestBody Medicamento medicamento) {
-        Medicamento nuevo = medicamentoService.agregar(medicamento);
-        return ResponseEntity.ok(nuevo);
+    @PreAuthorize("hasRole('DOCTOR')")
+    public ResponseEntity<String> agregarMedicamento(
+            @RequestPart("medication") String medicamentoJson,
+            @RequestPart(value = "imagen", required = true) MultipartFile imagen) { // Imagen obligatoria
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            // Registrar módulos para LocalDate si el DTO los tiene
+            mapper.findAndRegisterModules();
+
+            MedicamentoDTO dto = mapper.readValue(medicamentoJson, MedicamentoDTO.class);
+
+            System.out.println("Medicamento recibido: " + dto);
+
+            // 1. Crear medicamento en BD sin URL aún
+            Medicamento nuevoMedicamento = medicamentoService.crearDesdeDTO(dto);
+
+            // 2. Guardar imagen obligatoria y obtener URL
+            String urlImagen = fotoService.guardarImagenMedicamento(nuevoMedicamento.getId(), imagen);
+
+            // 3. Asignar URL directamente y guardar
+            nuevoMedicamento.setUrl(urlImagen);
+            medicamentoService.actualizar(nuevoMedicamento);
+
+            return ResponseEntity.ok("Medicamento agregado correctamente");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError()
+                    .body("Error al agregar el medicamento");
+        }
     }
 
+
     // ==================================================  ==================================================
-    // ACTUALIZAR
-    @PutMapping("/actualizar")
-    public ResponseEntity<Medicamento> actualizar(@RequestBody Medicamento medicamento) {
-        Medicamento actualizado = medicamentoService.actualizar(medicamento);
-        return ResponseEntity.ok(actualizado);
+    @PutMapping("/actualiza")
+    @PreAuthorize("hasRole('DOCTOR')")
+    public ResponseEntity<String> actualizarMedicamento(
+            @RequestPart("medication") String medicamentoJson,
+            @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            // Permite manejar fechas como String (fechaCaducidad)
+            mapper.findAndRegisterModules();
+
+            MedicamentoDTO medicamentoDTO = mapper.readValue(medicamentoJson, MedicamentoDTO.class);
+
+            System.out.println("Medicamento recibido: " + medicamentoDTO);
+
+            String urlImagen = null;
+
+            // 1. Guardar imagen si existe
+            if (imagen != null && !imagen.isEmpty()) {
+                System.out.println("Imagen recibida: " + imagen.getOriginalFilename());
+                urlImagen = fotoService.guardarImagenMedicamento(medicamentoDTO.getId(), imagen);
+            }
+
+            // 2. Actualizar medicamento con la URL si existe
+            medicamentoService.actualizarDesdeDTO(medicamentoDTO, urlImagen);
+
+            return ResponseEntity.ok("Medicamento actualizado correctamente");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError()
+                    .body("Error al actualizar el medicamento");
+        }
     }
-	
+
 	// ==================================================  ==================================================
     @DeleteMapping("/inactivar/{id}")
     public ResponseEntity<Void> deleteMedicamento(@PathVariable Integer id) {

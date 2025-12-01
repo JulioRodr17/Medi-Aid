@@ -4,6 +4,24 @@ const getMedications = (filters = {}) => {
   return httpClient.get('/medicamentos/filtrados', { params: filters });
 };
 
+const getMedWithPhoto = async (filters = {}) => {
+  console.log(filters);
+  const response = await httpClient.get('/medicamentos/filtrados', { params: filters });
+
+  // Iteramos sobre response.data (el array de medicamentos)
+  const dataConSrc = await Promise.all(
+    response.data.map(async (med) => {
+      const src = med.url ? await httpClient.getImage(med.url) : null;
+      return { ...med, src };  // Mantenemos todo y agregamos src
+    })
+  );
+
+  // Devolvemos igual estructura que llega, reemplazando data con la nueva iteración
+  return { ...response, data: dataConSrc };
+};
+
+
+
 // Obtener nombres
 const getNombres = (filters = {}) => {
   return httpClient.get('/medicamentos/nombres', { params: filters });
@@ -24,7 +42,10 @@ const addMedication = (medData) => {
 };
 
 const updateMedication = (medData) => {
-  return httpClient.put('/medicamentos/actualizar', medData);
+  for (let pair of medData.entries()) {
+  console.log(pair[0], pair[1]);
+}
+  return httpClient.put('/medicamentos/actualiza', medData);
 };
 
 const deleteMedication = (medId) => {
@@ -36,6 +57,7 @@ export const medicationService = {
   // Usuario
   getCategories,
   getMedications,
+  getMedWithPhoto,
   getNombres,
   getScarceMedications,
   // Admin

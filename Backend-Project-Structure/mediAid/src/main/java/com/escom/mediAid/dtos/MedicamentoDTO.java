@@ -1,62 +1,48 @@
-package com.escom.mediAid.models;
+package com.escom.mediAid.dtos;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "medicamentos")
-public class Medicamento {
+import com.escom.mediAid.models.Categoria;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_medicamento")
+public class MedicamentoDTO {
+
     private Integer id;
-
-    // Relación Many-to-One con Categoría
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_categoria", nullable = false)
-    private Categoria categoria;
-
-    @Column(name = "nombre_medicamento", nullable = false, length = 255)
     private String nombreMedicamento;
-
-    @Column(columnDefinition = "TEXT")
+    private Categoria categoria;    // Solo guardamos el ID de la categoría
     private String descripcion;
-    
-    @Column(columnDefinition = "TEXT")
-    private String url;  // URL de la imagen del medicamento
-
-
-    @Column(name = "presentacion", length = 100)
     private String presentacion;
-
-    @Column(name = "dosis", length = 50)
     private String dosis;
-
-    @Column(name = "cantidad_stock")
     private Integer cantidadStock;
-    
-    @Column(name = "stock_minimo ")
     private Integer stockMinimo;
-
-    @Column(name = "fecha_caducidad")
-    private LocalDate fechaCaducidad;
-
-    @Column(columnDefinition = "TEXT")
+    private LocalDate fechaCaducidad;  // String para evitar problemas de deserialización
     private String uso;
+    private Boolean activo;
+    private String url;             // URL de la imagen, si existe
 
-    @Column(name = "activo", nullable = false)
-    private Boolean activo = true;  // Antes era estado VARCHAR
+    // Constructor vacío
+    public MedicamentoDTO() {}
 
-    @Column(name = "fecha_registro", nullable = false, updatable = false)
-    private LocalDateTime fechaRegistro = LocalDateTime.now();
-
-    // --- Constructores ---
-    public Medicamento() {
+    // Constructor con todos los campos
+    public MedicamentoDTO(Integer id, String nombreMedicamento, Categoria categoria,
+                          String descripcion, String presentacion, String dosis,
+                          Integer cantidadStock, Integer stockMinimo, LocalDate fechaCaducidad,
+                          String uso, Boolean activo, String url) {
+        this.id = id;
+        this.nombreMedicamento = nombreMedicamento;
+        this.categoria = categoria;
+        this.descripcion = descripcion;
+        this.presentacion = presentacion;
+        this.dosis = dosis;
+        this.cantidadStock = cantidadStock;
+        this.stockMinimo = stockMinimo;
+        this.fechaCaducidad = fechaCaducidad;
+        this.uso = uso;
+        this.activo = activo;
+        this.url = url;
     }
 
     // --- Getters y Setters ---
+
     public Integer getId() {
         return id;
     }
@@ -65,20 +51,20 @@ public class Medicamento {
         this.id = id;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
     public String getNombreMedicamento() {
         return nombreMedicamento;
     }
 
     public void setNombreMedicamento(String nombreMedicamento) {
         this.nombreMedicamento = nombreMedicamento;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoriaId(Categoria categoria) {
+        this.categoria = categoria;
     }
 
     public String getDescripcion() {
@@ -121,7 +107,6 @@ public class Medicamento {
         this.stockMinimo = stockMinimo;
     }
 
-    
     public LocalDate getFechaCaducidad() {
         return fechaCaducidad;
     }
@@ -141,23 +126,11 @@ public class Medicamento {
     public Boolean getActivo() {
         return activo;
     }
-    
+
     public void setActivo(Boolean activo) {
         this.activo = activo;
     }
 
-    public void setEstado(Boolean activo) {
-        this.activo = activo;
-    }
-
-    public LocalDateTime getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
-    
     public String getUrl() {
         return url;
     }

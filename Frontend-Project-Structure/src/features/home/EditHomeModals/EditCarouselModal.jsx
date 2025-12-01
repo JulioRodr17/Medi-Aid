@@ -14,9 +14,30 @@ const EditNoticiasModal = ({ onSave, onCancel }) => {
     setLoading(true);
     try {
       const dataNoticias = await homeService.getCarousel(true);
-      setItems(dataNoticias);
-      setMode('edit');
-      setCurrentIndex(0);
+
+      if (!dataNoticias || dataNoticias.length === 0) {
+        // Si no hay noticias → ir a modo agregar
+        const newItem = {
+          id: `new_${Date.now()}`,
+          titulo: '',
+          descripcion: '',
+          fechaInicio: new Date().toISOString().split('T')[0],
+          fechaExpiracion: '',
+          activo: true,
+          orden: 1,
+          file: null,
+          preview: null
+        };
+
+        setItems([newItem]);
+        setMode('add');
+        setCurrentIndex(0);
+      } else {
+        // Si sí hay noticias → modo edición normal
+        setItems(dataNoticias);
+        setMode('edit');
+        setCurrentIndex(0);
+      }    
     } catch (error) {
       console.error(error);
     } finally {
@@ -83,7 +104,6 @@ const EditNoticiasModal = ({ onSave, onCancel }) => {
   };
 
   if (loading) return <p>Cargando noticias...</p>;
-  if (!items.length && mode === 'edit') return <p>No hay noticias.</p>;
 
   const currentItem = items[currentIndex];
 

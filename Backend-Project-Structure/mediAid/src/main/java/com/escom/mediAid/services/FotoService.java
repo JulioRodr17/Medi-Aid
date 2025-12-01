@@ -81,5 +81,50 @@ public class FotoService {
         // ESTA ES LA URL QUE SE GUARDARÁ EN BD
         return "/public/Noticias/" + nombreArchivo;
     }
+    
+    public String guardarImagenMedicamento(Integer medicamentoId, MultipartFile imagen) throws IOException {
+
+        // Nombre del archivo: por ejemplo, "med_123.jpg"
+        String nombreArchivo = "med_" + medicamentoId + ".jpg";
+
+        // Carpeta donde se guardará la imagen
+        String ruta = System.getProperty("user.dir")
+                + File.separator + "public"
+                + File.separator + "Medicamentos";
+
+        // Crear carpeta si no existe
+        File carpeta = new File(ruta);
+        if (!carpeta.exists()) {
+            carpeta.mkdirs();
+        }
+
+        Path path = Paths.get(ruta, nombreArchivo);
+
+        // Leer la imagen original
+        BufferedImage original = ImageIO.read(imagen.getInputStream());
+        if (original == null) {
+            throw new IOException("El archivo no es una imagen válida");
+        }
+
+        // Convertir a JPG y manejar transparencias
+        BufferedImage jpgImage = new BufferedImage(
+                original.getWidth(),
+                original.getHeight(),
+                BufferedImage.TYPE_INT_RGB
+        );
+
+        Graphics2D graphics = jpgImage.createGraphics();
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 0, original.getWidth(), original.getHeight());
+        graphics.drawImage(original, 0, 0, null);
+        graphics.dispose();
+
+        // Guardar la imagen
+        ImageIO.write(jpgImage, "jpg", path.toFile());
+
+        // URL que se guardará en la BD
+        return "/public/Medicamentos/" + nombreArchivo;
+    }
+
 
 }

@@ -30,7 +30,7 @@ const InventoryPage = () => {
       setError(null);
 
       //const inventoryData = await medicationService.getMedications({ size: 0, sortBy: "fechaCaducidad", sortDirection: "DESC" });
-      const inventoryData = await medicationService.getMedications({ size: 0, sortBy: "nombreMedicamento", sortDirection: "ASC" });
+      const inventoryData = await medicationService.getMedWithPhoto({ size: 0, sortBy: "nombreMedicamento", sortDirection: "ASC" });
       const statsData = summarizeMedicamentos(inventoryData.data);
       setStats(statsData);
       setInventory(inventoryData.data); // getMedications devuelve { data: [...] }

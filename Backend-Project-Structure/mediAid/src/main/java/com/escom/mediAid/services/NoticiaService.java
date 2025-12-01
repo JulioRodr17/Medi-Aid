@@ -32,7 +32,7 @@ public class NoticiaService {
 
     // Obtener todas las noticias (sin filtro)
     public List<Noticias> obtenerTodasNoticias() {
-        return noticiaRepo.findAll();
+        return noticiaRepo.findAllByOrderByActivoDescFechaExpiracionAsc();
     }
     
     public List<Cards> obtenerCards(){

@@ -53,10 +53,32 @@ public class PublicController {
         }
     }
     
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/Noticias/{noticia}")
     public ResponseEntity<byte[]> obtenerNoticia(@PathVariable String noticia) {
         try {
             Path fotoPath = publicRoot.resolve(Paths.get("Noticias", noticia)).normalize();
+            System.out.println(fotoPath);
+            if (!Files.exists(fotoPath)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            byte[] fotoBytes = Files.readAllBytes(fotoPath);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+
+            return new ResponseEntity<>(fotoBytes, headers, HttpStatus.OK);
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/Medicamentos/{medicamento}")
+    public ResponseEntity<byte[]> obtenerMedicamento(@PathVariable String medicamento) {
+        try {
+            Path fotoPath = publicRoot.resolve(Paths.get("Medicamentos", medicamento)).normalize();
             System.out.println(fotoPath);
             if (!Files.exists(fotoPath)) {
                 return ResponseEntity.notFound().build();

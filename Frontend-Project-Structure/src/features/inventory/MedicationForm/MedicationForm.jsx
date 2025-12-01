@@ -5,11 +5,10 @@ import Button from '../../../components/ui/button/Button';
 import { medicationService } from '../../../services/medicationService';
 
 const MedicationForm = ({ medication, onSave, onCancel }) => {
-
   const [formData, setFormData] = useState({
     id: medication?.id || null,
     nombreMedicamento: medication?.nombreMedicamento || '',
-    categoria: medication?.categoria.id,
+    categoria: medication?.categoria?.id || null,
     descripcion: medication?.descripcion || '',
     presentacion: medication?.presentacion || '',
     dosis: medication?.dosis || '',
@@ -25,44 +24,29 @@ const MedicationForm = ({ medication, onSave, onCancel }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  /** ─────────────────────────────────────────
-   *  Cargar categorías y nombres de medicamentos
-   * ────────────────────────────────────────── */
+  // NUEVOS ESTADOS para imagen/url
+  const [imageFile, setImageFile] = useState(null);
+  const [preview, setPreview] = useState(medication?.imageUrl || null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const categoriesResponse = await medicationService.getCategories();
         const nombresResponse = await medicationService.getNombres();
 
-        console.log(formData);
-
         setCategories(categoriesResponse);
         setNombres(nombresResponse);
 
-        // Manejo de categoría
-        if (!medication) {
-          setFormData(prev => ({
-            ...prev,
-            categoria: categoriesResponse[0]?.id
-          }));
-        } else {
-          setFormData(prev => ({
-            ...prev,
-            categoria: medication.categoria?.id
-          }));
+        if (!medication && categoriesResponse.length > 0) {
+          setFormData(prev => ({ ...prev, categoria: categoriesResponse[0].id }));
         }
 
         // Manejo del select de nombres
         const exists = nombresResponse.some(n => n === medication?.nombreMedicamento);
-
         if (medication) {
-          if (exists) {
-            setSelectedNombre(medication.nombreMedicamento);
-          } else {
-            setSelectedNombre("otro");
-          }
+          if (exists) setSelectedNombre(medication.nombreMedicamento);
+          else setSelectedNombre("otro");
         }
-
       } catch (err) {
         console.error("Error cargando datos:", err);
       }
@@ -71,66 +55,47 @@ const MedicationForm = ({ medication, onSave, onCancel }) => {
     fetchData();
   }, [medication]);
 
-  /** ─────────────────────────────────────────
-   *  Manejo del cambio en inputs y selects
-   * ────────────────────────────────────────── */
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    
     if (name === "categoria") {
-      setFormData(prev => ({
-        ...prev,
-        [name]: Number(value) // guardar siempre como número
-      }));
+      setFormData(prev => ({ ...prev, [name]: Number(value) }));
       return;
     }
-    // Si se cambia el select de nombre
+
     if (name === "nombreMedicamentoSelect") {
       setSelectedNombre(value);
-
-      if (value !== "otro") {
-        // Si selecciona uno de la lista, actualizar directamente
-        setFormData(prev => ({ ...prev, nombreMedicamento: value }));
-      } else {
-        // Si selecciona "otro", limpiar el input
-        setFormData(prev => ({ ...prev, nombreMedicamento: '' }));
-      }
-
+      if (value !== "otro") setFormData(prev => ({ ...prev, nombreMedicamento: value }));
+      else setFormData(prev => ({ ...prev, nombreMedicamento: '' }));
       return;
     }
 
-    // Para el input de nombre manual
     if (name === "nombreMedicamento") {
-      setFormData(prev => ({
-        ...prev,
-        nombreMedicamento: value
-      }));
+      setFormData(prev => ({ ...prev, nombreMedicamento: value }));
       return;
     }
 
-    // Para el resto del formulario
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    // Para inputs normales
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  /** ─────────────────────────────────────────
-   *  Enviar form
-   * ────────────────────────────────────────── */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const payload = {
-      ...formData,
-      categoria: categories.find(cat => cat.id === formData.categoria) || null
-    };
-
     try {
+      const payload = new FormData();
+
+      payload.append("medication", JSON.stringify({
+        ...formData,
+        activo: true,
+        categoria: categories.find(cat => cat.id === formData.categoria) || null
+      }));
+    
+      payload.append("imagen", imageFile);
       await onSave(payload);
+
     } catch (err) {
       setError(err.message || 'Error al guardar el medicamento.');
     } finally {
@@ -158,7 +123,6 @@ const MedicationForm = ({ medication, onSave, onCancel }) => {
         </select>
       </div>
 
-      {/* INPUT cuando selecciona "otro" */}
       {selectedNombre === "otro" && (
         <Input
           id="nombreMedicamento"
@@ -180,7 +144,6 @@ const MedicationForm = ({ medication, onSave, onCancel }) => {
           onChange={handleChange}
           disabled={loading}
         />
-
         <Input
           id="presentacion"
           name="presentacion"
@@ -196,7 +159,7 @@ const MedicationForm = ({ medication, onSave, onCancel }) => {
         <select
           id="categoria"
           name="categoria"
-          value={formData.categoria}
+          value={formData.categoria ?? ""}
           onChange={handleChange}
           disabled={loading || categories.length === 0}
           required
@@ -219,7 +182,6 @@ const MedicationForm = ({ medication, onSave, onCancel }) => {
           disabled={loading}
           required
         />
-
         <Input
           id="stockMinimo"
           name="stockMinimo"
@@ -230,7 +192,6 @@ const MedicationForm = ({ medication, onSave, onCancel }) => {
           onChange={handleChange}
           disabled={loading}
         />
-
         <Input
           id="fechaCaducidad"
           name="fechaCaducidad"
@@ -251,19 +212,42 @@ const MedicationForm = ({ medication, onSave, onCancel }) => {
         disabled={loading}
       />
 
+      {/* --- NUEVA SECCIÓN PARA IMAGEN / URL --- */}
+      <div className="form-group">
+        <label>Imagen del medicamento</label>
+
+        <input 
+          type="file" 
+          accept="image/*" 
+          onChange={(e) => {
+            const file = e.target.files[0];
+            setImageFile(file);
+            setPreview(file ? URL.createObjectURL(file) : null);
+          }} 
+          required={!medication?.src} // ⚡ obligatorio si no hay imagen previa
+        />
+
+        {(preview || medication?.src) && (
+          <img
+            src={preview || medication.src}
+            style={{
+              width: '100%',
+              maxHeight: 200,
+              objectFit: 'cover',
+              marginTop: 10,
+              borderRadius: 8
+            }}
+          />
+        )}
+      </div>
+
       {error && <p className="form-error-message">{error}</p>}
 
       <div className="med-form-actions">
         <Button type="button" variant="secondary" onClick={onCancel} disabled={loading}>
           Cancelar
         </Button>
-
-        <Button
-          type="submit"
-          variant="primary"
-          style={{ backgroundColor: '#3921f2' }}
-          disabled={loading}
-        >
+        <Button type="submit" variant="primary" style={{ backgroundColor: '#3921f2' }} disabled={loading}>
           {loading ? 'Guardando...' : (medication ? 'Guardar Cambios' : 'Agregar Medicamento')}
         </Button>
       </div>

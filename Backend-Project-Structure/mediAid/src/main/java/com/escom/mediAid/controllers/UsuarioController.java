@@ -10,17 +10,12 @@ import com.escom.mediAid.dtos.ResetPasswordDTO;
 import com.escom.mediAid.dtos.UsuarioDTO;
 import com.escom.mediAid.models.PasswordResetToken;
 import com.escom.mediAid.models.Usuario;
-import com.escom.mediAid.models.VerificationToken;
 import com.escom.mediAid.repositories.PasswordResetTokenRepository;
 import com.escom.mediAid.repositories.UsuarioRepository;
-import com.escom.mediAid.repositories.VerificationTokenRepository;
 import com.escom.mediAid.services.EmailService;
 import com.escom.mediAid.services.PasswordResetTokenService;
 import com.escom.mediAid.services.UsuarioService;
-import com.escom.mediAid.services.VerificationTokenService;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,18 +26,14 @@ public class UsuarioController {
 	private final UsuarioService service;
 	
     private final PasswordResetTokenRepository passwordResetTokenRepo;
-    private final PasswordResetTokenService passwordResetTokenService;    
     private final UsuarioRepository usuarioRepo;
-    private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     
 	public UsuarioController(UsuarioService service, UsuarioRepository usuarioRepo, EmailService emailService, PasswordResetTokenRepository passwordResetTokenRepo, PasswordResetTokenService passwordResetTokenService) {
 		this.service = service;
-    	this.emailService = emailService;
     	this.usuarioRepo = usuarioRepo;
     	this.passwordResetTokenRepo = passwordResetTokenRepo;
-    	this.passwordResetTokenService = passwordResetTokenService;
 	}
 	// ================================================== Listar usuarios ==================================================
 	@GetMapping

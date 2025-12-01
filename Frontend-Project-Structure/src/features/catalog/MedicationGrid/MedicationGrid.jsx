@@ -24,7 +24,7 @@ const MedicationGrid = ({
             key={med.id}
             name={med.nombreMedicamento}
             dosage={med.dosis}
-            imageUrl={imgMed}
+            imageUrl={med.src || med.url || imgMed}
             onClick={() => onCardClick(med)}
           />
         ))}

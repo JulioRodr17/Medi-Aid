@@ -28,7 +28,7 @@ public class NoticiasController {
     }
 
     // ==================================================
-    // Obtener noticias activas (usuarios)
+    // Obtener noticias activas (usuarios) 
     // ==================================================
     @GetMapping("/activas")
     public List<Noticias> obtenerNoticias(@RequestParam(defaultValue = "false") boolean inactivas) {

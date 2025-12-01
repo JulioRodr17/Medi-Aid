@@ -16,11 +16,6 @@ const HomePage = () => {
   const { user, loading: authLoading } = useAuth();
   const isAdmin = user.admin;
 
-  // Estados de Datos
-  const [homeData, setHomeData] = useState({ 
-    carouselImages: [], 
-    infoCards: [] 
-  });
   const [noticias, setNoticias] = useState();
   const [cards, setCards] = useState();
   const [loading, setLoading] = useState(true);
@@ -128,7 +123,6 @@ const handleSaveCards = async (newCards) => {
         onClose={() => setIsCarouselModalOpen(false)}
       >
         <EditCarouselModal 
-          currentData={homeData.carouselImages} 
           onSave={handleSaveCarousel} 
           onCancel={() => setIsCarouselModalOpen(false)} 
         />
@@ -140,7 +134,6 @@ const handleSaveCards = async (newCards) => {
         onClose={() => setIsCardsModalOpen(false)}
       >
         <EditInfoCardsModal 
-          currentData={homeData.infoCards} 
           onSave={handleSaveCards} 
           onCancel={() => setIsCardsModalOpen(false)} 
         />

@@ -1,14 +1,10 @@
 import { httpClient } from './httpClient';
 import { notificationService } from './notificationService';
-import { 
-  simulateUpdateInfoCards 
-} from '../data/homeData';
 
 const USE_DUMMY_DATA = true;
 
 const getCarousel = async (inactivas = false) => {
   const data = await notificationService.obtenNoticias(inactivas);
-  data.sort((a, b) => a.orden - b.orden);
 
   const noticiasConSrc = await Promise.all(
     data.map(async (n) => {

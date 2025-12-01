@@ -1,6 +1,6 @@
 // utils/httpClient.js
 const API_BASE_URL = 'http://localhost:8080/api'; // Desarrollo
-// const API_BASE_URL = '/api'; // Producción
+//const API_BASE_URL = '/api'; // Producción
 
 const request = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');

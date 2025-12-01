@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './UserSettingMenu.css';
-
-// TODO:
-// Estos botones/enlaces deberían abrir Modales.
-// Por ahora, solo simulan la acción.
+import PrivacyModal from "../../AvisoDePrivacidad/AvisoDePrivacidad";
 
 const UserSettingsMenu = ({ onEditProfileClick, onChangePasswordClick, onCloseMenu }) => {
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleEditProfile = () => {
     onEditProfileClick(); 
@@ -18,19 +17,26 @@ const UserSettingsMenu = ({ onEditProfileClick, onChangePasswordClick, onCloseMe
   };
 
   return (
-   <ul className="settings-menu">
-      <li className="settings-menu-item">
-        <button onClick={handleEditProfile}>Editar Perfil</button>
-      </li>
-      <li className="settings-menu-item">
-        <button onClick={handleChangePassword}>Cambiar Contraseña</button>
-      </li>
-      <li className="settings-menu-item">
-        <a href="/politica" target="_blank" rel="noopener noreferrer" onClick={onCloseMenu}>
-          Política de Privacidad
-        </a>
-      </li>
-    </ul>
+    <>
+      <ul className="settings-menu">
+        <li className="settings-menu-item">
+          <button onClick={handleEditProfile}>Editar Perfil</button>
+        </li>
+
+        <li className="settings-menu-item">
+          <button onClick={handleChangePassword}>Cambiar Contraseña</button>
+        </li>
+
+        <li className="settings-menu-item">
+          <button onClick={() => setIsModalOpen(true)}>
+            Política de Privacidad
+          </button>
+        </li>
+      </ul>
+
+      {/* Modal de privacidad */}
+      <PrivacyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    </>
   );
 };
 
