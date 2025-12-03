@@ -1,0 +1,53 @@
+.donation-detail-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-item.full {
+  grid-column: 1 / 3;
+}
+
+.label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  margin-top: 2px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Colores según estado */
+.status-badge.pendiente {
+  background: #fff3cd;
+  color: #92400e;
+}
+.status-badge.aprobada {
+  background: #d1fae5;
+  color: #065f46;
+}
+.status-badge.rechazada {
+  background: #fee2e2;
+  color: #991b1b;
+}

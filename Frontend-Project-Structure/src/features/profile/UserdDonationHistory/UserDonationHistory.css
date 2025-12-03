@@ -6,10 +6,12 @@
 
 .history-table th,
 .history-table td {
+  width: 100%;
   padding: 0.75rem 0.5rem;
   text-align: left;
   border-bottom: 1px solid #e9ecef;
 }
+
 
 .history-table th {
   font-size: 0.9rem;
@@ -26,6 +28,13 @@
 .history-table td:last-child {
   text-align: right;
 }
+
+.history-table th:first-child,
+.history-table td:first-child {
+  width: auto; /* Ajusta al contenido */
+  white-space: nowrap; /* Opcional: evita que el texto se parta */
+}
+
 
 .history-footer {
   text-align: center;
@@ -47,4 +56,16 @@
     overflow-x: auto;
     white-space: nowrap;
   }
+
+  .history-table th {
+    font-size: 0.75rem;
+    color: #555;
+    font-weight: 600;
+  }
+
+  .history-table td {
+    font-size: 0.75rem;
+    color: #333;
+  }
 }
+

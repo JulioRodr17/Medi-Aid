@@ -13,7 +13,7 @@ const AdminDonationChart = ({ stats }) => {
     datasets: [
       {
         label: '# de Donaciones',
-        data: [stats.approved, stats.pending, stats.rejected],
+        data: [stats.aprobada, stats.pendiente, stats.rechazada],
         backgroundColor: [
           'rgba(40, 167, 69, 0.7)',  // Aprobadas (Verde)
           'rgba(255, 193, 7, 0.7)',  // Pendientes (Amarillo)

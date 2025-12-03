@@ -27,36 +27,39 @@ const ChangePasswordForm = ({ onSave, onCancel }) => {
     }
   };
 
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // 1. Validación: Revisamos que las contraseñas nuevas coincidan
     if (formData.newPassword !== formData.confirmPassword) {
       setError('Las nuevas contraseñas no coinciden.');
-      return; // Detenemos el envío
+      return;
     }
-    
-    // 2. Validación: (Opcional) Revisar longitud de contraseña
-    if (formData.newPassword.length < 8) {
-      setError('La nueva contraseña debe tener al menos 8 caracteres.');
+
+    // 2. Validación: Regex para seguridad
+    if (!passwordRegex.test(formData.newPassword)) {
+      setError(
+        'La nueva contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una letra minúscula, un número y un carácter especial.'
+      );
       return;
     }
 
     setLoading(true);
     setError('');
-    
+
     try {
       // Llamamos al servicio
       await profileService.changePassword(user.id, formData);
       onSave(); // Cerramos el modal
-
     } catch (err) {
-      // El error de "contraseña actual incorrecta" vendrá del servicio
       setError(err.message || 'Error al cambiar la contraseña.');
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="change-password-form">

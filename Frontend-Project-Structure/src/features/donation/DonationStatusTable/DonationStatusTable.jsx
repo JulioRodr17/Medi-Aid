@@ -5,10 +5,11 @@ import { donationService } from '../../../services/donationService';
 import { useAuth } from '../../../context/AuthContext.jsx';
 import Spinner from '../../../components/ui/Spinner/Spinner';
 import EmptyState from '../../../components/ui/EmptyState/EmptyState';
-
+import DonationDetailModal from './DonationDetailModal'
 
 
 const DonationStatusTable = () => {
+  const [selectedDonation, setSelectedDonation] = useState(null);
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,6 +26,7 @@ const DonationStatusTable = () => {
 
         // TODO: BACKEND - Llamamos al servicio con el ID del usuario
         const data = await donationService.getDonationHistory(user.id);
+        console.log(data);
         setDonations(data);
 
       } catch (err) {
@@ -37,6 +39,20 @@ const DonationStatusTable = () => {
 
     loadDonationHistory();
   }, [user]);
+
+  const handleSelectDonation = (donation) => {
+    setSelectedDonation(donation);
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("es-MX", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    });
+  };
 
   if (loading) {
     return <Spinner label="Cargando tu historial..." />;
@@ -61,26 +77,44 @@ const DonationStatusTable = () => {
       <table>
         <thead>
           <tr>
+            <th>Fecha registro</th>
             <th>Medicamento</th>
             <th>Cantidad</th>
-            <th>Estado</th>
+            <th>Estatus</th>
           </tr>
         </thead>
         <tbody>
           {donations.map((donation) => (
-            <tr key={donation.id}>
-              <td>{donation.name}</td>
-              <td>{`${donation.cantidadNumerica} ${donation.cantidadDonada}`}</td>
+            <tr
+              key={donation.id}
+              onClick={() => handleSelectDonation(donation)}
+              className="row-clickable"
+            >
+              <td>{formatDate(donation.donacion.fechaRegistro)}</td>
+              <td>{donation.medicamento.nombreMedicamento}</td>
+              <td>{donation.cantidadOfrecida}</td>
               <td className="status-cell">
-                <StatusIcon status={donation.status} />
-                <span className="status-text">{donation.status.charAt(0).toUpperCase() + donation.status.slice(1)}</span>
+                <StatusIcon
+                  status={donation.donacion.estadoDonacion.nombreEstado}
+                />
+                <span className="status-text">
+                  {donation.donacion.estadoDonacion.nombreEstado}
+                </span>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {selectedDonation && (
+        <DonationDetailModal
+          donation={selectedDonation}
+          onClose={() => setSelectedDonation(null)}
+        />
+      )}
     </div>
   );
+
 };
 
 export default DonationStatusTable;

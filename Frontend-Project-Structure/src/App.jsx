@@ -16,6 +16,8 @@ import PrivateRoute from './components/utility/PrivateRoute';
 import PublicRoute from './components/utility/PublicRoute';
 import AuthWatcher from './components/utility/AuthWatcher.jsx';
 
+import DonationReviewTable from './features/donation/DonationReviewTable/DonationReviewTable';
+
 import './App.css'
 import TokenValidator from './features/RegisterForm/Verificación.js';
 
@@ -42,6 +44,7 @@ function App() {
               <Route index element={<HomePage />} />
               <Route path="catalogo" element={<CatalogPage />} />
               <Route path="donacion" element={<DonationPage />} />
+              <Route path="revisiones" element={<DonationReviewTable />} />
               <Route path="perfil" element={<ProfilePage />} />
               <Route path="inventario" element={<InventoryPage />}/>
               <Route path = "*" element={<Navigate to="/admin" />} />
@@ -53,7 +56,6 @@ function App() {
               <Route path="catalogo" element={<CatalogPage />} />
               <Route path="donacion" element={<DonationPage />} />
               <Route path="perfil" element={<ProfilePage />} />
-              {/*<Route path="inventario" element={<InventoryPage />}/>*/}
               <Route path = "*" element={<Navigate to="/user" />} />
           </Route>
           

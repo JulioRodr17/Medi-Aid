@@ -38,7 +38,7 @@ public class MedicamentosController {
             @RequestParam(required = false, defaultValue = "") String search,
             @RequestParam(required = false) Integer category,
             @RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "8") int size,
+            @RequestParam(required = false, defaultValue = "6") int size,
             @RequestParam(required = false, defaultValue = "nombreMedicamento") String sortBy,
             @RequestParam(required = false, defaultValue = "ASC") String sortDirection
     ) {

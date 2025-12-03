@@ -40,23 +40,14 @@ const ProfilePage = () => {
       try {
         setLoading(true);
         setError(null);
-        // Definimos las promesas base (Stats siempre se cargan)
-        const promises = [profileService.getProfileStats(user.id)];
 
-        // Si es usuario normal, también cargamos su historial
-        if (user.admin) {
-          promises.push(profileService.getDonationHistoryRecent(user.id));
-        }
+        const resultsHistory = await profileService.getDonationHistoryRecent(user.id);
+        const primerosTres = resultsHistory.slice(0, 3);
+        setHistory(primerosTres); // El segundo es history (solo si no es admin)
 
-        // Ejecutamos las peticiones
-        const results = await Promise.all(promises);
-        
-        // Asignamos resultados
-        setStats(results[0]); // El primero siempre es stats
-        
-        if (user.admin) {
-          setHistory(results[1]); // El segundo es history (solo si no es admin)
-        }
+        const resultsStats = await profileService.getProfileStats(user.id);
+        console.log(resultsStats);
+        setStats(resultsStats);
 
       } catch (err) {
         console.error(err);
@@ -111,7 +102,7 @@ const ProfilePage = () => {
                 {user.admin? (
                   <AdminDonationChart stats={stats} />) : (
                   <>
-                    <UserDonationStats total={stats.total} pending={stats.pending} approved={stats.approved} />
+                    <UserDonationStats total={stats.total} pending={stats.pendiente} approved={stats.aprobada} rechazada = {stats.rechazada} />
                     <UserDonationHistory history={history} />
                   </>
               )}

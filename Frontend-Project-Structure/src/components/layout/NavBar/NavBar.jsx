@@ -90,6 +90,12 @@ const Navbar = () => {
             Inventario
           </NavLink>
         )}
+
+        {isAdmin && (
+          <NavLink to="revisiones" onClick={handleLinkClick} className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+            Revisiones
+          </NavLink>
+        )}
       </nav>
 
       {/* --- Derecha --- */}

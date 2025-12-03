@@ -112,5 +112,63 @@ public class UsuarioController {
 
 	    return ResponseEntity.ok("Contraseña restablecida correctamente");
 	}
-    
+	
+	// ==================================================  ==================================================
+	@PutMapping("/changePassword")
+	public ResponseEntity<String> changePassword(@RequestBody Map<String, Object> payload) {
+
+	    // Extraer campos
+	    Object idObj = payload.get("id");
+	    Object currentPasswordObj = payload.get("currentPassword");
+	    Object newPasswordObj = payload.get("newPassword");
+	    Object confirmPasswordObj = payload.get("confirmPassword");
+
+	    if (idObj == null || currentPasswordObj == null || newPasswordObj == null || confirmPasswordObj == null) {
+	        return ResponseEntity.badRequest().body("Todos los campos son obligatorios");
+	    }
+
+	    Long id;
+	    String currentPassword, newPassword, confirmPassword;
+
+	    try {
+	        id = Long.parseLong(idObj.toString());
+	        currentPassword = currentPasswordObj.toString();
+	        newPassword = newPasswordObj.toString();
+	        confirmPassword = confirmPasswordObj.toString();
+	    } catch (Exception e) {
+	        return ResponseEntity.badRequest().body("Datos inválidos");
+	    }
+
+	    // Verificar que newPassword y confirmPassword coincidan
+	    if (!newPassword.equals(confirmPassword)) {
+	        return ResponseEntity.badRequest().body("Las nuevas contraseñas no coinciden");
+	    }
+
+	    // Validar formato de la nueva contraseña
+	    String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$";
+	    if (!newPassword.matches(passwordRegex)) {
+	        return ResponseEntity.badRequest().body(
+	            "La nueva contraseña debe tener al menos 8 caracteres, incluyendo mayúscula, minúscula, número y carácter especial"
+	        );
+	    }
+
+	    // Buscar usuario
+	    Optional<Usuario> optionalUsuario = usuarioRepo.findById(id);
+	    if (!optionalUsuario.isPresent()) {
+	        return ResponseEntity.badRequest().body("Usuario no encontrado");
+	    }
+
+	    Usuario usuario = optionalUsuario.get();
+
+	    // Verificar contraseña actual
+	    if (!passwordEncoder.matches(currentPassword, usuario.getContrasena())) {
+	        return ResponseEntity.badRequest().body("La contraseña actual es incorrecta");
+	    }
+
+	    // Hashear nueva contraseña y guardar
+	    usuario.setContrasena(passwordEncoder.encode(newPassword));
+	    usuarioRepo.save(usuario);
+
+	    return ResponseEntity.ok("Contraseña actualizada correctamente");
+	}    
 }

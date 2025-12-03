@@ -10,14 +10,15 @@ const StatBox = ({ value, label }) => (
   </div>
 );
 
-const UserDonationStats = ({ total, pending, approved }) => {
+const UserDonationStats = ({ total, pending, approved, rechazada }) => {
   return (
     <div className="profile-card">
       <h3 className="profile-card-title">Resumen de Donaciones</h3>
       <div className="stats-container">
         <StatBox value={total} label="Total de Donaciones" />
-        <StatBox value={pending} label="Donaciones Pendientes" />
         <StatBox value={approved} label="Donaciones Aprobadas" />
+        <StatBox value={pending} label="Donaciones Pendientes" />
+        <StatBox value={rechazada} label="Donaciones Rechazadas" />
       </div>
     </div>
   );

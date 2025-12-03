@@ -26,13 +26,13 @@ const RejectedIcon = () => (
 const StatusIcon = ({ status }) => {
   let icon = null;
   switch (status) {
-    case 'aprobado':
+    case 'APROBADA':
       icon = <CheckIcon />;
       break;
-    case 'pendiente':
+    case 'PENDIENTE':
       icon = <PendingIcon />;
       break;
-    case 'rechazado':
+    case 'RECHAZADA':
       icon = <RejectedIcon />;
       break;
     default:

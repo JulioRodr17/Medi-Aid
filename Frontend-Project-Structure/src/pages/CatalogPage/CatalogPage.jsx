@@ -22,7 +22,9 @@ const CatalogPage = () => {
     search: '',
     category: '',
     page: 0,
-    size: 8
+    size: 6,
+    sortBy: "nombreMedicamento",
+    sortDirection: "ASC"
   });
 
   useEffect(() => {
@@ -49,7 +51,6 @@ const CatalogPage = () => {
     const loadMedications = async () => {
       try {
         const medsResponse = await medicationService.getMedWithPhoto(filters);
-        console.log(scarceMeds);
         setMedications(medsResponse.data);
         setTotalPages(medsResponse.totalPages);
 

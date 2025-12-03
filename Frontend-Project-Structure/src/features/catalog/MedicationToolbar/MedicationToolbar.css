@@ -6,46 +6,19 @@
   width: 100%;
 }
 
+/* ===============================
+   CONTENEDOR DE FILTROS
+   =============================== */
 .filter-wrapper {
   position: relative;
-  display: inline-block; 
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.filters-dropdown {
-  position: absolute;
-  top: 110%; 
-  left: 0;
-  width: 220px; 
-  background-color: #ffffff;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); 
-  z-index: 100; 
-  overflow: hidden;
-  padding: 0.5rem 0;
-}
-
-.filters-dropdown ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.filters-dropdown li{
-  padding: 0.75rem 1.25rem;
-  color: #333;
-  font-size: 0.95rem;
-  cursor: pointer; /* ¡Esto pone la manita! */
-  transition: background-color 0.2s ease;
-  display: block;
-}
-
-.filters-dropdown li:hover {
-  background-color: #f0f0ff; /* Un fondo moradito muy suave */
-  color: #3921f2; /* Texto morado */
-  font-weight: 500;
-}
-
+/* ===============================
+   BOTÓN "FILTROS"
+   =============================== */
 .filter-button {
   display: flex;
   align-items: center;
@@ -69,6 +42,111 @@
   color: #3921f2;
 }
 
+/* ===============================
+   BOTÓN DE FLECHA (ASC / DESC)
+   =============================== */
+.sort-direction-button {
+  padding: 0.65rem 0.75rem;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sort-direction-button:hover {
+  background-color: #f8f9fa;
+  border-color: #3921f2;
+}
+
+/* ===============================
+   DROPDOWN
+   =============================== */
+.filters-dropdown {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 220px;
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  overflow: hidden;
+  padding: 0.5rem 0;
+}
+
+/* ===============================
+   SELECT DE CATEGORÍA
+   =============================== */
+.filters-dropdown select {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+/* ===============================
+   DIVISOR
+   =============================== */
+.filter-divider {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #adb5bd;
+  background-color: #f8f9fa;
+  padding: 0.5rem 1.25rem;
+  border-top: 1px solid #e9ecef;
+  border-bottom: 1px solid #e9ecef;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+  cursor: default !important;
+  pointer-events: none;
+}
+
+.filter-divider:hover {
+  background-color: #f9f9f9 !important;
+  color: #999 !important;
+}
+
+/* ===============================
+   BOTONES DE ORDEN
+   =============================== */
+.sort-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 0.75rem 0.5rem;
+}
+
+.sort-buttons button {
+  all: unset;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.sort-buttons button:hover {
+  background-color: #f0f0ff;
+  color: #3921f2;
+  font-weight: 500;
+}
+
+.sort-buttons button.active {
+  background-color: #3921f2;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ===============================
+   SEARCH BAR
+   =============================== */
 .search-bar {
   flex-grow: 1;
   position: relative;
@@ -80,8 +158,7 @@
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-    color: #adb5bd;
-
+  color: #adb5bd;
 }
 
 .search-input {
@@ -96,25 +173,4 @@
 
 .search-input::placeholder {
   color: #adb5bd;
-}
-
-.filter-divider {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #adb5bd;
-  background-color: #f8f9fa;
-  padding: 0.5rem 1.25rem;
-  border-top: 1px solid #e9ecef;
-  border-bottom: 1px solid #e9ecef;
-  margin-top: 0.5rem;
-  margin-bottom: 0.25rem;
-  cursor: default !important; 
-  pointer-events: none; 
-}
-
-.filter-divider:hover {
-  background-color: #f9f9f9 !important;
-  color: #999 !important;
 }

@@ -3,19 +3,19 @@ import "./EditProfileForm.css";
 import Input from "../../../components/ui/input/Input";
 import Button from "../../../components/ui/button/Button";
 import { profileService } from "../../../services/profileService"; // Importamos el servicio
-import { useAuth } from "../../../context/AuthContext.jsx";
+import { useAuth } from "../../../context/AuthContext";
 
 const EditProfileForm = ({ currentUser, onSave, onCancel }) => {
   // Inicializamos el estado del formulario con los datos actuales del usuario
   const { user } = useAuth();
   const [formData, setFormData] = useState({
-    name: currentUser.name || "",
-    phone: currentUser.phone || "",
+    telefono: currentUser.telefono || "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
   const handleChange = (e) => {
+    console.log(user);
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -31,6 +31,14 @@ const EditProfileForm = ({ currentUser, onSave, onCancel }) => {
     try {
       // Llamamos al servicio para actualizar
       const updatedData = await profileService.updateProfile(user.id, formData);
+      currentUser.telefono = formData.telefono;
+
+      const storedUser = localStorage.getItem('user');
+      localStorage.removeItem('user');
+      const newPhone = JSON.parse(storedUser);
+      newPhone.telefono = formData.telefono;
+      localStorage.setItem('user', JSON.stringify(newPhone));
+
       onSave(updatedData); // Pasamos los datos actualizados a ProfilePage
     } catch (err) {
       setError(err.message || "No se pudo actualizar el perfil.");
@@ -42,19 +50,10 @@ const EditProfileForm = ({ currentUser, onSave, onCancel }) => {
   return (
     <form onSubmit={handleSubmit} className="edit-profile-form">
       <Input
-        id="name"
-        name="name"
-        label="Nombre Completo"
-        value={formData.name}
-        onChange={handleChange}
-        disabled={loading}
-        required
-      />
-      <Input
-        id="phone"
-        name="phone"
+        id="telefono"
+        name="telefono"
         label="Teléfono"
-        value={formData.phone}
+        value={formData.telefono}
         onChange={handleChange}
         disabled={loading}
       />

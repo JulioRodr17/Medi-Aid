@@ -1,5 +1,7 @@
 .medication-grid-wrapper {
   width: 100%;
+  padding: 1rem 2rem; /* Más espacio lateral en móviles */
+  box-sizing: border-box;
 }
 
 .medication-grid-empty {
@@ -11,7 +13,6 @@
 
 .medication-grid {
   display: grid;
-  /* Desktop: Ajuste automático (3 o 4 columnas según espacio) */
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
 }
@@ -27,6 +28,10 @@
   .medication-grid {
     /* Mobile: 1 columna al 100% */
     grid-template-columns: 1fr;
+  }
+
+  .medication-grid-wrapper {
+    padding: 1rem; /* Menor padding lateral en móviles pequeños */
   }
 }
 

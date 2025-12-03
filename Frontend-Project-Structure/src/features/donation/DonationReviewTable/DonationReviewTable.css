@@ -1,86 +1,128 @@
 .review-table-container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-}
-
-.review-table-scroll {
-  width: 100%;
   overflow-x: auto;
+  padding: 0 1rem;
 }
 
+/* TÍTULO */
 .review-title {
-  font-size: 1.75rem;
+  margin: 1.5rem 0;
+  font-size: 1.6rem;
   font-weight: 700;
   color: #333;
-  margin-bottom: 1.5rem;
-}
-
-.review-loading,
-.review-empty,
-.review-error {
   text-align: center;
-  font-size: 1.1rem;
-  padding: 3rem;
-  color: #6c757d;
-  font-style: italic;
 }
 
-.review-error {
-  color: #dc3545;
-  font-weight: 500;
-}
-
+/* TABLA */
 .review-table {
   width: 100%;
   border-collapse: collapse;
-  text-align: left;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  min-width: 600px;
+}
+
+.review-table thead tr {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #e9ecef;
 }
 
 .review-table th,
 .review-table td {
-  padding: 1rem 0.75rem;
-  border-bottom: 1px solid #e9ecef;
+  padding: 1rem 1.25rem;
+  text-align: left;
+  white-space: nowrap;
 }
 
 .review-table th {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #495057;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  /* Evita desbordamiento en títulos largos */
+  white-space: normal !important;
+  max-width: 140px;
 }
 
 .review-table td {
-  font-size: 1rem;
-  color: #212529;
+  color: #333;
+  font-size: 0.95rem;
+
+  /* Permite corte por palabra en móviles */
+  white-space: normal;
+  word-break: break-word;
+  max-width: 200px;
 }
 
-.review-table tbody tr:hover {
-  background-color: #f8f9fa;
+.review-table tbody tr {
+  border-bottom: 1px solid #e9ecef;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-/* Ajustar el botón en la última celda */
-.review-table td:last-child {
-  text-align: center;
+.review-table tbody tr:last-child {
+  border-bottom: none;
 }
 
+/* FILAS CLICKEABLES */
+.review-row {
+  cursor: pointer;
+}
+
+.review-row:hover {
+  background-color: #f9fafb;
+  transform: scale(1.01);
+}
+
+/* ESTADOS (opcional para StatusIcon) */
+.status-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+}
+
+/* RESPONSIVE */
 @media (max-width: 768px) {
-  .review-table-container {
-    padding: 1.25rem;
-  }
 
   .review-title {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
+  }
+
+  .review-table {
+    min-width: 0;
   }
 
   .review-table th,
   .review-table td {
-    padding: 0.75rem;
-    font-size: 0.9rem;
-    white-space: nowrap;
+    padding: 0.65rem 0.75rem;
+    font-size: 0.8rem;
   }
+
+  .status-cell {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .review-title {
+    font-size: 1.1rem;
+  }
+
+  .review-table th {
+    font-size: 0.65rem;
+  }
+
+  .review-table td {
+    font-size: 0.75rem;
+  }
+
 }

@@ -1,57 +1,23 @@
 import { httpClient } from './httpClient';
-import { 
-  simulateGetProfileStats, 
-  simulateGetDonationHistoryRecent,
-  simulateUpdateProfile,   
-  simulateChangePassword,   
-} from '../data/profileData'; // Importamos las funciones simuladas
 
-// --- ¡EL INTERRUPTORMÁGICO! ---
-const USE_DUMMY_DATA = true;
-// ---------------------------------
-
-/**
- * Obtiene las estadísticas del perfil del usuario.
- */
 const getProfileStats = (userId) => {
-  if (USE_DUMMY_DATA) {
-    // TODO: BACKEND - Le pasamos el userId por si la simulación lo necesita
-    return simulateGetProfileStats(userId);
-  }
-
-  // TODO: BACKEND
-  // La API real podría necesitar el ID del usuario o tomarlo del token
-  return httpClient.get(`/profile/stats`); 
+  return httpClient.get(`/donacion/stats/${userId}`); 
 };
 
-/**
- * Obtiene el historial reciente de donaciones del usuario.
- */
 const getDonationHistoryRecent = (userId) => {
-  if (USE_DUMMY_DATA) {
-    // TODO: BACKEND - Le pasamos el userId
-    return simulateGetDonationHistoryRecent(userId);
-  }
-
-  // TODO: BACKEND
-  return httpClient.get(`/donations/history/recent`);
+  return httpClient.get(`/donacion/historial/${userId}`);
 };
 
 // --- ¡NUEVO! ---
 const updateProfile = (userId, profileData) => {
-  if (USE_DUMMY_DATA) {
-    return simulateUpdateProfile(userId, profileData);
-  }
-  return httpClient.put(`/profile/${userId}`, profileData);
+  profileData.id = userId;
+  return httpClient.put(`/usuarios/changePhone`, profileData);
 };
 
 // --- ¡NUEVO! ---
 const changePassword = (userId, passwordData) => {
-  if (USE_DUMMY_DATA) {
-    // La simulación pide los 3 campos, pero tu backend podría solo necesitar 2
-    return simulateChangePassword(userId, passwordData.currentPassword, passwordData.newPassword);
-  }
-  return httpClient.post(`/profile/change-password`, passwordData);
+  passwordData.id = userId;
+  return httpClient.put(`/usuarios/changePassword`, passwordData);
 };
 
 export const profileService = {

@@ -22,6 +22,15 @@ const DonationReviewTable = () => {
       setError(null);
       // TODO: BACKEND - Llamada al servicio para obtener donaciones pendientes
       const data = await donationService.getPendingDonations();
+      
+      if (Array.isArray(data)) {
+      data.forEach(item => {
+        if (item.medicamento) {
+          item.medicamento.cantidadStock = item.cantidadOfrecida;
+        }
+      });
+    }
+      
       setPendingDonations(data);
     } catch (err) {
       setError(err.message || 'Error al cargar las donaciones pendientes.');
@@ -49,68 +58,60 @@ const DonationReviewTable = () => {
     return <div className="review-error">Error: {error}</div>;
   }
 
-  return (
-    <>
-      <div className="review-table-container">
-        <h2 className="review-title">Revisión de Donaciones Pendientes</h2>
-        
-        {pendingDonations.length === 0 ? (
-          <EmptyState
-            icon="✅"
-            title="No hay donaciones pendientes"
-            message="Las nuevas donaciones aparecerán aquí para su revisión."
-          />
-        ) : (
-          <div className="review-table-scroll">
-            <table className="review-table">
-              <thead>
-                <tr>
-                  <th>Usuario</th>
-                  <th>Medicamento</th>
-                  <th>Cantidad</th>
-                  <th>Caducidad</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pendingDonations.map((donation) => (
-                  <tr key={donation.id}>
-                    <td>{donation.userName}</td>
-                    <td>{donation.name}</td>
-                    <td>{`${donation.cantidadNumerica} ${donation.cantidadDonada}`}</td>
-                    <td>{donation.caducidad || 'N/A'}</td>
-                    <td>
-                      <Button 
-                        variant="primary" 
-                        onClick={() => setSelectedDonation(donation)}
-                        style={{ backgroundColor: '#3921f2' }} // Tu color primario
-                      >
-                        Revisar
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+return (
+  <>
+    <div className="review-table-container">
+      <h2 className="review-title">Revisión de Donaciones Pendientes</h2>
 
-      {/* --- El Modal --- */}
-      <Modal
-        title="Revisar Donación"
-        isOpen={!!selectedDonation} // El modal está abierto si selectedDonation no es null
-        onClose={() => handleCloseModal(false)}
-      >
-        {selectedDonation && (
-          <DonationReviewModal 
-            donation={selectedDonation}
-            onClose={handleCloseModal} // Pasa la función de cierre al modal
-          />
-        )}
-      </Modal>
-    </>
-  );
+      {(!Array.isArray(pendingDonations) || pendingDonations.length === 0) ? (
+        <EmptyState
+          icon="✅"
+          title="No hay donaciones pendientes"
+          message="Las nuevas donaciones aparecerán aquí para su revisión."
+        />
+      ) : (
+        <div className="review-table-scroll">
+          <table className="review-table">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Medicamento</th>
+                <th>Cantidad</th>
+                <th>Caducidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pendingDonations.map((donation) => (
+                <tr
+                  key={donation.id}
+                  className="review-row"
+                  onClick={() => setSelectedDonation(donation)}
+                >
+                  <td>
+                    {donation.donacion.usuarioDonante.nombre}{" "}
+                    {donation.donacion.usuarioDonante.apellidoPaterno}{" "}
+                    {donation.donacion.usuarioDonante.apellidoMaterno}
+                  </td>
+                  <td>{donation.medicamento.nombreMedicamento}</td>
+                  <td>{`${donation.cantidadOfrecida}`}</td>
+                  <td>{donation.fechaCaducidadLote || "N/A"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+
+    {selectedDonation && (
+      <DonationReviewModal
+        donation={selectedDonation}
+        onClose={handleCloseModal}
+      />
+    )}
+  </>
+);
+
 };
 
 export default DonationReviewTable;

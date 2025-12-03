@@ -1,7 +1,6 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState } from 'react';
 import './DonationPage.css';
 
-import { donationService } from '../../services/donationService';
 import { useAuth } from '../../context/AuthContext.jsx';
 
 import TabToggle from '../../components/ui/TabToggle/TabToggle';
@@ -9,9 +8,12 @@ import DonationForm from '../../features/donation/DonationForm/DonationForm';
 import DonationStatusTable from '../../features/donation/DonationStatusTable/DonationStatusTable';
 import DonationReviewTable from '../../features/donation/DonationReviewTable/DonationReviewTable';
 import Spinner from '../../components/ui/Spinner/Spinner';
+import { useSearchParams } from 'react-router-dom';
 
 const UserView = () => {
-  const [activeTab, setActiveTab] = useState('option1'); // 'option1' = Realizar
+  const [searchParams] = useSearchParams();
+  const initialTab = searchParams.get('tab') || 'option1';
+  const [activeTab, setActiveTab] = useState(initialTab); // 'option1' = Realizar
 
   return (
     <>

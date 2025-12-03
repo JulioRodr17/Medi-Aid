@@ -13,7 +13,17 @@ const UserDonationHistory = ({ history }) => {
 
   const goToDonations = () => {
     const prefix = user?.role === 'admin' ? '/admin' : '/user';
-    navigate(`${prefix}/donacion`);
+    navigate(`${prefix}/donacion?tab=option2`);
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("es-MX", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    });
   };
 
   if (!history) {
@@ -35,6 +45,7 @@ const UserDonationHistory = ({ history }) => {
           <table className="history-table">
             <thead>
               <tr>
+                <th>Fecha</th>
                 <th>Medicamento</th>
                 <th>Estado</th>
               </tr>
@@ -42,10 +53,11 @@ const UserDonationHistory = ({ history }) => {
             <tbody>
               {history.map(don => (
                 <tr key={don.id}>
-                  <td>{don.name}</td>
+                  <td>{formatDate(don.donacion.fechaRegistro)}</td>
+                  <td>{don.medicamento.nombreMedicamento}</td>
                   <td>
                     {/* Ponemos el ícono de estado aquí */}
-                    <StatusIcon status={don.status} />
+                    <StatusIcon status={don.donacion.estadoDonacion.nombreEstado} />
                   </td>
                 </tr>
               ))}

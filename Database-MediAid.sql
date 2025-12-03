@@ -24,10 +24,6 @@ GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO usr_mediaid;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO usr_mediaid;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO usr_mediaid;
 
--- =============================================
--- TABLAS DE CATÁLOGO
--- =============================================
-
 -- Catálogo para los roles de usuario (DONANTES Y OPERADORES)
 CREATE TABLE cat_roles (
     id_rol SERIAL PRIMARY KEY,
@@ -182,6 +178,21 @@ CREATE TABLE info_cards (
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE notificaciones (
+    id SERIAL PRIMARY KEY,                           -- Autoincremental
+    usuario_id INT NOT NULL REFERENCES usuarios(id), -- Relación con la tabla de usuarios
+    titulo VARCHAR(255) NOT NULL,                    -- Título de la notificación
+    descripcion TEXT,                                -- Descripción detallada
+    tipo VARCHAR(50) DEFAULT 'INFO',                 -- Tipo de notificación: INFO, ALERTA, ERROR, ÉXITO, etc.
+    url VARCHAR(255),                                -- URL opcional para redirigir al hacer clic
+    leida BOOLEAN DEFAULT FALSE,                     -- Indica si el usuario ya vio la notificación
+    fecha_lectura TIMESTAMP WITH TIME ZONE,         -- Fecha en que se marcó como leída
+    fecha_registro TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- Fecha de creación
+    activo BOOLEAN DEFAULT TRUE                      -- Para mantener historial o desactivar notificaciones obsoletas
+);
+
+
+
 -- =============================================
 -- DATOS INICIALES DE CATÁLOGOS
 -- =============================================
@@ -207,6 +218,7 @@ INSERT INTO cat_tipos_movimiento (nombre_movimiento, descripcion) VALUES
 ('AJUSTE_MANUAL_NEGATIVO', 'Ajuste manual para decrementar el stock.');
 
 INSERT INTO categorias (nombre_categoria, descripcion) VALUES
+('Otros', 'Medicamentos o productos farmacéuticos que no entran en ninguna categoría específica.'),
 ('Analgésicos', 'Medicamentos utilizados para aliviar el dolor.'),
 ('Anestésicos', 'Sustancias que bloquean la sensibilidad al dolor de manera parcial o total.'),
 ('Antiagregantes plaquetarios', 'Medicamentos que previenen la formación de coágulos sanguíneos.'),
@@ -235,8 +247,7 @@ INSERT INTO categorias (nombre_categoria, descripcion) VALUES
 ('Hormonas', 'Medicamentos que contienen o regulan hormonas del organismo.'),
 ('Laxantes', 'Medicamentos que facilitan la evacuación intestinal.'),
 ('Relajantes musculares', 'Medicamentos que reducen el tono del músculo esquelético.'),
-('Vitaminas y suplementos', 'Complementos alimenticios para cubrir deficiencias nutricionales.'),
-('Otros', 'Medicamentos o productos farmacéuticos que no entran en ninguna categoría específica.');
+('Vitaminas y suplementos', 'Complementos alimenticios para cubrir deficiencias nutricionales.');
 
 INSERT INTO medicamentos 
 (id_categoria, nombre_medicamento, descripcion, presentacion, dosis, cantidad_stock, fecha_caducidad, uso)

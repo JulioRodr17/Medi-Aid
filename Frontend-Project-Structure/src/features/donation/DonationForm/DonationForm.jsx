@@ -1,33 +1,77 @@
-import React, { useState } from 'react';
-import './DonationForm.css';
-import Input from '../../../components/ui/input/Input';
-import Button from '../../../components/ui/button/Button';
-import InfoModal from '../../../components/ui/InfoModal/InfoModal';
-import { donationService } from '../../../services/donationService'; // Importamos el servicio
+import React, { useState, useEffect } from "react";
+import "./DonationForm.css";
+import Input from "../../../components/ui/input/Input";
+import Button from "../../../components/ui/button/Button";
+import InfoModal from "../../../components/ui/InfoModal/InfoModal";
+import { donationService } from "../../../services/donationService";
+import { medicationService } from '../../../services/medicationService';
+import { useAuth } from '../../../context/AuthContext';
 
 const DonationForm = () => {
-  // Estado para el modal de éxito
   const [showModal, setShowModal] = useState(false);
+  const [showOtro, setShowOtro] = useState(false);
+  const [medicamentosExistentes, setMedicamentosExistentes] = useState([]);
+  const { user } = useAuth();
 
-  // Estado para todos los campos del formulario
   const [formData, setFormData] = useState({
-    nombre: '',
-    tipo: 'pastilla', // Valor por defecto
-    concentracion: '',
-    cantidadNumerica: '',
-    cantidadTipo: 'caja', // Valor por defecto
-    lote: '',
-    caducidad: '',
+    userId: user.id,
+    nombre: "",
+    otroNombre: "",
+    presentacion: "",
+    dosis: "",
+    cantidadNumerica: "",
+    lote: "",
+    caducidad: "",
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const esInsumo = formData.nombre === "Insumo médico";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const nombresResponse = await medicationService.getNombres();
+        setMedicamentosExistentes(nombresResponse);
+      } catch (err) {
+        console.error("Error cargando datos:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const getMinDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + 14);
+    return date.toISOString().split("T")[0];
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value.toLowerCase(),
-    }));
+
+    if (name === "nombre") {
+      if (value === "Otro...") {
+        setShowOtro(true);
+        setFormData(prev => ({
+          ...prev,
+          nombre: "",
+          otroNombre: ""
+        }));
+      } else {
+        setShowOtro(false);
+        setFormData(prev => ({
+          ...prev,
+          nombre: value
+        }));
+      }
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -35,149 +79,182 @@ const DonationForm = () => {
     setLoading(true);
     setError(null);
 
-    let finalData = { ...formData };
+    const finalData = { ...formData };
 
-    // Convertir cantidad a número entero
+    // Si eligió Otro..., usamos el valor ingresado como nombre
+    if (showOtro) {
+      if (!formData.otroNombre.trim()) {
+        setError("Debes ingresar el nombre del medicamento.");
+        setLoading(false);
+        return;
+      }
+      finalData.nombre = formData.otroNombre;
+    }
+
     finalData.cantidadNumerica = parseInt(finalData.cantidadNumerica, 10);
 
-    if (formData.tipo === 'insumo') {
-      // Para insumos, estos campos no aplican y deben ser null en la BD
-      finalData.lote = null;
-      finalData.caducidad = null; 
-      finalData.concentracion = null;
-    } else {
-      // Para medicamentos, si el lote no se llenó (opcional), enviar null
-      if (!finalData.lote) finalData.lote = null;
+    // Validación de fecha mínima (2 semanas) si NO es insumo
+    if (!esInsumo) {
+      const minDate = new Date();
+      minDate.setDate(minDate.getDate() + 14);
 
-      // Si el tipo no requiere concentración (ej. jarabe según la UI actual), enviar null
-      if (formData.tipo !== 'pastilla' && formData.tipo !== 'capsula') {
-        finalData.concentracion = null;
+      const selectedDate = new Date(finalData.caducidad);
+
+      if (!finalData.caducidad || selectedDate < minDate) {
+        setError("La fecha de caducidad debe ser de al menos 2 semanas a partir de hoy.");
+        setLoading(false);
+        return;
       }
     }
-    
+
+    // Si es insumo, anulamos lote, dosis y presentación
+    if (esInsumo) {
+      finalData.lote = null;
+      finalData.dosis = null;
+      finalData.presentacion = null;
+    }
+
     try {
-      // Llamamos al servicio de donación
       await donationService.postDonation(finalData);
-      
-      // Si todo sale bien, mostramos el modal de éxito
       setShowModal(true);
-      // Opcional: Resetear el formulario
+
       setFormData({
-        nombre: '', tipo: 'pastilla', concentracion: '',
-        cantidadNumerica: '', lote: '', caducidad: '',
+        nombre: "",
+        otroNombre: "",
+        presentacion: "",
+        dosis: "",
+        cantidadNumerica: "",
+        lote: "",
+        caducidad: "",
       });
 
+      setShowOtro(false);
+
     } catch (err) {
-      setError(err.message || 'Error al enviar la donación.');
+      setError(err.message || "Error al enviar la donación.");
     } finally {
       setLoading(false);
     }
   };
 
   const getCantidadLabel = () => {
-     if (formData.tipo === 'insumo') {
-      return 'Número de insumos';
-    }
-    return 'Número de cajas/frascos';
+    return esInsumo
+      ? "Cantidad a donar (unidades)"
+      : "Cantidad a donar (cajas/frascos)";
   };
 
   return (
     <>
       <div className="donation-form-container">
-        {/* Banner Informativo */}
         <div className="info-banner">
           <strong>Atención:</strong> No se aceptan medicamentos caducados, abiertos,
           en mal estado o que requieran refrigeración estricta.
         </div>
 
         <form onSubmit={handleSubmit} className="donation-form">
-          {/* TODO: BACKEND (Mejora Futura)
-              Este campo 'nombre' será un <input> de texto por ahora,
-              pero en un futuro ideal, se conectará al backend para ser un campo
-              de autocompletar.
-          */}
           {error && <p className="form-error-message">{error}</p>}
-          <Input
-            id="nombre"
-            name="nombre"
-            label="Nombre del Medicamento"
-            type="text"
-            value={formData.nombre}
-            onChange={handleChange}
-            placeholder="Ej. Paracetamol"
-            required
-          />
-          
+
+          {/* SELECT DE MEDICAMENTOS */}
           <div className="form-group">
-            <label htmlFor="tipo">Tipo de Medicamento</label>
-            <select id="tipo" name="tipo" value={formData.tipo} onChange={handleChange} required>
-              <option value="pastilla">Pastilla</option>
-              <option value="capsula">Cápsula</option>
-              <option value="jarabe">Jarabe</option>
-              <option value="insumo">Insumo (Gasas, jeringas, etc.)</option>
+            <label>Medicamento</label>
+            <select
+              name="nombre"
+              value={showOtro ? "Otro..." : formData.nombre}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Selecciona un medicamento</option>
+
+              {medicamentosExistentes.map((med, index) => (
+                <option key={index} value={med}>{med}</option>
+              ))}
+
+              <option value="Insumo médico">Insumo médico</option>
+              <option value="Otro...">Otro...</option>
             </select>
           </div>
 
-          {/* --- Campo Condicional: Concentración --- */}
-          {(formData.tipo === 'pastilla' || formData.tipo === 'capsula') && (
+          {/* INPUT DE OTRO MEDICAMENTO */}
+          {showOtro && (
             <Input
-              id="concentracion"
-              name="concentracion"
-              label="Concentración (ej. 500 mg)"
+              id="otroNombre"
+              name="otroNombre"
+              label="Escribe el nombre del medicamento"
               type="text"
-              value={formData.concentracion}
+              value={formData.otroNombre}
               onChange={handleChange}
-              placeholder="Ej. 500 mg"
               required
             />
           )}
 
+          {/* PRESENTACIÓN */}
+          <Input
+            id="presentacion"
+            name="presentacion"
+            label="Presentación"
+            type="text"
+            value={formData.presentacion}
+            onChange={handleChange}
+            placeholder="Ej. Tableta, Cápsula, Jarabe, Frasco"
+            required
+          />
+
+          {/* DOSIS */}
+          <Input
+            id="dosis"
+            name="dosis"
+            label="Dosis (ej. 500 mg)"
+            type="text"
+            value={formData.dosis}
+            onChange={handleChange}
+            placeholder="Ej. 500 mg"
+            disabled={esInsumo}
+            required={!esInsumo}
+          />
+
+          {/* CANTIDAD */}
           <Input
             id="cantidadNumerica"
             name="cantidadNumerica"
             label={getCantidadLabel()}
             type="number"
-            min="1" // Buena práctica añadir un mínimo
+            min="1"
             value={formData.cantidadNumerica}
             onChange={handleChange}
-            placeholder="Ej. 3"
             required
           />
 
-          {formData.tipo !== 'insumo' && (
-            <Input
-              id="lote"
-              name="lote"
-              label="Número de Lote"
-              type="text"
-              value={formData.lote}
-              onChange={handleChange}
-              placeholder="Ej. LOTE-123XYZ"
-            />
-          )}
+          {/* LOTE */}
+          <Input
+            id="lote"
+            name="lote"
+            label="Número de lote"
+            type="text"
+            value={formData.lote}
+            onChange={handleChange}
+            disabled={esInsumo}
+            required={!esInsumo}
+          />
 
-          {/* La fecha de caducidad sigue siendo condicional (disabled) */}
+          {/* CADUCIDAD */}
           <Input
             id="caducidad"
             name="caducidad"
-            label="Fecha de Caducidad"
+            label="Fecha de caducidad"
             type="date"
             value={formData.caducidad}
             onChange={handleChange}
-            disabled={formData.tipo === 'insumo'}
+            disabled={esInsumo}
+            min={getMinDate()}
+            required={!esInsumo}
           />
 
-          <Button 
-            type="submit" 
-            variant="primary"
-            disabled={loading}
-          >
-            {loading ? 'Enviando...' : 'Enviar Donación'}
+          <Button type="submit" variant="primary" disabled={loading}>
+            {loading ? "Enviando..." : "Enviar Donación"}
           </Button>
         </form>
       </div>
 
-      {/* --- Modal Condicional --- */}
       {showModal && (
         <InfoModal
           title="¡Gracias por tu donación!"

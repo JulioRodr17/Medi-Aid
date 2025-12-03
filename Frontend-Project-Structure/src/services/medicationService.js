@@ -5,7 +5,6 @@ const getMedications = (filters = {}) => {
 };
 
 const getMedWithPhoto = async (filters = {}) => {
-  console.log(filters);
   const response = await httpClient.get('/medicamentos/filtrados', { params: filters });
 
   // Iteramos sobre response.data (el array de medicamentos)
@@ -19,8 +18,6 @@ const getMedWithPhoto = async (filters = {}) => {
   // Devolvemos igual estructura que llega, reemplazando data con la nueva iteración
   return { ...response, data: dataConSrc };
 };
-
-
 
 // Obtener nombres
 const getNombres = (filters = {}) => {
@@ -42,9 +39,6 @@ const addMedication = (medData) => {
 };
 
 const updateMedication = (medData) => {
-  for (let pair of medData.entries()) {
-  console.log(pair[0], pair[1]);
-}
   return httpClient.put('/medicamentos/actualiza', medData);
 };
 

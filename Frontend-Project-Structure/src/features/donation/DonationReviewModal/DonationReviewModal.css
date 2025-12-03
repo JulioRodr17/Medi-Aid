@@ -1,55 +1,99 @@
-
+/* CONTENEDOR PRINCIPAL */
 .review-modal-content {
-  padding: 1rem;
+  width: 100%;
 }
 
-.review-modal-subtitle {
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: #333;
-  border-bottom: 1px solid #e9ecef;
-  padding-bottom: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.review-details {
+/* MANTENEMOS TU GRID ORIGINAL */
+.donation-detail-grid {
+  width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Dos columnas */
-  gap: 1.25rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
-.review-detail-item {
+.detail-item {
   display: flex;
   flex-direction: column;
 }
 
-.detail-label {
+.detail-item.full {
+  grid-column: 1 / 3;
+}
+
+/* LABEL ORIGINALES */
+.label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* VALUE ORIGINALES */
+.value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  margin-top: 2px;
+}
+
+/* BADGE ORIGINAL */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 5px 12px;
+  border-radius: 9999px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #6c757d;
-  margin-bottom: 0.25rem;
-  text-transform: uppercase;
 }
 
-.detail-value {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #212529;
+.status-badge.pendiente {
+  background: #fff3cd;
+  color: #92400e;
+}
+.status-badge.aprobada {
+  background: #d1fae5;
+  color: #065f46;
+}
+.status-badge.rechazada {
+  background: #fee2e2;
+  color: #991b1b;
 }
 
+/* MENSAJE DE ERROR */
 .review-modal-error {
   text-align: center;
   color: #dc3545;
   font-weight: 500;
-  margin: 1rem 0;
+  margin-top: 1.5rem;
 }
 
+/* SECCIÓN DE BOTONES */
 .review-modal-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e9ecef;
-  margin-top: 1.5rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* RESPONSIVE - MÓVIL */
+@media (max-width: 640px) {
+  .donation-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-item.full {
+    grid-column: 1 / 2;
+  }
+
+  .review-modal-actions {
+    flex-direction: column-reverse;
+    gap: 1rem;
+  }
+
+  .review-modal-actions button {
+    width: 100%;
+  }
 }
