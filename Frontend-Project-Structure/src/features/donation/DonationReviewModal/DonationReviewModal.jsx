@@ -26,16 +26,15 @@ const DonationReviewModal = ({ donation, onClose }) => {
 
   const { donacion, medicamento, cantidadOfrecida } = donation;
 
-function formatDate(dateString) {
-  if (!dateString) return "-";
-
-  // Parseo manual de YYYY-MM-DD
-  const [y, m, d] = dateString.split("-");
-  const date = new Date(Number(y), Number(m) - 1, Number(d));
-  date.setHours(0, 0, 0, 0);
-
-  return date.toLocaleDateString();
-}
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("es-MX", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    });
+  };
 
 
   // -------------------- FUNCIONES --------------------

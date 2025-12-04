@@ -17,10 +17,10 @@ const PrivacyModal = ({ isOpen, onClose }) => {
           <h3>Política de Uso y Privacidad de Datos para el Proyecto de Donación de Medicamentos Cerrados al Servicio Médico</h3>
 
           <p><strong>Versión 1.0</strong><br />
-          <strong>Fecha de emisión:</strong> 10 de noviembre de 2025<br />
+          <strong>Fecha de emisión:</strong> 04 de Diciembre de 2025<br />
           <strong>Proyecto:</strong> Trabajo Terminal de la Escuela Superior de Cómputo (ESCOM), Instituto Politécnico Nacional (IPN) – Plataforma de Donación de Medicamentos No Utilizados (Cerrados) al Servicio Médico del IPN.<br />
-          <strong>Responsable:</strong> [Nombre del estudiante o equipo], en representación del proyecto académico, con domicilio en la ESCOM-IPN, Av. Juan de Dios Bátiz s/n, Unidad Profesional Adolfo López Mateos, Zacatenco, Gustavo A. Madero, C.P. 07738, Ciudad de México.<br />
-          <strong>Contacto:</strong> [Correo electrónico del proyecto] | Teléfono: [Número de contacto].</p>
+          <strong>Responsable:</strong> MediAid, en representación del proyecto académico, con domicilio en la ESCOM-IPN, Av. Juan de Dios Bátiz s/n, Unidad Profesional Adolfo López Mateos, Zacatenco, Gustavo A. Madero, C.P. 07738, Ciudad de México.<br />
+          <strong>Contacto:</strong> escomediaid@gmail.com | Teléfono: 5557296000 52014</p>
 
           <p>Esta Política de Uso y Privacidad de Datos (en adelante, "Política") regula el tratamiento de datos personales en el marco del proyecto de donación de medicamentos cerrados (no abiertos, no caducados y en buen estado) destinados al Servicio Médico del IPN. El proyecto busca facilitar la recolección segura y eficiente de donaciones de medicamentos no utilizados por estudiantes, personal y comunidad politécnica, para su redistribución a beneficiarios del servicio médico institucional, promoviendo la sostenibilidad y el apoyo a la salud comunitaria.</p>
 

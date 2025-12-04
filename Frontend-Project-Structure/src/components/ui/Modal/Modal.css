@@ -22,6 +22,7 @@
 }
 
 .modal-container {
+  top: 50px;
   position: relative; /* Para que el z-index funcione si se necesita */
   width: 90%;
   max-width: 500px;
@@ -30,7 +31,7 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
-  max-height: 90vh; /* Evita que se salga de la pantalla si es muy alto */
+  max-height: 80vh; /* Evita que se salga de la pantalla si es muy alto */
   z-index: 2010; /* Más alto que el backdrop */
   
   opacity: 0;

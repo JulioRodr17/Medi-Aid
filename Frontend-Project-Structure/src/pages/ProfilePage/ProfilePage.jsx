@@ -40,10 +40,13 @@ const ProfilePage = () => {
       try {
         setLoading(true);
         setError(null);
-
+        
         const resultsHistory = await profileService.getDonationHistoryRecent(user.id);
-        const primerosTres = resultsHistory.slice(0, 3);
-        setHistory(primerosTres); // El segundo es history (solo si no es admin)
+
+        const historyArray = Array.isArray(resultsHistory) ? resultsHistory : [];
+        const primerosTres = historyArray.slice(0, 3);
+
+        setHistory(primerosTres);
 
         const resultsStats = await profileService.getProfileStats(user.id);
         console.log(resultsStats);
@@ -99,13 +102,33 @@ const ProfilePage = () => {
           <>
             <div className="profile-page-content">
               <div className="profile-main-column">
-                {user.admin? (
-                  <AdminDonationChart stats={stats} />) : (
+                {user.admin ? (
+                  stats && stats.total > 0 ? (
+                    <AdminDonationChart stats={stats} />
+                  ) : (
+                    <div className="empty-admin-container">
+                      <div className="empty-admin-card">
+                        <div className="empty-icon">📭</div>
+                        <h2>No hay registro de donaciones revisadas</h2>
+                        <p>
+                          Aún no existen donaciones revisadas en el sistema.  
+                          Cuando empieces a gestionar solicitudes, aparecerán aquí.
+                        </p>
+                      </div>
+                    </div>
+                  )
+                ) : (
                   <>
-                    <UserDonationStats total={stats.total} pending={stats.pendiente} approved={stats.aprobada} rechazada = {stats.rechazada} />
+                    <UserDonationStats
+                      total={stats?.total || 0}
+                      pending={stats?.pendiente || 0}
+                      approved={stats?.aprobada || 0}
+                      rechazada={stats?.rechazada || 0}
+                    />
                     <UserDonationHistory history={history} />
                   </>
-              )}
+                  )}
+
               </div>
               <div className="profile-sidebar-column">
                 <UserContactInfo email={user.correo} phone={user.telefono} />

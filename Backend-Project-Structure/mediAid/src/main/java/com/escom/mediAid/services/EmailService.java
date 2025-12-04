@@ -104,7 +104,7 @@ public class EmailService {
     public void sendPasswordResetEmail(String toEmail, String token) {
         try {
             String subject = "Restablece tu contraseña";
-            String resetUrl = rutaReact + "/restablecerPassword?token=" + token; // URL de tu front para reset
+            String resetUrl = rutaReact + "/restablecerContrasena?token=" + token; // URL de tu front para reset
 
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");

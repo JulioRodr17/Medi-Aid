@@ -3,15 +3,14 @@ import './InventoryTable.css';
 import Button from '../../../components/ui/button/Button';
 
 const InventoryTable = ({
-  inventory,
-  onEdit,
-  onDelete,
-  onAdd,
-  onSortChange,
-  currentSortBy,
-  currentSortDirection
+  inventory,              // arreglo de medicamentos
+  onAdd,                  // función para agregar
+  onEdit,                 // función para editar
+  onDelete,               // función para borrar
+  onSortChange,           // función para ordenar
+  currentSortBy,          // campo por el que se está ordenando
+  currentSortDirection    // dirección de ordenamiento ('ASC' o 'DESC')
 }) => {
-
   const renderArrow = (field) => {
     if (currentSortBy !== field) return "↕";
     return currentSortDirection === "ASC" ? "↑" : "↓";
@@ -49,69 +48,81 @@ const InventoryTable = ({
               Caducidad {renderArrow("fechaCaducidad")}
             </th>
 
-            <th>Acciones</th>
+            <th></th>
           </tr>
         </thead>
 
         <tbody>
-          {inventory.map((med) => (
-            <tr key={med.id}>
-              <td>
-                <span className="med-name">{med.nombreMedicamento}</span>
-                <span className="med-dosage">{med.dosis}</span>
-              </td>
+          {inventory.map((med) => {
+            // Determinar si el medicamento está caducado
+            let isExpired = false;
+            let displayDate = "No hay fecha";
+            let diffDays = null;
 
-              <td>{med.categoria?.nombreCategoria}</td>
+            if (med.fechaCaducidad) {
+              const hoy = new Date();
+              hoy.setHours(0, 0, 0, 0);
 
-              <td>
-                <span className={`stock-level ${med.cantidadStock < med.stockMinimo ? 'low' : ''}`}>
-                  {med.cantidadStock}
-                </span>
-              </td>
+              const [y, m, d] = med.fechaCaducidad.split('-');
+              const fechaCad = new Date(y, m - 1, d);
+              fechaCad.setHours(0, 0, 0, 0);
 
-              <td>
-                {med.fechaCaducidad ? (() => {
-                  // Fecha actual sin horas
-                  const hoy = new Date();
-                  hoy.setHours(0, 0, 0, 0);
+              const diffTime = fechaCad - hoy;
+              diffDays = diffTime / (1000 * 60 * 60 * 24);
 
-                  // Parseo manual de YYYY-MM-DD para evitar problema de zona horaria
-                  const [y, m, d] = med.fechaCaducidad.split('-');
-                  const fechaCad = new Date(y, m - 1, d);
-                  fechaCad.setHours(0, 0, 0, 0);
+              if (diffDays < 0) {
+                isExpired = true;
+                displayDate = "Caducado";
+              } else {
+                displayDate = fechaCad.toLocaleDateString();
+              }
+            }
 
-                  const diffTime = fechaCad - hoy;
-                  const diffDays = diffTime / (1000 * 60 * 60 * 24);
+            return (
+              <tr key={med.id} onClick={() => onEdit(med)}>
+                <td>
+                  <span className="med-name">{med.nombreMedicamento}</span>
+                  <span className="med-dosage">{med.dosis}</span>
+                </td>
 
-                  return diffDays <= 30 && diffDays >= 0 ? (
-                    <span className="expiring-soon">
-                      {fechaCad.toLocaleDateString()}
-                    </span>
+                <td>{med.categoria?.nombreCategoria}</td>
+
+                <td>
+                  <span className={`stock-level ${med.cantidadStock < med.stockMinimo ? 'low' : ''}`}>
+                    {med.cantidadStock}
+                  </span>
+                </td>
+
+                <td>
+                  {displayDate === "Caducado" ? (
+                    <span className="expiring-soon">Caducado</span>
+                  ) : diffDays <= 30 && diffDays >= 0 ? (
+                    <span className="expiring-soon">{displayDate}</span>
                   ) : (
-                    <span>
-                      {fechaCad.toLocaleDateString()}
-                    </span>
-                  );
-                })() : <span>No hay fecha</span>}
-              </td>
+                    <span>{displayDate}</span>
+                  )}
+                </td>
 
-              <td className="action-buttons">
-                <button 
-                  className="action-btn edit" 
-                  onClick={() => onEdit(med)}
-                >
-                  Editar
-                </button>
-
-                <button 
-                  className="action-btn delete" 
-                  onClick={() => onDelete(med)}
-                >
-                  Borrar
-                </button>
-              </td>
-            </tr>
-          ))}
+                <td>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation(); // evita que se dispare onEdit
+                      onDelete(med);
+                    }}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: 18,
+                      color: 'red'
+                    }}
+                  >
+                    🗑️
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

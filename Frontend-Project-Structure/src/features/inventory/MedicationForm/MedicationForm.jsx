@@ -224,6 +224,7 @@ const MedicationForm = ({ medication, onSave, onCancel }) => {
             setImageFile(file);
             setPreview(file ? URL.createObjectURL(file) : null);
           }} 
+          required={!preview && !medication?.src}
         />
 
         {(preview || medication?.src) && (

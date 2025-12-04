@@ -27,3 +27,27 @@
 .footer-links a:hover {
   color: white;
 }
+
+
+.footer-bottom-bar {
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  color: #white;
+  display: flex;
+  flex-direction: column; /* para que cada <p> esté en su renglón */
+}
+
+.footer-privacy-link {
+  text-align: right;      /* alinear a la derecha */
+  color: #0073e6;         /* azul destacado */
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  margin-top: 4px;
+  transition: all 0.2s ease;
+}
+
+.footer-privacy-link:hover {
+  text-decoration: underline;
+  color: #005bb5;
+}

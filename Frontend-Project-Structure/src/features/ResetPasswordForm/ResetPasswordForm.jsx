@@ -85,7 +85,7 @@ const ResetPasswordForm = () => {
   }
 
   const handleBack = () => {
-    navigate(-1);
+    navigate('/login');
   };
 
   return (

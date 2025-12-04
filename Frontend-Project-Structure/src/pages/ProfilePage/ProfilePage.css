@@ -12,3 +12,38 @@
   justify-content: center;
   margin-top: 1rem;
 }
+
+.empty-admin-container {
+  width: 100%;
+  min-height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.empty-admin-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 3rem 2.5rem;
+  max-width: 700px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+.empty-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+}
+
+.empty-admin-card h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.empty-admin-card p {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+}

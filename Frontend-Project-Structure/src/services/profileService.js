@@ -11,6 +11,7 @@ const getDonationHistoryRecent = (userId) => {
 // --- ¡NUEVO! ---
 const updateProfile = (userId, profileData) => {
   profileData.id = userId;
+  console.log(profileData);
   return httpClient.put(`/usuarios/changePhone`, profileData);
 };
 

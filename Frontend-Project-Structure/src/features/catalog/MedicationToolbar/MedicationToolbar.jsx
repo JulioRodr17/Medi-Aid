@@ -75,75 +75,49 @@ const MedicationToolbar = ({ categories, onFilterChange }) => {
     emitFilters({ sortDirection: newDirection });
   };
 
-  // SOLO cambia el campo por el que se ordena
-  const handleSortByChange = (field) => {
-    setSortBy(field);
-    emitFilters({ sortBy: field });
-  };
-
-  const toggleFilterMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   return (
     <div className="medication-toolbar">
-      
-      {/* BOTÓN FILTROS + FLECHA */}
-      <div className="filter-wrapper">
-        <button className="filter-button" onClick={toggleFilterMenu}>
-          <FilterIcon />
-          <span>Filtros</span>
-        </button>
+          
+<div className="filter-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  {/* SELECT DE CATEGORÍAS */}
+  <select
+    value={selectedCategory}
+    onChange={handleCategoryChange}
+    style={{
+      padding: '8px 12px',    // un poco más alto
+      borderRadius: 6,
+      border: '1px solid #ccc',
+      height: 36,             // altura mayor
+      width: 120,             // menos ancho
+      fontSize: 14,
+    }}
+  >
+    <option value="">Categoría</option>
+    {categories.map(cat => (
+      <option key={cat.id} value={cat.id}>
+        {cat.nombreCategoria}
+      </option>
+    ))}
+  </select>
 
-        {/* BOTÓN DE FLECHITA */}
-        <button
-          className="sort-direction-button"
-          onClick={toggleSortDirection}
-        >
-          <ArrowIcon direction={sortDirection} />
-        </button>
+  {/* BOTÓN DE ORDENAMIENTO */}
+  <button
+    className="sort-direction-button"
+    onClick={toggleSortDirection}
+    style={{
+      padding: '6px 10px',
+      borderRadius: 6,
+      border: '1px solid #ccc',
+      background: '#fff',
+      cursor: 'pointer',
+      height: 36,
+    }}
+  >
+    <ArrowIcon direction={sortDirection} />
+  </button>
+</div>
 
-        {/* MENÚ */}
-        {isMenuOpen && (
-          <div className="filters-dropdown">
 
-            {/* CATEGORÍA (SIGUE SIENDO SELECT) */}
-            <select value={selectedCategory} onChange={handleCategoryChange}>
-              <option value="">Todas las categorías</option>
-              {categories.map(cat => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.nombreCategoria}
-                </option>
-              ))}
-            </select>
-
-            {/* ORDENAR POR (SOLO BOTONES) */}
-            <div className="sort-buttons">
-              <button
-                className={sortBy === 'nombreMedicamento' ? 'active' : ''}
-                onClick={() => handleSortByChange('nombreMedicamento')}
-              >
-                NOMBRE
-              </button>
-
-              <button
-                className={sortBy === 'cantidadStock' ? 'active' : ''}
-                onClick={() => handleSortByChange('cantidadStock')}
-              >
-                STOCK
-              </button>
-
-              <button
-                className={sortBy === 'fechaCaducidad' ? 'active' : ''}
-                onClick={() => handleSortByChange('fechaCaducidad')}
-              >
-                CADUCIDAD
-              </button>
-            </div>
-
-          </div>
-        )}
-      </div>
 
       {/* SEARCH BAR (NO SE TOCA) */}
       <div className="search-bar">

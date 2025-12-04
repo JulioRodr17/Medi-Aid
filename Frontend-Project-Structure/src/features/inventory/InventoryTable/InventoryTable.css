@@ -158,17 +158,55 @@
 
   .inventory-table th,
   .inventory-table td {
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;   /* Menor padding en móviles */
+    font-size: 0.75rem;        /* Letra más pequeña */
     white-space: nowrap;
   }
 
+  .med-name {
+    font-size: 0.8rem;
+  }
+
+  .med-dosage {
+    font-size: 0.7rem;
+  }
+
+  .stock-level {
+    font-size: 0.75rem;
+  }
+
+  .expiring-soon {
+    font-size: 0.75rem;
+  }
+
   .inventory-table {
-    min-width: 600px;
+    min-width: 0; /* Que se ajuste al contenedor */
   }
 
   .inventory-inline-error,
   .inventory-scarce-counter {
-    margin: 0 1rem 0.75rem;
+    margin: 0 0.75rem 0.5rem;
+    font-size: 0.8rem;
   }
+
+  .table-title {
+    font-size: 1rem;
+  }
+}
+
+
+/* Filas clickeables */
+.row-clickable {
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.row-clickable:hover {
+  background-color: #f9fafb;
+  transform: scale(1.01);
+}
+
+/* Fila de medicamento caducado */
+.row-clickable.expired {
+  color: #e74c3c; /* rojo */
 }

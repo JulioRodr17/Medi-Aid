@@ -191,8 +191,6 @@ CREATE TABLE notificaciones (
     activo BOOLEAN DEFAULT TRUE                      -- Para mantener historial o desactivar notificaciones obsoletas
 );
 
-
-
 -- =============================================
 -- DATOS INICIALES DE CATÁLOGOS
 -- =============================================
@@ -219,62 +217,11 @@ INSERT INTO cat_tipos_movimiento (nombre_movimiento, descripcion) VALUES
 
 INSERT INTO categorias (nombre_categoria, descripcion) VALUES
 ('Otros', 'Medicamentos o productos farmacéuticos que no entran en ninguna categoría específica.'),
-('Analgésicos', 'Medicamentos utilizados para aliviar el dolor.'),
-('Anestésicos', 'Sustancias que bloquean la sensibilidad al dolor de manera parcial o total.'),
-('Antiagregantes plaquetarios', 'Medicamentos que previenen la formación de coágulos sanguíneos.'),
-('Antibióticos', 'Medicamentos que combaten infecciones bacterianas.'),
-('Anticoagulantes', 'Medicamentos que reducen la capacidad de coagulación de la sangre.'),
-('Anticonceptivos', 'Medicamentos para prevenir el embarazo.'),
-('Anticonvulsivos', 'Medicamentos para prevenir o tratar convulsiones.'),
-('Antidiabéticos', 'Medicamentos utilizados para controlar los niveles de glucosa en sangre.'),
-('Antidepresivos', 'Medicamentos para el tratamiento de trastornos depresivos.'),
-('Antidiarreicos', 'Medicamentos para controlar la diarrea.'),
-('Antieméticos', 'Medicamentos para prevenir náuseas y vómitos.'),
-('Antifúngicos', 'Medicamentos utilizados para combatir infecciones por hongos.'),
-('Antihipertensivos', 'Medicamentos para controlar la presión arterial alta.'),
-('Antihistamínicos', 'Utilizados para tratar alergias y reacciones histamínicas.'),
-('Antiinflamatorios', 'Medicamentos que reducen la inflamación.'),
-('Antipiréticos', 'Medicamentos empleados para reducir la fiebre.'),
-('Antipsicóticos', 'Medicamentos para tratar trastornos como esquizofrenia y psicosis.'),
-('Antisépticos', 'Sustancias que eliminan o inhiben microorganismos en tejidos vivos.'),
-('Antitusivos', 'Medicamentos que alivian o eliminan la tos.'),
-('Antivirales', 'Medicamentos para el tratamiento de infecciones virales.'),
-('Broncodilatadores', 'Medicamentos que facilitan la respiración al dilatar las vías respiratorias.'),
-('Corticoesteroides', 'Medicamentos antiinflamatorios y supresores del sistema inmunológico.'),
-('Expectorantes', 'Medicamentos que ayudan a expulsar mucosidad de las vías respiratorias.'),
-('Gastroprotectores', 'Medicamentos que protegen la mucosa del estómago.'),
-('Hipolipemiantes', 'Medicamentos para reducir los niveles de colesterol y triglicéridos.'),
-('Hormonas', 'Medicamentos que contienen o regulan hormonas del organismo.'),
-('Laxantes', 'Medicamentos que facilitan la evacuación intestinal.'),
-('Relajantes musculares', 'Medicamentos que reducen el tono del músculo esquelético.'),
-('Vitaminas y suplementos', 'Complementos alimenticios para cubrir deficiencias nutricionales.');
-
-INSERT INTO medicamentos 
-(id_categoria, nombre_medicamento, descripcion, presentacion, dosis, cantidad_stock, fecha_caducidad, uso)
-VALUES
--- Analgésicos
-(1, 'Paracetamol', 'Alivio de dolor leve a moderado', 'Tableta', '500 mg', 100, '2026-12-31', 'Dolor y fiebre'),
-(1, 'Ibuprofeno', 'Alivio de dolor e inflamación', 'Tableta', '400 mg', 80, '2026-10-30', 'Dolor, fiebre e inflamación'),
-(1, 'Naproxeno', 'Antiinflamatorio y analgésico', 'Tableta', '250 mg', 60, '2026-08-15', 'Dolor e inflamación'),
-
--- Antibióticos
-(2, 'Amoxicilina', 'Antibiótico de amplio espectro', 'Cápsula', '500 mg', 150, '2026-11-20', 'Infecciones bacterianas'),
-(2, 'Cefalexina', 'Antibiótico betalactámico', 'Cápsula', '500 mg', 120, '2026-09-30', 'Infecciones bacterianas'),
-(2, 'Azitromicina', 'Antibiótico macrólido', 'Tableta', '250 mg', 90, '2026-07-31', 'Infecciones respiratorias y otras'),
-
--- Antiinflamatorios
-(3, 'Diclofenaco', 'Antiinflamatorio no esteroideo', 'Tableta', '50 mg', 70, '2026-12-31', 'Dolor e inflamación'),
-(3, 'Ketorolaco', 'Analgesico y antiinflamatorio potente', 'Tableta', '10 mg', 50, '2026-10-15', 'Dolor moderado a severo'),
-
--- Antihipertensivos
-(4, 'Enalapril', 'Control de presión arterial', 'Tableta', '10 mg', 200, '2027-01-31', 'Hipertensión'),
-(4, 'Losartán', 'Control de presión arterial', 'Tableta', '50 mg', 180, '2026-12-31', 'Hipertensión'),
-
--- Vitaminas y suplementos
-(5, 'Vitamina C', 'Refuerzo del sistema inmunológico', 'Tableta', '500 mg', 250, '2027-06-30', 'Deficiencia de vitamina C'),
-(5, 'Vitamina D', 'Regulación de calcio y huesos', 'Tableta', '1000 UI', 200, '2027-05-31', 'Deficiencia de vitamina D'),
-(5, 'Multivitamínico', 'Suplemento multivitamínico', 'Cápsula', '1 cápsula', 150, '2027-04-30', 'Complemento nutricional');
-
+('Analgésicos y antiinflamatorios', 'Medicamentos utilizados para aliviar el dolor y reducir la inflamación.'),
+('Respiratorios y alergias', 'Medicamentos destinados al tratamiento de afecciones respiratorias y alergias.'),
+('Gastrointestinales', 'Medicamentos que ayudan en el funcionamiento y cuidado del sistema digestivo.'),
+('Vitaminas', 'Suplementos vitamínicos para complementar la nutrición diaria.'),
+('Insumos y curación', 'Materiales y productos para curación y cuidado de heridas.');
 
 INSERT INTO info_cards (icon, title, text, orden) VALUES
 ('📰', 'Noticias Recientes', 'Mantente al día con las últimas novedades y comunicados.', 1),

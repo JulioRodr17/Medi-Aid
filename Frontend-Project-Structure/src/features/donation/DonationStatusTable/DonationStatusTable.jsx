@@ -84,25 +84,31 @@ const DonationStatusTable = () => {
           </tr>
         </thead>
         <tbody>
-          {donations.map((donation) => (
-            <tr
-              key={donation.id}
-              onClick={() => handleSelectDonation(donation)}
-              className="row-clickable"
-            >
-              <td>{formatDate(donation.donacion.fechaRegistro)}</td>
-              <td>{donation.medicamento.nombreMedicamento}</td>
-              <td>{donation.cantidadOfrecida}</td>
-              <td className="status-cell">
-                <StatusIcon
-                  status={donation.donacion.estadoDonacion.nombreEstado}
-                />
-                <span className="status-text">
-                  {donation.donacion.estadoDonacion.nombreEstado}
-                </span>
+          {Array.isArray(donations) && donations.length > 0 ? (
+            donations.map((donation) => (
+              <tr
+                key={donation.id}
+                onClick={() => handleSelectDonation(donation)}
+                className="row-clickable"
+              >
+                <td>{formatDate(donation.donacion.fechaRegistro)}</td>
+                <td>{donation.medicamento.nombreMedicamento}</td>
+                <td>{donation.cantidadOfrecida}</td>
+                <td className="status-cell">
+                  <StatusIcon status={donation.donacion.estadoDonacion.nombreEstado} />
+                  <span className="status-text">
+                    {donation.donacion.estadoDonacion.nombreEstado}
+                  </span>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
+                No hay donaciones registradas
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
 

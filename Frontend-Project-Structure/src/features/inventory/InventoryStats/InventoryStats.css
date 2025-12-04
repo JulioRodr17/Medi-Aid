@@ -1,3 +1,4 @@
+/* Estilos existentes */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -5,6 +6,7 @@
   margin-bottom: 2rem;
 }
 
+/* Tarjetas */
 .stat-card {
   background-color: #ffffff;
   padding: 1.5rem;
@@ -32,4 +34,23 @@
 
 .stat-card.urgent .stat-card-value {
   color: #e74c3c;
+}
+
+/* Media query para móviles */
+@media (max-width: 600px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr); /* dos tarjetas por fila */
+  }
+
+  .stat-card {
+    padding: 1rem; /* opcional: hacerlas un poco más pequeñas */
+  }
+
+  .stat-card-value {
+    font-size: 2rem; /* reducir tamaño del número */
+  }
+
+  .stat-card-label {
+    font-size: 0.9rem;
+  }
 }

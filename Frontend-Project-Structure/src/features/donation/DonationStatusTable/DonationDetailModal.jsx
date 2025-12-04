@@ -8,17 +8,16 @@ const DonationDetailModal = ({ donation, onClose }) => {
 
   const { donacion, medicamento, cantidadOfrecida } = donation;
   console.log(donation);
-  function formatDate(dateString) {
+  
+  const formatDate = (dateString) => {
     if (!dateString) return "-";
-
-    // Parseo manual de YYYY-MM-DD
-    const [y, m, d] = dateString.split("-");
-    const date = new Date(Number(y), Number(m) - 1, Number(d));
-    date.setHours(0, 0, 0, 0);
-
-    return date.toLocaleDateString();
-  }
-
+    const date = new Date(dateString);
+    return date.toLocaleDateString("es-MX", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    });
+  };
 
   return (
     <Modal isOpen={true} onClose={onClose} title="Detalle de la donación">
@@ -59,7 +58,7 @@ const DonationDetailModal = ({ donation, onClose }) => {
 
         <div className="detail-item">
           <span className="label">Fecha de registro</span>
-          <span className="value">{formatDate(donacion.fechaRegistro)}</span>
+          <span className="value">{formatDate(donation.donacion.fechaRegistro)}</span>
         </div>
 
         <div className="detail-item">
