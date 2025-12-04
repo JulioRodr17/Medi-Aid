@@ -113,6 +113,44 @@ public class UsuarioController {
 	    return ResponseEntity.ok("Contraseña restablecida correctamente");
 	}
 	
+	// ==================================================  
+	@PutMapping("/changePhone")
+	public ResponseEntity<String> changePhone(@RequestBody Map<String, Object> payload) {
+
+	    // Extraer campos
+	    Object idObj = payload.get("id");
+	    Object newPhoneObj = payload.get("telefono");
+
+	    if (idObj == null || newPhoneObj == null) {
+	        return ResponseEntity.badRequest().body("El ID y el nuevo teléfono son obligatorios");
+	    }
+
+	    Long id;
+	    String newPhone;
+
+	    try {
+	        id = Long.parseLong(idObj.toString());
+	        newPhone = newPhoneObj.toString();
+	    } catch (Exception e) {
+	        return ResponseEntity.badRequest().body("Datos inválidos");
+	    }
+
+	    // Buscar usuario
+	    Optional<Usuario> optionalUsuario = usuarioRepo.findById(id);
+	    if (!optionalUsuario.isPresent()) {
+	        return ResponseEntity.badRequest().body("Usuario no encontrado");
+	    }
+
+	    Usuario usuario = optionalUsuario.get();
+
+	    // Actualizar teléfono y guardar
+	    usuario.setTelefono(newPhone);
+	    usuarioRepo.save(usuario);
+
+	    return ResponseEntity.ok("Teléfono actualizado correctamente");
+	}
+
+	
 	// ==================================================  ==================================================
 	@PutMapping("/changePassword")
 	public ResponseEntity<String> changePassword(@RequestBody Map<String, Object> payload) {

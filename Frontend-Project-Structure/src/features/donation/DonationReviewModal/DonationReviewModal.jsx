@@ -6,6 +6,7 @@ import StatusIcon from "../../../components/ui/StatusIcon/StatusIcon";
 import Button from "../../../components/ui/button/Button";
 import Modal from "../../../components/ui/Modal/Modal";
 import MedicationForm from "../../../features/inventory/MedicationForm/MedicationForm";
+import {notificationService} from './../../../services/notificationService';
 
 import { useAuth } from "../../../context/AuthContext";
 
@@ -58,6 +59,15 @@ const DonationReviewModal = ({ donation, onClose }) => {
       };
       await donationService.rejectDonation(payload);
 
+      const notificacion = {
+        usuarioId: donation.donacion.usuarioDonante.id,
+        titulo: "Donación Rechazada",
+        descripcion: "El médico ha rechazado tu donación",
+        tipo: "ERROR", // INFO | ALERTA | ERROR | ÉXITO
+        url: "/user/donacion?tab=option2",
+      };
+      await notificationService.postNotifications(notificacion);
+
       onClose(true);
     } catch (err) {
       setError(err.message || "Error al procesar el rechazo.");
@@ -89,6 +99,15 @@ const DonationReviewModal = ({ donation, onClose }) => {
       };
 
       await donationService.approveDonation(payload);
+      
+      const notificacion = {
+        usuarioId: donation.donacion.usuarioDonante.id,
+        titulo: "Donación Aprobada",
+        descripcion: "El médico ha aprobado tu donación",
+        tipo: "EXITO", // INFO | ALERTA | ERROR | ÉXITO
+        url: "/user/donacion?tab=option2",
+      };
+      await notificationService.postNotifications(notificacion);
 
       setIsMedicationModalOpen(false);
       onClose(true);

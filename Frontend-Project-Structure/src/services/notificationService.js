@@ -14,33 +14,30 @@ const obtenNoticias = (inactivas = false) => {
 const obtenCards = (inactivas = false) => {
   return httpClient.get('/noticias/cards', { params: {inactivas: inactivas} });
 };
-/**
- * Obtiene la lista de notificaciones del usuario.
- */
-const getNotifications = () => {
-  if (USE_DUMMY_DATA) {
-    return simulateGetNotifications();
-  }
 
-  // TODO: BACKEND
-  return httpClient.get('/notifications');
+
+const postNotifications = (data) => {
+    return httpClient.post('/notifications/nueva', data);
+}
+
+const getNotifications = (id) => {
+  return httpClient.get(`/notifications/todas/${id}`);
 };
 
-/**
- * Marca todas las notificaciones como leídas.
- */
-const markAllAsRead = () => {
-  if (USE_DUMMY_DATA) {
-    return simulateMarkAllAsRead();
-  }
-
-  // TODO: BACKEND
-  return httpClient.post('/notifications/mark-read');
+const markAsRead = (id) => {
+  return httpClient.put(`/notifications/mark-read/${id}`);
 };
+
+const markAllAsRead = (id) => {
+  return httpClient.put(`/notifications/markAll-read/${id}`);
+};
+
 
 export const notificationService = {
   obtenNoticias,
   obtenCards,
+  postNotifications,
   getNotifications,
+  markAsRead,
   markAllAsRead
 };

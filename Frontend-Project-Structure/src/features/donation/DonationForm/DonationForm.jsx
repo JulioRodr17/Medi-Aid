@@ -6,6 +6,7 @@ import InfoModal from "../../../components/ui/InfoModal/InfoModal";
 import { donationService } from "../../../services/donationService";
 import { medicationService } from '../../../services/medicationService';
 import { useAuth } from '../../../context/AuthContext';
+import { notificationService } from "../../../services/notificationService";
 
 const DonationForm = () => {
   const [showModal, setShowModal] = useState(false);
@@ -115,7 +116,17 @@ const DonationForm = () => {
     }
 
     try {
+      const notificacion = {
+        usuarioId: null,
+        titulo: "Nueva Donación",
+        descripcion: "Un usuario quiere donar " + finalData.cantidadNumerica + " de " + finalData.nombre,
+        tipo: "INFO", // INFO | ALERTA | ERROR | ÉXITO
+        url: "/admin/revisiones",
+      };
+
       await donationService.postDonation(finalData);
+      await notificationService.postNotifications(notificacion);
+      
       setShowModal(true);
 
       setFormData({

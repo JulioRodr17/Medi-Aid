@@ -25,22 +25,41 @@ const HomePage = () => {
   const [isCarouselModalOpen, setIsCarouselModalOpen] = useState(false);
   const [isCardsModalOpen, setIsCardsModalOpen] = useState(false);
 
-  const loadHomeData = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const dataNoticias = await homeService.getCarousel();
-      const dataCards = await homeService.getCards();
+const loadHomeData = useCallback(async () => {
+  try {
+    setLoading(true);
+    setError(null);
 
-      setNoticias(dataNoticias);
-      setCards(dataCards);
-    } catch (error) {
-      console.error('Error cargando home:', error);
-      setError(error.message || 'No se pudo cargar el contenido.');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    const dataNoticias = await homeService.getCarousel();
+
+    const noticiasOrdenadas = dataNoticias.sort((a, b) => {
+      // 1. Activos primero
+      if (a.activo !== b.activo) {
+        return a.activo ? -1 : 1;
+      }
+
+      // 2. Orden ascendente
+      if (a.orden !== b.orden) {
+        return a.orden - b.orden;
+      }
+
+      // 3. (Opcional) Más reciente primero si empatan en orden
+      return new Date(b.fechaCreacion) - new Date(a.fechaCreacion);
+    });
+
+    const dataCards = await homeService.getCards();
+
+    setNoticias(noticiasOrdenadas);
+    setCards(dataCards);
+
+  } catch (error) {
+    console.error('Error cargando home:', error);
+    setError(error.message || 'No se pudo cargar el contenido.');
+  } finally {
+    setLoading(false);
+  }
+}, []);
+
 
   useEffect(() => {
     loadHomeData();
